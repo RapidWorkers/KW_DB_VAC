@@ -1,36 +1,100 @@
 <!DOCTYPE html>
     <head>
         <meta charset="utf-8">
-        <title>{@제목}</title>
+        <title>{백신 예약 시스템}</title>
         <link href="./css/bootstrap.min.css" rel="stylesheet">
-    </head>
+        <style type="text/css"> 
+        @font-face {
+            
+            font-family: 'Pretendard-Regular';
+            src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+        }
+        .main_header_BF
+        {
+            font-family: 'Pretendard-Regular', sans-serif;
+        }
+        .nav
+        {
+            font-size: large;
+        }
+        
+        </style>
+        
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+          google.charts.load('current', {'packages':['corechart']});
+          google.charts.setOnLoadCallback(drawChart);
+    
+          function drawChart() {
+    
+            var data = google.visualization.arrayToDataTable([
+              ['부작용', '발생수'],
+              ['Work',     11],
+              ['Eat',      2],
+              ['Commute',  2],
+              ['Watch TV', 2],
+              ['Sleep',    7]
+            ]);
+    
+            var options = {
+              title: 'My Daily Activities'
+            };
+    
+            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+    
+            chart.draw(data, options);
+          }
+        </script>
 
-    <div class="main_header_BF">
-        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+    </head>
+   
+    <div class="container main_header_BF">
+        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 border-bottom">
           <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-            <img src="./image/syringe.png">
-            <span class="fs-4">백신 예약 시스템</span>
+            <img class = "ms-4 me-2" src="./image/syringe.png" width="30px"></span>
+            <span class="fw-bold fs-6 me-2">백신 예약 <br>시스템</span>
         </a>
     
           <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            <img src="./"
-            <li><a href="#" class="nav-link px-2 link-secondary">백신 예약</a></li>
-            <li><a href="#" class="nav-link px-2 link-dark">통계</a></li>
-            <li><a href="#" class="nav-link px-2 link-dark">친구</a></li>
-            <li><a href="#" class="nav-link px-2 link-dark">부작용 신고</a></li>
-            <li><a href="#" class="nav-link px-2 link-dark">응급실 안내</a></li>
+            
+            <li><a href="#" class="nav-link px-4 link-dark">백신 예약</a></li>
+            <div class="vr"></div>
+            <li><a href="#" class="nav-link px-4 link-dark">통계</a></li>
+            <div class="vr"></div>
+            <li><a href="#" class="nav-link px-4 link-dark">친구</a></li>
+            <div class="vr"></div>
+            <li><a href="#" class="nav-link px-4 link-dark">부작용 신고</a></li>
+            <div class="vr"></div>
+            <li><a href="#" class="nav-link px-4 link-dark">응급실 안내</a></li>
           </ul>
     
-          <div class="col-md-3 text-end">
+          <div class="col-md-3 me-3 text-end">
             <button type="button" class="btn btn-outline-primary me-2">로그인</button>
             <button type="button" class="btn btn-primary">회원 가입</button>
           </div>
+          
         </header>
+        
       </div>
 
-
-
-
+    <div class="container">
+        <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
+            <h2 class="px-4 display-8 fw-bold text-white">백신 예약 페이지</h2>
+        </div>
+        <div class="py-4 px-5 pb-3 text-start border-bottom" style="background-color: #0077CD;">
+            <h4 class="px-4 display-8 text-white">병원: 연세 나눔 소아과</h4>
+        </div>
+        <div class="p-5 mb-4 bg-light">
+            <div class="container-fluid py-5">
+                <h1 class="display-5 fw-bold">Centered screenshot</h1>
+                <p class="fs-4">Using a series of utilities, you can create this jumbotron, just like the one in previous versions of Bootstrap. Check out the examples below for how you can remix and restyle it to your liking.</p>
+                <button class="btn btn-primary btn-lg" type="button">Example button</button>
+                <div id="piechart" class = "py-4" style="width: 900px; height: 500px; display: block; margin: 0 auto;"></div>
+            </div>
+        </div>
+    </div>
 
 
 </html>
