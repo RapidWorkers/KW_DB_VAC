@@ -1,0 +1,19 @@
+{
+  "name": "ilovevaccine",
+  "version": "1.0.0",
+  "description": "Kwangwoon University 2021 Fall, Database and Visualization. Making COVID-19 Vaccine Reservation Site",
+  "main": "webapp.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RapidWorkers/KW_DB_VAC.git"
+  },
+  "author": "JiYoon Kwon, Yujin Kwon, Heejin Lee, SooHyun Kim",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/RapidWorkers/KW_DB_VAC/issues"
+  },
+  "homepage": "https://github.com/RapidWorkers/KW_DB_VAC#readme"
+}
