@@ -4,7 +4,6 @@
         <title>{백신 예약 시스템}</title>
         <link href="./css/bootstrap.min.css" rel="stylesheet">
         <style type="text/css"> 
-
         @font-face {
             
             font-family: 'Pretendard-Regular';
@@ -57,41 +56,50 @@
             font-size: large;
         }
 
+        html {
+          background: url('./image/pfizer_comirnaty_tm.jpg') no-repeat center center fixed;
+          background-size: cover;
+          mix-blend-mode: darken;
+          filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+        }
+
         body {
           background-color: transparent;
         }
+
+        .form-signin {
+          width: 100%;
+          max-width: 330px;
+          padding: 15px;
+          margin: auto;
+        }
+
+        .form-signin .checkbox {
+          font-weight: 400;
+        }
+
+        .form-signin .form-floating:focus-within {
+          z-index: 2;
+        }
+
+        .form-signin input[type="email"] {
+          margin-bottom: -1px;
+          border-bottom-right-radius: 0;
+          border-bottom-left-radius: 0;
+        }
+
+        .form-signin input[type="password"] {
+          margin-bottom: 10px;
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
+        }
         
         </style>
-        
-        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-        <script type="text/javascript">
-          google.charts.load('current', {'packages':['corechart']});
-          google.charts.setOnLoadCallback(drawChart);
-    
-          function drawChart() {
-    
-            var data = google.visualization.arrayToDataTable([
-              ['부작용', '발생수'],
-              ['Work',     11],
-              ['Eat',      2],
-              ['Commute',  2],
-              ['Watch TV', 2],
-              ['Sleep',    7]
-            ]);
-    
-            var options = {
-              title: 'My Daily Activities'
-            };
-    
-            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-    
-            chart.draw(data, options);
-          }
-        </script>
-
     </head>
    
-    <div class="container main_header_BF">
+    <body>
+      <div class="navbar_bg">
+    <div class="main_header_BF">
         <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 border-bottom">
           <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
             <img class = "ms-4 me-2" src="./image/syringe.png" width="30px"></span>
@@ -118,24 +126,32 @@
           
         </header>
         
-      </div>
-
-    <div class="container">
-        <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
-            <h2 class="px-4 display-8 fw-bold text-white">백신 예약 페이지</h2>
-        </div>
-        <div class="py-4 px-5 pb-3 text-start border-bottom" style="background-color: #0077CD;">
-            <h4 class="px-4 display-8 text-white">병원: 연세 나눔 소아과</h4>
-        </div>
-        <div class="p-5 mb-4 bg-light">
-            <div class="container-fluid py-5">
-                <h1 class="display-5 fw-bold">Centered screenshot</h1>
-                <p class="fs-4">Using a series of utilities, you can create this jumbotron, just like the one in previous versions of Bootstrap. Check out the examples below for how you can remix and restyle it to your liking.</p>
-                <button class="btn btn-primary btn-lg" type="button">Example button</button>
-                <div id="piechart" class = "py-4" style="width: 900px; height: 500px; display: block; margin: 0 auto;"></div>
-            </div>
-        </div>
     </div>
+  </div>
 
+      <div class="container">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content rounded-5 shadow" style="background: rgba(255, 255, 255, 0.7);">
+            <div class="modal-header p-5 pb-4 border-bottom-0 justify-content-center">
+              <!-- <h5 class="modal-title">Modal title</h5> -->
+              <h1 class="fw-bold h3 mb-3 fw-normal">이메일 인증 필요</h1>
+            </div>
+      
+            <main class="form-signin">
+              <div class="text-center">
+                <p class="fw-bold mb-3 h5">회원가입시 입력한 이메일</p>
+              </div>
+              <div class="row justify-content-center align-items-center" style="border-radius: 1rem; background-color: #00A3FF; min-height: 2.5rem;">
+                sample@email.com
+              </div>
+              <div class="text-center">
+                <p class="fw-bold mt-3 h5">인증이 성공했습니다.</p>
+                <p class="fw-bold mt-5 h6">해당 계정으로 로그인이 가능합니다.</p>
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+  </body>
 
 </html>
