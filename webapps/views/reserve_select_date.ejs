@@ -1,0 +1,70 @@
+<% include ./common/header_date_pick %>
+
+<div class="container">
+    <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
+        <h2 class="px-4 display-8 fw-bold text-white">병원 조회</h2>
+    </div>
+    <div class="py-4 px-5 pb-3 text-start border-bottom" style="background-color: #0077CD;">
+        <div class="row">
+            <div class="col-6">
+                <h4 class="px-4 display-8 text-white">병원: 연세 나눔 소아과</h4>
+            </div>
+            <div class="col-6">
+                <h4 class="px-4 display-8 text-white">일자: 2021년 11월 8일</h4>
+            </div>
+        </div>
+        <h4 class="px-4 display-8 text-white">백신: 모더나</h4>
+    </div>
+    <div class="p-5 mb-4 bg-light">
+        <div class="container-fluid py-5">
+            <div class="row justify-content-center ">
+                
+                <div class="col-3">
+                  <input type="text" class="form-control m-datepicker" placeholder="예약 날짜 선택" required>
+                </div>
+
+                <div class="col-3">
+                    <ol class="list-group list-group-numbered">
+                        <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-start active">
+                          <div class="ms-2 me-auto">
+                            모더나
+                          </div>
+                          <span class="badge bg-primary rounded-pill">5</span>
+                        </li>
+                        <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                          <div class="ms-2 me-auto">
+                            화이자
+                          </div>
+                          <span class="badge bg-primary rounded-pill">3</span>
+                        </li>
+                        <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                          <div class="ms-2 me-auto">
+                            아스트라제네카
+                          </div>
+                          <span class="badge bg-primary rounded-pill">7</span>
+                        </li>
+                      </ol>
+                </div>
+                
+            </div>
+
+        <div class="row-md-3 mt-5 me-3 text-center">
+            <button type="button" class="btn btn-primary me-3">예약하기</button>
+        </div>    
+
+        </div>
+    </div>
+</div>
+
+<script>
+  $(document).ready(function(){
+  $('.m-datepicker').datepicker({
+      format: "yyyy/mm/dd",
+      todayHighlight: true,
+      autoclose: true
+      });
+  });
+
+</script>
+
+<% include ./common/footer %>
