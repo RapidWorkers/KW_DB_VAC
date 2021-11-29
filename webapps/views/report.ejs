@@ -1,0 +1,111 @@
+<% include ./common/header %>
+
+    <div class="container">
+        <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
+            <h2 class="px-4 display-8 fw-bold text-white">부작용 신고</h2>
+        </div>
+        
+        <div class="p-4 mb-4 bg-light">
+            <div class="container-fluid py-5">
+                <h4 class="px-4 display-8 fw-bold">예방접종 후 이상반응이 있을 경우, 그에 해당하는 이상반응을 선택하여 주십시오.(중복 가능)</h4>
+                
+
+<!-- 
+
+<div class = "px-5 py-4 fs-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="report_fever" checked>
+                        <label class="form-check-label" for="report_fever">
+                        열이 있었나요?
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="report_covidarm">
+                        <label class="form-check-label" for="report_covidarm">
+                        접종부위에 이상이 있었나요?
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="report_headache">
+                        <label class="form-check-label" for="report_headache">
+                        두통이나 보채는 증상이 있었나요?
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="report_digestive">
+                        <label class="form-check-label" for="report_digestive">
+                        토하거나 설사, 복통 등 소화기 증상이 있었나요?
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="report_faint">
+                        <label class="form-check-label" for="report_faint">
+                        접종 후 일시적인 실신이나 경련이 있었나요?
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="report_rash">
+                        <label class="form-check-label" for="report_rash">
+                        접종부위가 아닌 곳에 발진(붉은 반점)과 붓기가 생겼나요?
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="report_anaphylaxis">
+                        <label class="form-check-label" for="report_anaphylaxis">
+                        아나필락시스(접종 후 수 분에서 수 시간 내에 갑자기 혈압이 떨어지거나 숨쉬기 어렵거나 전신 두드러기가 생기는 증상)증상이 있었나요?
+                        </label>
+                    </div>
+
+                </div>
+
+-->
+                <div class = "px-5 py-4 fs-5">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                        <input class="form-check-input me-1" type="checkbox" value="" aria-label="report_fever" id="report_fever">
+                        열이 있었나요?
+                        </li>
+                        <li class="list-group-item">
+                        <input class="form-check-input me-1" type="checkbox" value="" aria-label="report_covidarm" id="report_covidarm">
+                        접종부위에 이상이 있었나요?
+                        </li>
+                        <li class="list-group-item">
+                        <input class="form-check-input me-1" type="checkbox" value="" aria-label="report_headache" id="report_headache">
+                        두통이나 보채는 증상이 있었나요?
+                        </li>
+                        <li class="list-group-item">
+                        <input class="form-check-input me-1" type="checkbox" value="" aria-label="report_digestive" id="report_digestive">
+                        토하거나 설사, 복통 등 소화기 증상이 있었나요?
+                        </li>
+                        <li class="list-group-item">
+                        <input class="form-check-input me-1" type="checkbox" value="" aria-label="report_faint" id="report_faint">
+                        접종 후 일시적인 실신이나 경련이 있었나요?
+                        </li>
+                        <li class="list-group-item">
+                        <input class="form-check-input me-1" type="checkbox" value="" aria-label="report_rash" id="report_rash">
+                        접종부위가 아닌 곳에 발진(붉은 반점)과 붓기가 생겼나요?
+                        </li>
+                        <li class="list-group-item">
+                        <input class="form-check-input me-1" type="checkbox" value="" aria-label="report_anaphylaxis" id="report_anaphylaxis">
+                        아나필락시스(접종 후 수 분에서 수 시간 내에 갑자기 혈압이 떨어지거나 숨쉬기 어렵거나 전신 두드러기가 생기는 증상)가 있었나요?
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="row mt-4 justify-content-md-center">
+                    <div class="d-grid col col-2 mx-auto">
+                        <input type="submit" class="btn btn-primary btn-lg" value = "제출하기">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+<% include ./common/footer %>
