@@ -1,0 +1,93 @@
+<% include ./common/header_date_pick %>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+            var data = google.visualization.arrayToDataTable([
+                ['부작용', '발생수'],
+                ['Work', 11],
+                ['Eat', 2],
+                ['Commute', 2],
+                ['Watch TV', 2],
+                ['Sleep', 7]
+            ]);
+
+            var options = {
+                title: 'My Daily Activities'
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+            chart.draw(data, options);
+        }
+    </script>
+
+    <div class="container">
+        <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
+            <h2 class="px-4 display-8 fw-bold text-white">백신 접종현황</h2>
+        </div>
+        <div class="p-5 mb-4 bg-light">
+            <div class="container-fluid py-5">
+                <div class="row ">
+                    <div class="col-md-4">
+                        <div class="row my-4">
+                            <div class="col-md-12">
+                                <div class="row" style="background-color: rgba(204, 205, 211, 0.945);">
+                                    <div class="col-md-12 mx-3 my-3 fs-5">
+                                        전국 1차 접종
+                                    </div>
+                                </div>
+
+                                <div class="row" style="background-color: rgba(204, 205, 211, 0.945);">
+                                    <div class="col-6 text-center fs-3 fw-bold mt-1">
+                                        79.6%
+                                    </div>
+
+                                    <div class="col-6 text-center fs-6 mb-1">
+                                        누적 40,891,088 <br>
+                                        신규 40,305
+                                    </div>
+                                </div>
+
+                                <div class="row mt-5" style="background-color: rgba(204, 205, 211, 0.945);">
+                                    <div class="col-md-12 mx-3 my-3 fs-5">
+                                        전국 2차 접종
+                                    </div>
+                                </div>
+                                <div class="row" style="background-color: rgba(204, 205, 211, 0.945);">
+                                    <div class="col-6 text-center fs-3 fw-bold mt-1">
+                                        71.5%
+                                    </div>
+                                    <div class="col-6 text-center fs-6 mb-1">
+                                        누적 36,709,777 <br>
+                                        신규 278,236
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8 my-3">
+                        <div id="piechart" class="py-1"
+                            style="width: 500px; height: 300px; display: block; margin: 0 auto;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('.m-datepicker').datepicker({
+                format: "yyyy/mm/dd",
+                todayHighlight: true,
+                autoclose: true
+            });
+        });
+
+    </script>
+
+    <% include ./common/footer %>
