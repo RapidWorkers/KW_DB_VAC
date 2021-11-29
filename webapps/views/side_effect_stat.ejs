@@ -1,0 +1,55 @@
+<% include ./common/header %>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChart);
+
+function drawChart() {
+
+    var data = google.visualization.arrayToDataTable([
+    ['부작용', '발생수'],
+    ['Work',     11],
+    ['Eat',      2],
+    ['Commute',  2],
+    ['Watch TV', 2],
+    ['Sleep',    7]
+    ]);
+
+    var options = {
+    title: 'My Daily Activities'
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+    chart.draw(data, options);
+}
+</script>  
+
+<div class="container">
+    <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
+        <h2 class="px-4 display-8 fw-bold text-white">백신 부작용 통계</h2>
+    </div>
+    <div class="p-5 mb-4 bg-light">
+        <div class="container-fluid py-3">
+            <div class="row">
+                <div class="col-4">
+                    <h6 class="dislpay-8">백신 선택</h6>
+                    <select class="form-select" style="width:auto" aria-label=".form-select-lg example">
+                        <option selected disabled>백신 선택</option>
+                        <option value="1">모더나</option>
+                        <option value="2">화이자</option>
+                        <option value="3">아스트라제네카</option>
+                        <option value="4">얀센</option>
+                    </select>
+                </div>
+                <div class="col-8">
+                    <h6 class="dislpay-8">그래프</h6>
+                    <div id="piechart" class = "py-2" style="width: 720px; height: 400px; display: block; margin: 0 auto;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include ./common/footer %>

@@ -1,0 +1,68 @@
+<% include ./common/header %>
+
+<div class="container">
+    <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
+        <h2 class="px-4 display-8 fw-bold text-white">[친구] 그룹원 목록</h2>
+    </div>
+    <div class="p-5 mb-4 bg-light">
+        <div class="container-fluid py-5">
+            <div class="row justify-content-center">
+                <div class="col col-md-auto gx-5  text-center" style="background-color: rgba(166, 168, 175, 0.945);">
+                    <img src="./image/syringe.png" class="rounded-circle border border-dark ms-5 me-5 mt-5 mb-5"
+                        width="100px" height="100px" />
+                    <p>
+                    <h5>[친구]</h5>
+                    </p>
+                    <p>사진 수정</p>
+                </div>
+
+                <div class="col col-6 gx-5" style="background-color: rgba(204, 205, 211, 0.945);">
+                    <div class="py-4 fs-5">
+                        <ul class="list-group">
+                            <li class="list-group-item ">
+                                <input class="form-check-input me-1" type="checkbox" value="" aria-label="selectAll"
+                                    id="selectAll">
+                                모두 선택
+                            </li>
+                            <li class="list-group-item">
+                                <input class="form-check-input me-1" type="checkbox" value="" aria-label="friend1"
+                                    id="friend1 ">
+                                권유진
+                            </li>
+                            <li class="list-group-item">
+                                <input class="form-check-input me-1" type="checkbox" value="" aria-label="friend2"
+                                    id="friend2">
+                                권지윤
+                            </li>
+                            <li class="list-group-item">
+                                <input class="form-check-input me-1" type="checkbox" value="" aria-label="friend3"
+                                    id="friend3">
+                                김수현
+                            </li>
+                            <li class="list-group-item">
+                                <input class="form-check-input me-1" type="checkbox" value="" aria-label="friend4"
+                                    id="friend4">
+                                이희진
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-end me-3 mt-2">
+                <div class="col col-1">
+                    <h6 class="fw-bold">친구 추가</h6>
+                </div>
+                <div class="col col-3">
+                    <h6 class="fw-bold">선택된 친구 삭제</h6>
+                </div>
+            </div>
+            <div class="row mt-5 justify-content-md-center">
+                <div class="d-grid col col-2 mx-auto">
+                    <input type="submit" class="btn btn-primary btn-lg" value="모임 인원 계산">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include ./common/footer %>
