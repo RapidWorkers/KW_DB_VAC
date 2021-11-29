@@ -4,8 +4,33 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+// 1차
 var indexRouter = require('./routes/index');
+var loginRouter = require('./routes/login');
+var vaccRecommendRouter = require('./routes/vacc_recommend');
+var reserveSearchHospRouter = require('./routes/reserve_search_hosp');
+var reserveSelectDateRouter = require('./routes/reserve_select_date');
 var usersRouter = require('./routes/users');
+
+var reserveConfirmRouter = require('./routes/reserve_confirm');
+var leftVaccSelectRouter = require('./routes/leftvacc_select');
+var joinRouter = require('./routes/join');
+var emailAuthFinishRouter = require('./routes/email_auth_finish');
+var vaccStatRouter = require('./routes/vacc_stat');
+
+var sideEffectStatRouter = require('./routes/side_effect_stat');
+var myPageRouter = require('./routes/mypage');
+var modifyPersonalRouter = require('./routes/modify_personal');
+var groupListRouter = require('./routes/group_list');
+var groupMemListRouter = require('./routes/group_mem_list');
+var groupMemInfoRouter = require('./routes/group_mem_info');
+
+var groupCalcMeetupRouter = require('./routes/group_calc_meetup');
+var groupMemAddRouter = require('./routes/group_mem_add');
+var emergencyRouter = require('./routes/emergency');
+var reportRouter = require('./routes/report');
+
+
 
 var app = express();
 
@@ -19,8 +44,28 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// 2차
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/login', loginRouter);
+app.use('/vacc_recommend',vaccRecommendRouter);
+app.use('/reserve_search_hosp',reserveSearchHospRouter);
+app.use('/reserve_select_date', reserveSelectDateRouter);
+app.use('/side_effect_stat', sideEffectStatRouter);
+app.use('/mypage', myPageRouter);
+app.use('/modify_personal', modifyPersonalRouter);
+app.use('/group_list', groupListRouter);
+app.use('/group_mem_list', groupMemListRouter);
+app.use('/group_mem_info', groupMemInfoRouter);
+app.use('/reserve_confirm', reserveConfirmRouter);
+app.use('/leftvacc_select', leftVaccSelectRouter);
+app.use('/join', joinRouter);
+app.use('/email_auth', emailAuthFinishRouter);
+app.use('/vacc_stat', vaccStatRouter);
+app.use('/group_calc_meetup', groupCalcMeetupRouter);
+app.use('/group_mem_add', groupMemAddRouter);
+app.use('/emergency', emergencyRouter);
+app.use('/report', reportRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
