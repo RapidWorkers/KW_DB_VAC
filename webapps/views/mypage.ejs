@@ -14,9 +14,8 @@
                         <img src="./image/syringe.png" class="rounded-circle border border-danger ms-3 me-3 mt-3 mb-1"
                             width="100px" height="100px" />
                         <p>
-                        <h5>김백신 님</h5>
+                        <h5><%= legal_name %> 님</h5>
                         </p>
-                        <p>[가족]</p>
                     </div>
                 </div>
                 <div class="col col-md-5 group1">
@@ -43,25 +42,25 @@
                     <hr class="my-4">
                     <div class="row mb-4">
                         <div class="col col-md-3 text-start">개인정보</div>
-                        <div class="col col-md-9 text-end">개인정보 변경</div>
+                        <div class="col col-md-9 text-end"><a href="modify_personal">개인정보 변경</a></div>
                     </div>
                     <div class="row mb-2">
                         <div class="col col-md-2 text-start">생년월일</div>
-                        <div class="col col-md-4 text-start">1999. 01. 01.</div>
+                        <div class="col col-md-4 text-start"><%= byear %>. <%= bmonth %>. <%= bday %>.</div>
                         <div class="col col-md-2 text-start">성별 </div>
-                        <div class="col col-md-4 text-start">남 </div>
+                        <div class="col col-md-4 text-start"><%= sex %> </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col col-md-2 text-start">전화번호</div>
-                        <div class="col col-md-10 text-start">010-1234-5678</div>
+                        <div class="col col-md-10 text-start"><%= phone %></div>
                     </div>
                     <div class = "row mb-2">
                         <div class="col col-md-2 text-start">이메일 </div>
-                        <div class="col col-md-10 text-start">HongGilDong123@MyEmail.com </div>
+                        <div class="col col-md-10 text-start"><%= email %></div>
                     </div>
                     <div class="row mb-2">
                         <div class="col col-md-2 text-start">주소</div>
-                        <div class="col col-md-10 text-start">서울특별시 노원구 광운로20, 광운대학교 새빛관 911호</div>
+                        <div class="col col-md-10 text-start"><%= address %></div>
                     </div>
                 </div>
             </div>
