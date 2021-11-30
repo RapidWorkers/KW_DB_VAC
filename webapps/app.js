@@ -12,7 +12,6 @@ var loginRouter = require('./routes/login');
 var vaccRecommendRouter = require('./routes/vacc_recommend');
 var reserveSearchHospRouter = require('./routes/reserve_search_hosp');
 var reserveSelectDateRouter = require('./routes/reserve_select_date');
-var usersRouter = require('./routes/users');
 
 var reserveConfirmRouter = require('./routes/reserve_confirm');
 var leftVaccSelectRouter = require('./routes/leftvacc_select');
@@ -39,6 +38,7 @@ var app = express();
 
 app.use(
   session({
+      name: "DobbyIsFree",
       secret: "KYOSUNIM NA JOM GEU MAN BUL RU",
       resave: false,
       saveUninitialized: true,
@@ -59,7 +59,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // 2차
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/login', loginRouter);
 app.use('/vacc_recommend',vaccRecommendRouter);
 app.use('/reserve_search_hosp',reserveSearchHospRouter);
