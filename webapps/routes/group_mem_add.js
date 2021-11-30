@@ -3,12 +3,19 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('group_mem_add', { title: 'Express' });
+  if(req.session.loggedin === undefined || req.session.loggedin ===0)
+    res.send("<script>alert('로그인이 필요합니다.');location.href='login';</script>");
+  else
+    res.render('group_mem_add', { title: '친구 추가', loggedin: 1 });
+  
 });
 
 /* POST home page. */
 router.post('/', function(req, res, next) {
-    res.render('group_mem_add', { title: 'Express' });
+  if(req.session.loggedin === undefined || req.session.loggedin ===0)
+    res.send("<script>alert('로그인이 필요합니다.');location.href='login';</script>");
+  else
+    res.render('group_mem_add', { title: 'Express', loggedin: 1 });
   });
 
 module.exports = router;
