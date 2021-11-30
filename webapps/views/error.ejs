@@ -1,3 +1,89 @@
-<h1><%= message %></h1>
-<h2><%= error.status %></h2>
-<pre><%= error.stack %></pre>
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>Oops! 죽었어요!!</title>
+    <style>
+    *, :before, :after {
+    box-sizing: border-box;
+    }
+
+    body {
+    display: flex;
+    align-items: center;
+    background: #9fd7ff;
+    min-width: 275px;
+    height: 100vh;
+    margin: 0 10vw;
+    overflow: hidden;
+    color: #0965b1;
+    font-family: Roboto;
+    }
+
+    .wrapper {
+    flex-grow: 2;
+    width: 40vw;
+    max-width: 500px;
+    margin: 0 auto;
+    }
+
+    h1 {
+    margin: 0;
+    font-size: 6em;
+    font-weight: 100;
+    }
+
+    p {
+    width: 95%;
+    font-size: 1.5em;
+    line-height: 1.4;
+    }
+
+    .buttons {
+    white-space: nowrap;
+    display: inline-block;
+    }
+
+    a {
+    display: inline-block;
+    padding: 0.8em 1em;
+    margin-right: 1em;
+    margin-bottom: 1em;
+    border: 3px solid #47a7f7;
+    color: #0965b1;
+    font-weight: 500;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 0.2em;
+    position: relative;
+    overflow: hidden;
+    transition: 0.3s;
+    }
+    a:hover {
+    color: #E3F2FD;
+    }
+    a:hover:before {
+    top: 0;
+    }
+    a:before {
+    content: "";
+    background: #138FF2;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: -100%;
+    left: 0;
+    transition: 0.3s;
+    z-index: -1;
+    }
+
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <h1><%= error.status %></h1>
+        <h2><%= message %></h2>
+        <p>오류가 있었던 것 같습니다.<br>뒤로 돌아가거나 다시 시도해주세요.</p>
+        <div class="buttons"><a href="javascript:history.back();">돌아가기</a><a href="/">메인</a><br/></div>
+    </div>
+</body>
+</html>
