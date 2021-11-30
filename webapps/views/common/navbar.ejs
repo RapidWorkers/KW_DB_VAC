@@ -1,0 +1,68 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white rounded" aria-label="Twelfth navbar example">
+  <div class = "main_header_BF">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample10"
+            aria-controls="navbarsExample10" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-md-center" id="navbarsExample10">
+
+            <a href="/" class="navbar-brand d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+              <img class="ms-4 me-2" src="./image/syringe.png" width="30px"></span>
+              <span class="fw-bold fs-6 me-2">백신 예약 <br>시스템</span>
+            </a>
+            
+            <ul class="navbar-nav me-auto mb-lg-0">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown10" data-bs-toggle="dropdown"
+                    aria-expanded="false">백신 예약</a>
+                <ul class="dropdown-menu" aria-labelledby="dropdown10">
+                    <li><a class="dropdown-item" href="reserve_search_hosp">백신 예약</a></li>
+                    <li><a class="dropdown-item" href="vacc_recommend">백신 추천</a></li>
+                </ul>
+                </li>
+                
+                <div class="vr"></div>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown10" data-bs-toggle="dropdown"
+                        aria-expanded="false">통계</a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdown10">
+                        <li><a class="dropdown-item" href="vacc_stat">백신 접종 현황</a></li>
+                        <li><a class="dropdown-item" href="side_effect_stat">백신 부작용 통계</a></li>
+                    </ul>
+                </li>
+
+                <div class="vr"></div>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown10" data-bs-toggle="dropdown"
+                        aria-expanded="false">친구</a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdown10">
+                        <li><a class="dropdown-item" href="group_list">친구 리스트</a></li>
+                        <li><a class="dropdown-item" href="group_calc_meetup">모임 계산기</a></li>
+                    </ul>
+                </li>
+
+                <div class="vr"></div>
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="report">부작용 신고</a>
+                </li>
+
+                <div class="vr"></div>
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="emergency">응급실 안내</a>
+                </li>
+            </ul>
+
+            <% if(typeof loggedin !=='undefined' && loggedin === 1) { %>
+              <button type="button" class="btn btn-outline-primary me-2" onclick="location.href='mypage'">내 정보</button>
+              <button type="button" class="btn btn-primary" onclick="location.href='logout'">로그아웃</button>
+            <% } else { %>
+              <button type="button" class="btn btn-outline-primary me-2" onclick="location.href='login'">로그인</button>
+              <button type="button" class="btn btn-primary" onclick="location.href='join'">회원 가입</button>
+            <% } %>
+
+        </div>
+    </div>
+  </div>
+</nav>
+

@@ -1,0 +1,6 @@
+{
+    "host" : "<YOUR HOST>",
+    "user" : "<USER>",
+    "password" : "<YOUR PASSWORD>",
+    "database" : "kwu_vaccine"
+}
