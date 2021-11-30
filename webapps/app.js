@@ -7,7 +7,7 @@ var session = require("express-session");
 var FileStore = require("session-file-store")(session);
 
 // 1차
-var indexRouter = require('./routes/index');
+var introRouter = require('./routes/intro');
 var loginRouter = require('./routes/login');
 var vaccRecommendRouter = require('./routes/vacc_recommend');
 var reserveSearchHospRouter = require('./routes/reserve_search_hosp');
@@ -58,7 +58,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // 2차
-app.use('/', indexRouter);
+app.use('/', introRouter);
 app.use('/login', loginRouter);
 app.use('/vacc_recommend',vaccRecommendRouter);
 app.use('/reserve_search_hosp',reserveSearchHospRouter);
