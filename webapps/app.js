@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var session = require("express-session");
+var FileStore = require("session-file-store")(session);
 
 // 1차
 var indexRouter = require('./routes/index');
@@ -30,9 +32,20 @@ var groupMemAddRouter = require('./routes/group_mem_add');
 var emergencyRouter = require('./routes/emergency');
 var reportRouter = require('./routes/report');
 
+var logoutRouter = require('./routes/logout');
 
 
 var app = express();
+
+app.use(
+  session({
+      secret: "KYOSUNIM NA JOM GEU MAN BUL RU",
+      resave: false,
+      saveUninitialized: true,
+      store: new FileStore(),
+      cookie: { maxAge: 86400000 },
+  })
+);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -66,6 +79,7 @@ app.use('/group_calc_meetup', groupCalcMeetupRouter);
 app.use('/group_mem_add', groupMemAddRouter);
 app.use('/emergency', emergencyRouter);
 app.use('/report', reportRouter);
+app.use('/logout', logoutRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
