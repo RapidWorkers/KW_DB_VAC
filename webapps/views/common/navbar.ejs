@@ -54,6 +54,7 @@
             </ul>
 
             <% if(typeof loggedin !== 'undefined' && loggedin === 1) { %>
+              <div class="nav-item fw-bold"><%= legal_name %></div><div class = "mx-3"> 님</div>
               <button type="button" class="btn btn-outline-primary me-2" onclick="location.href='mypage'">내 정보</button>
               <button type="button" class="btn btn-primary" onclick="location.href='logout'">로그아웃</button>
             <% } else { %>

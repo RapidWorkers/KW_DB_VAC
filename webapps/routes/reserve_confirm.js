@@ -12,7 +12,7 @@ router.post('/', function(req, res, next) {
   }
   else
   {
-    res.render('reserve_confirm', { title: '백신 예약완료', loggedin: 1});
+    res.render('reserve_confirm', { title: '백신 예약완료', loggedin: 1, legal_name: req.session.legal_name});
   }
   
 });

@@ -5,7 +5,7 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   if(req.session.loggedin === 1)
   {
-    res.render('group_mem_list', { title: '그룹 구성원 목록 보기', loggedin: 1});
+    res.render('group_mem_list', { title: '그룹 구성원 목록 보기', loggedin: 1, legal_name: req.session.legal_name});
   }
   else
   {

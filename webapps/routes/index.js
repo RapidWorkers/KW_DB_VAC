@@ -5,7 +5,7 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   if(req.session.loggedin === 1)
   {
-    res.render('intro', { title: '백신 예약 시스템', loggedin: 1});
+    res.render('intro', { title: '백신 예약 시스템', loggedin: 1, legal_name: req.session.legal_name});
   }
   else
   {

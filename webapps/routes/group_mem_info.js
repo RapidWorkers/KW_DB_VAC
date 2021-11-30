@@ -5,7 +5,7 @@ var router = express.Router();
 router.post('/', function(req, res, next) {
   if(req.session.loggedin === 1)
   {
-    res.render('group_mem_info', { title: '친구 정보 보기', loggedin: 1});
+    res.render('group_mem_info', { title: '친구 정보 보기', loggedin: 1, legal_name: req.session.legal_name});
   }
   else
   {

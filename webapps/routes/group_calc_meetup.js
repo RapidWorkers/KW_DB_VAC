@@ -6,7 +6,7 @@ router.get('/', function(req, res, next) {
   if(req.session.loggedin === undefined || req.session.loggedin ===0)
     res.send("<script>alert('로그인이 필요합니다.');location.href='login';</script>");
   else
-    res.render('group_calc_meetup', { title: '모임 계산기', loggedin: 1 });
+    res.render('group_calc_meetup', { title: '모임 계산기', loggedin: 1, legal_name: req.session.legal_name});
   
 });
 
@@ -16,7 +16,7 @@ router.post('/', function(req, res, next) {
   if(req.session.loggedin === undefined || req.session.loggedin ===0)
     res.send("<script>alert('로그인이 필요합니다.');location.href='login';</script>");
   else
-    res.render('group_calc_meetup_result1', { title: '결과 1', loggedin: 1 });
+    res.render('group_calc_meetup_result1', { title: '결과 1', loggedin: 1, legal_name: req.session.legal_name});
   });
 
 module.exports = router;

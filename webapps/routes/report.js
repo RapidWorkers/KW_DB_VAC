@@ -6,7 +6,7 @@ router.get('/', function(req, res, next) {
 if(req.session.loggedin === undefined || req.session.loggedin ===0)
   res.send("<script>alert('로그인이 필요합니다.');location.href='login';</script>");
 else
-  res.render('report', { title: '이상반응 신고' , loggedin: 1});
+  res.render('report', { title: '이상반응 신고' , loggedin: 1, legal_name: req.session.legal_name});
   
 });
 
@@ -15,7 +15,7 @@ router.post('/', function(req, res, next) {
 if(req.session.loggedin === undefined || req.session.loggedin ===0)
   res.send("<script>alert('로그인이 필요합니다.');location.href='login';</script>");
 else
-  res.render('report_result', { title: '이상반응 신고 완료', loggedin: 1 });
+  res.render('report_result', { title: '이상반응 신고 완료', loggedin: 1, legal_name: req.session.legal_name});
 });
 
 module.exports = router;

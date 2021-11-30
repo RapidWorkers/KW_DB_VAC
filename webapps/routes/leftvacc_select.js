@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
   }
   else
   {
-    res.render('left_vacc', { title: '잔여백신 예약', loggedin: 1 });
+    res.render('left_vacc', { title: '잔여백신 예약', loggedin: 1, legal_name: req.session.legal_name});
   }
 });
 
@@ -23,7 +23,7 @@ router.post('/', function(req, res, next) {
   }
   else
   {
-    res.render('left_vacc_result', { title: '잔여백신 예약', loggedin: 1 });
+    res.render('left_vacc_result', { title: '잔여백신 예약', loggedin: 1, legal_name: req.session.legal_name});
   }
   
 });
