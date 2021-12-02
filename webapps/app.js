@@ -32,7 +32,7 @@ var emergencyRouter = require('./routes/emergency');
 var reportRouter = require('./routes/report');
 
 var logoutRouter = require('./routes/logout');
-
+var apiRouter = require('./routes/api/api_router');
 
 var app = express();
 
@@ -79,6 +79,7 @@ app.use('/group_mem_add', groupMemAddRouter);
 app.use('/emergency', emergencyRouter);
 app.use('/report', reportRouter);
 app.use('/logout', logoutRouter);
+app.use('/api', apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
