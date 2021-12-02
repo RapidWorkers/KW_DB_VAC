@@ -1,9 +1,20 @@
 <% include ./common/header %>
+<script>
+    function deleteClick(DEL_ID){
+        if(confirm("정말 삭제하시겠습니까?")==true){
+            return DEL_ID;
+        }
+        else{
+            return false;
+        }
+    }
+</script>
 
     <div class="container">
         <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
-            <h2 class="px-4 display-8 fw-bold text-white">김백신 님의 그룹</h2>
+            <h2 class="px-4 display-8 fw-bold text-white"><%=legal_name %> 님의 그룹</h2>
         </div>
+
         <div class="p-5 mb-4 bg-light">
             <div class="container-fluid py-5">
                 <div class="row justify-content-center text-center">
@@ -19,39 +30,23 @@
 
                         </div>
                     </div>
-                    <div class="col col-md-auto gx-5">
-                        <div class="group1">
-                            <img src="./image/syringe.png"
-                                class="rounded-circle border border-danger ms-5 me-5 mt-3 mb-1" width="100px"
-                                height="100px" />
-                            <p>
-                            <h5>[가족]</h5>
-                            </p>
-                            <p>그룹 삭제</p>
+                    <% for(var i =0; i < rows.length; i++) { %>
+                         <div class="col col-md-auto gx-5">
+                            <div class="group1">
+                                <img src="./image/syringe.png"
+                                 class="rounded-circle border border-danger ms-5 me-5 mt-3 mb-1" width="100px"
+                                    height="100px" />
+                                <p>
+                                <h5><%= rows[i].team_name %></h5>
+                                </p>
+                                <form method = "DELETE" action="/group_list">
+                                    <input type="hidden" value="<%=rows[i].gid %>">
+                                    <a href=# onclick="deleteClick('<%=rows[i].gid %>')">그룹 삭제</p>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col col-md-auto gx-5">
-                        <div class="group1">
-                            <img src="./image/syringe.png"
-                                class="rounded-circle border border-danger ms-5 me-5 mt-3 mb-1" width="100px"
-                                height="100px" />
-                            <p>
-                            <h5>[친구]</h5>
-                            </p>
-                            <p>그룹 삭제</p>
-                        </div>
-                    </div>
-                    <div class="col col-md-auto gx-5">
-                        <div class="group1">
-                            <img src="./image/syringe.png"
-                                class="rounded-circle border border-danger ms-5 me-5 mt-3 mb-1" width="100px"
-                                height="100px" />
-                            <p>
-                            <h5>[직장]</h5>
-                            </p>
-                            <p>그룹 삭제</p>
-                        </div>
-                    </div>
+                    <% };   %> 
+                    
 
                     <div class="row mt-5 justify-content-md-center">
                         <div class="d-grid col col-2 mx-auto">
