@@ -7,7 +7,6 @@ const getSqlConnection = require('../configs/mysql_load');
 router.get('/', async function(req, res, next) {
   if(req.session.loggedin === 1)//check login
   {
-
     var sqlGetUserInfo = "SELECT sex, birthdate, address, email, phone from USER where uid = ?;";
     var sqlGetVaccinatedSeries = "SELECT Vaccinated from USER_VACCINATED where uid = ?;";
     var sqlGetFirstDoseInfo = "SELECT V.vac_name, R.reserve_date FROM RESERVATION R INNER JOIN VACCINE V ON R.vaccine_type = V.id WHERE uid = ? and current_series = 1;";
@@ -61,11 +60,12 @@ router.get('/', async function(req, res, next) {
       //Release connection
       conn.release();
 
-      console.log(renderInfo);
+      //Render page
       res.render('mypage', renderInfo);
 
     } catch(err) {
       console.log("Error: MySQL returned ERROR : " + err);
+      conn.release();
     }
   }
   else
