@@ -29,8 +29,6 @@ router.get('/', async function (req, res, next) {
     var dong = req.query.dong;
     var emergency = req.query.emergency;
 
-    console.log(decodeURI(metropol));
-
     if(!req.query.searchType) return res.json({success: false});
 
     var searchType = req.query.searchType;
@@ -66,7 +64,6 @@ router.get('/', async function (req, res, next) {
 
         try {
             var conn = await getSqlConnectionAsync();
-            console.log(metropol+" "+district+"%");
             var [rows, fields] = await conn.query(sqlSearchDong, [metropol+" "+district+"%"]);
             
             var dongArray = [];
