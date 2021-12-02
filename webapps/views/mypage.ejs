@@ -23,14 +23,34 @@
                         <h5 class="mb-5 mt-3">코로나 19 예방접종 정보</h5>
                         <div class="row">
                             <div class="col col-md-3 text-start ms-4 mb-3">접종여부</div>
+                            <% if (vaccinatedStatus === "NO") { %>
+                            <div class="col col-md-5 text-end ms-4 mb-3">미접종</div>
+                            <%} else if (vaccinatedStatus === "PARTIAL") { %>
                             <div class="col col-md-5 text-end ms-4 mb-3">1차 접종 완료</div>
+                            <%} else { %>
+                            <div class="col col-md-5 text-end ms-4 mb-3">2차 접종 완료</div>
+                            <% } %>
                         </div>
                         <div class="row">
-                            <div class="col col-md-3 text-start ms-4 mb-3">백신 제조사</div>
-                            <div class="col col-md-5 text-end ms-4 mb-3">아스트라제네카</div>
+                            <div class="col col-md-3 text-start ms-4 mb-3">1차 제조사</div>
+                            <div class="col col-md-5 text-end ms-4 mb-3"><%= firstVaccineName %></div>
+                            <div class="col col-md-3 text-start ms-4 mb-3">2차 제조사</div>
+                            <div class="col col-md-5 text-end ms-4 mb-3"><%= secondVaccineName %></div>
                         </div>
                         <div class="row">
+                            <% if (vaccinatedStatus === "FULL") { %>
                             <div class="col col-md-3 text-start ms-4 mb-3">접종일</div>
+                            <% } else if (vaccinatedStatus === "PARTIAL") { 
+                                if(second_reserve_date === null) { %>
+                            <div class="col col-md-3 text-start ms-4 mb-3">1차 접종일</div>
+                            <% } else { %>
+                            <div class="col col-md-3 text-start ms-4 mb-3">2차 예정일</div>
+                            <% }} else { 
+                                if(first_reserve_date === null) { %>
+                            <div class="col col-md-3 text-start ms-4 mb-3">정보 없음</div>
+                            <% } else { %>
+                            <div class="col col-md-3 text-start ms-4 mb-3">1차 예정일</div>
+                            <% } }  %>
                             <div class="col col-md-5 text-end ms-4 mb-3">2021. 11. 28.</div>
                         </div>
                     </div>

@@ -25,11 +25,11 @@ router.post('/', function (req, res, next) {
       //SQL 준비 작업
       var sqlGetPwdofUser = "SELECT uid, legal_name, passwd from USER where username = ?;";
       conn.query(sqlGetPwdofUser, [username], function (err, rows) {
-        if (err) console.err("Error: MySQL returned ERROR : " + err);
+        if (err) console.log("Error: MySQL returned ERROR : " + err);
         else {
           //Compare user password with saved password
           bcrypt.compare(passwd, rows[0].passwd, (err, isMatched) => {
-            if (err) console.err("Error: bcrypt returned ERROR : " + err);//bcrypt error
+            if (err) console.log("Error: bcrypt returned ERROR : " + err);//bcrypt error
             else {
               if (isMatched) {//password match
                 /* NOTE: 자주 쓰는 정보는 Session에 담아두기, 매번 Query 요청은 성능 저하 */
