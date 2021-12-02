@@ -7,7 +7,8 @@ router.get('/', async function (req, res, next) {
 
     var sqlSearchDistrict = 'SELECT DISTINCT SUBSTRING_INDEX(SUBSTRING_INDEX(address, " ", 2), " ", -1) as district from HOSPITAL where address like ? ORDER BY district;';
     var sqlSearchDong = 'SELECT DISTINCT SUBSTRING_INDEX(SUBSTRING_INDEX(address, " ", 3), " ", -1) as dong from HOSPITAL where address like ? ORDER BY dong;';
-    var sqlSearchHospital = 'SELECT id, name from HOSPITAL where address like ? ORDER BY name;';
+    var sqlSearchHospital = 'SELECT id, name from HOSPITAL where address like ? and emergency = 0 ORDER BY name;';
+    var sqlSearchHospitalEmergency = 'SELECT id, name, department from HOSPITAL where address like ? ORDER BY name;';
 
     /*
         Input:
@@ -26,6 +27,7 @@ router.get('/', async function (req, res, next) {
     var metropol = req.query.metropol;
     var district = req.query.district;
     var dong = req.query.dong;
+    var emergency = req.query.emergency;
 
     console.log(decodeURI(metropol));
 
@@ -92,7 +94,9 @@ router.get('/', async function (req, res, next) {
 
         try {
             var conn = await getSqlConnectionAsync();
-            console.log(metropol+" "+district+"%");
+
+            if(!emergency)
+            {
             var [rows, fields] = await conn.query(sqlSearchHospital, [metropol+" "+district+" "+dong+"%"]);
             
             var hospitalArray = [];
@@ -104,6 +108,21 @@ router.get('/', async function (req, res, next) {
             var resultJson = JSON.stringify(Object.assign({}, hospitalArray));
             resultJson.success = true;
             res.json(resultJson);
+            }
+            else
+            {
+                var [rows, fields] = await conn.query(sqlSearchHospitalEmergency, [metropol+" "+district+" "+dong+"%"]);
+            
+                var hospitalArray = [];
+    
+                rows.forEach(element => {
+                    hospitalArray.push([element.id, element.name, element.department]);
+                });
+    
+                var resultJson = JSON.stringify(Object.assign({}, hospitalArray));
+                resultJson.success = true;
+                res.json(resultJson);
+            }
 
             conn.release();
         } catch(err) {
