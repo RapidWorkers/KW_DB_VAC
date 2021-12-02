@@ -7,7 +7,7 @@
 
     <div class="p-5 mb-4 bg-light">
         <div class="container-fluid py-5">
-            <form class="needs-validation" novalidate>
+            <form class="needs-validation"  method = "POST" action = "join" novalidate>
                 <div class="row g-5 align-items-center justify-content-center">
                     <div class="col-md-7 col-lg-8">
                         <h4 class="mb-3">개인 정보 입력</h4>
@@ -15,8 +15,8 @@
                             <div class="col-9">
                                 <label for="username" class="form-label">아이디</label>
                                 <div class="input-group has-validation">
-                                    <span class="input-group-text">@</span>
-                                    <input type="text" class="form-control" id="username" placeholder="아이디"
+                                    <span class="input-group-text">#</span>
+                                    <input type="text" class="form-control" name = "username" id="username" placeholder="아이디"
                                         required>
                                     <div class="invalid-feedback">
                                         Your username is required.
@@ -28,9 +28,9 @@
                                 <button class="form-control btn btn-primary" >중복 확인</button>
                             </div>
                             <div class="col-12">
-                                <label for="username" class="form-label">비밀번호</label>
+                                <label for="passwd" class="form-label">비밀번호</label>
                                 <div class="input-group has-validation">
-                                    <input type="password" class="form-control" id="passwd" placeholder="비밀번호"
+                                    <input type="password" class="form-control" name="passwd" id="passwd" placeholder="비밀번호"
                                         required>
                                     <div class="invalid-feedback">
                                         Your username is required.
@@ -39,16 +39,16 @@
                             </div>
 
                             <div class="col-sm-12">
-                                <label for="firstName" class="form-label">이름</label>
-                                <input type="text" class="form-control" id="firstName" placeholder="홍길동" value="" required>
+                                <label for="legal_name" class="form-label">이름</label>
+                                <input type="text" class="form-control" name ="legal_name" id="legal_name" placeholder="홍길동" value="" required>
                                 <div class="invalid-feedback">
                                     Valid first name is required.
                                 </div>
                             </div>
 
                             <div class="col-sm-6">
-                                <label for="bDate" class="form-label">생년월일</label>
-                                <input type="text" class="form-control m-datepicker" placeholder="Click here to open datepicker" required>
+                                <label for="birthdate" class="form-label">생년월일</label>
+                                <input type="text" class="form-control m-datepicker" name="birthdate" id="birthdate"  placeholder="Click here to open datepicker" required>
                                 <div class="invalid-feedback">
                                     Valid first name is required.
                                 </div>
@@ -57,12 +57,12 @@
                                 <label for="sex" class="form-label">성별</label>
                                 <div>
                                     <div class="fs-5 form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="vac_recommend_fever_yes" id="vac_recommend_fever_yes" value="option1" checked>
-                                        <label class="form-check-label" for="inlineRadio1">남자</label>
+                                        <input class="form-check-input" type="radio" name="sex" id="male" value="0" checked>
+                                        <label class="form-check-label" for="male">남자</label>
                                     </div>
                                     <div class="fs-5 form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="vac_recommend_fever_yes" id="vac_recommend_fever_no" value="option2">
-                                        <label class="form-check-label" for="inlineRadio2">여자</label>
+                                        <input class="form-check-input" type="radio" name="sex" id="female" value="1">
+                                        <label class="form-check-label" for="female">여자</label>
                                     </div>
                                 </div>
                                 <div class="invalid-feedback">
@@ -72,7 +72,7 @@
 
                             <div class="col-md-3">
                                 <label for="zip" class="form-label">Zip</label>
-                                <input type="text" class="form-control" id="zip" placeholder="01422" required>
+                                <input type="text" class="form-control" name = "zip" id="zip" placeholder="01422" required>
                                 <div class="invalid-feedback">
                                     Zip code required.
                                 </div>
@@ -80,7 +80,7 @@
 
                             <div class="col-md-9">
                                 <label for="address" class="form-label">주소</label>
-                                <input type="text" class="form-control" id="address" placeholder="서울시 노원구 광운로 20"
+                                <input type="text" class="form-control" name ="address" id="address" placeholder="서울시 노원구 광운로 20"
                                     required>
                                 <div class="invalid-feedback">
                                     Please enter your shipping address.
@@ -88,28 +88,28 @@
                             </div>
                             <div class="col-12">
                                 <label for="address2" class="form-label">상세 주소</label>
-                                <input type="text" class="form-control" id="address2" placeholder="111동 1110호 (월계동, 광운대학교)">
+                                <input type="text" class="form-control" name="address2" id="address2" placeholder="111동 1110호 (월계동, 광운대학교)">
                             </div>
 
                             <div class="col-md-12">
-                                <button class="form-control btn btn-primary btn-sm" >주소 찾기</button>
+                                <button class="form-control btn btn-primary btn-sm" onclick="post()" type = "button">주소 찾기</button>
                             </div>
 
                             <div class="col-12">
-                                <label for="address2" class="form-label">전화번호</label>
-                                <input type="text" class="form-control" id="address2" placeholder="010-1234-5678">
+                                <label for="phone" class="form-label">전화번호</label>
+                                <input type="text" class="form-control" name="phone" id="phone" placeholder="010-1234-5678">
                             </div>
 
                             <div class="col-9">
                                 <label for="email" class="form-label">이메일</label>
-                                <input type="email" class="form-control" id="email" placeholder="you@example.com">
+                                <input type="email" class="form-control" name="email" id="email" placeholder="you@example.com">
                                 <div class="invalid-feedback">
                                     Please enter a valid email address for shipping updates.
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">&nbsp;</label>
-                                <button class="form-control btn btn-primary" >중복 확인</button>
+                                <button class="form-control btn btn-primary" type = "button">중복 확인</button>
                             </div>
                         </div>
 
@@ -123,7 +123,7 @@
                         <hr class="my-4">
 
                         <button class="w-100 btn btn-primary btn-lg" type="submit">회원 가입</button>
-            </form>
+                    </form>
         </div>
 
     </div>
@@ -140,6 +140,18 @@
         });
     });
 
+</script>
+
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+    function post(){
+    new daum.Postcode({
+        oncomplete: function(data) {
+            document.querySelector("#zip").value = data.zonecode;
+            document.querySelector("#address").value = data.address;
+        }
+    }).open();
+}
 </script>
 
 <% include ./common/footer %>
