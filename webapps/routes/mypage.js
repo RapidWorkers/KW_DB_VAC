@@ -1,7 +1,6 @@
 var express = require('express');
-const getSqlConnectionAsync = require('../configs/mysql_load');
+const getSqlConnectionAsync = require('../configs/mysql_load').getSqlConnectionAsync;
 var router = express.Router();
-const getSqlConnection = require('../configs/mysql_load');
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
