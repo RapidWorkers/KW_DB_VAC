@@ -1,68 +1,76 @@
 <% include ./common/header %>
 
-<div class="container">
-    <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
-        <h2 class="px-4 display-8 fw-bold text-white">백신 추천</h2>
-    </div>
+    <div class="container">
+        <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
+            <h2 class="px-4 display-8 fw-bold text-white">백신 추천</h2>
+        </div>
 
-    <div class="p-5 mb-4 bg-light">
-        <div class="container-fluid py-5">
-            
-            <div class = "mb-4">
-                <p class="fs-4">Q. 나이가 만 19세 이상입니까?</p>
+        <div class="p-5 mb-4 bg-light">
+            <div class="container-fluid py-5">
 
-                <div class = "px-4">
-                    <div class="fs-5 form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="vac_recommend_age" id="vac_recommend_age_yes" value="option1">
-                        <label class="form-check-label" for="inlineRadio1">예</label>
+                <form method="POST" action="vacc_recommend">
+                    <div class="mb-4">
+                        <p class="fs-4">Q. 나이가 만 19세 이상입니까?</p>
+
+                        <div class="px-4">
+                            <div class="fs-5 form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="vac_recommend_age"
+                                    id="vac_recommend_age_yes" value="yes">
+                                <label class="form-check-label" for="inlineRadio1">예</label>
+                            </div>
+                            <div class="fs-5 form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="vac_recommend_age"
+                                    id="vac_recommend_age_no" value="no">
+                                <label class="form-check-label" for="inlineRadio2">아니오</label>
+                            </div>
+                        </div>
+
                     </div>
-                    <div class="fs-5 form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="vac_recommend_age" id="vac_recommend_age_no" value="option2">
-                        <label class="form-check-label" for="inlineRadio2">아니오</label>
+
+                    <div class="mb-4">
+                        <p class="fs-4">Q. 오늘 37.5도 이상의 열이 있습니까?</p>
+
+                        <div class="px-4">
+                            <div class="fs-5 form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="vac_recommend_fever"
+                                    id="vac_recommend_fever_yes" value="yes">
+                                <label class="form-check-label" for="inlineRadio1">예</label>
+                            </div>
+                            <div class="fs-5 form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="vac_recommend_fever"
+                                    id="vac_recommend_fever_no" value="no">
+                                <label class="form-check-label" for="inlineRadio2">아니오</label>
+                            </div>
+                        </div>
+
                     </div>
-                </div>
-           
+
+                    <div class="mb-4">
+                        <p class="fs-4">Q. 아스트라제네카 부작용을 겪은 적이 있습니까?</p>
+
+                        <div class="px-4">
+                            <div class="fs-5 form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="vac_recommend_sideeffect"
+                                    id="vac_recommend_sideeffect_yes" value="yes">
+                                <label class="form-check-label" for="inlineRadio1">예</label>
+                            </div>
+                            <div class="fs-5 form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="vac_recommend_sideeffect"
+                                    id="vac_recommend_sideeffect_no" value="no">
+                                <label class="form-check-label" for="inlineRadio2">아니오</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4 justify-content-md-center">
+                        <div class="d-grid col col-2 mx-auto">
+                            <input type="submit" class="btn btn-primary btn-lg" value="확인">
+                        </div>
+                    </div>
+                </form>
+
             </div>
-
-            <div class = "mb-4">
-                <p class="fs-4">Q. 오늘 37.5도 이상의 열이 있습니까?</p>
-
-                <div class = "px-4">
-                    <div class="fs-5 form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="vac_recommend_fever" id="vac_recommend_fever_yes" value="option1">
-                        <label class="form-check-label" for="inlineRadio1">예</label>
-                    </div>
-                    <div class="fs-5 form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="vac_recommend_fever" id="vac_recommend_fever_no" value="option2">
-                        <label class="form-check-label" for="inlineRadio2">아니오</label>
-                    </div>
-                </div>
-               
-            </div>
-
-            <div class = "mb-4">
-                <p class="fs-4">Q. 아스트라제네카 부작용을 겪은 적이 있습니까?</p>
-
-                <div class = "px-4">
-                    <div class="fs-5 form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="vac_recommend_sideeffect" id="vac_recommend_sideeffect_yes" value="option1">
-                        <label class="form-check-label" for="inlineRadio1">예</label>
-                    </div>
-                    <div class="fs-5 form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="vac_recommend_sideeffect" id="vac_recommend_sideeffect_no" value="option2">
-                        <label class="form-check-label" for="inlineRadio2">아니오</label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mt-4 justify-content-md-center">
-                <div class="d-grid col col-2 mx-auto">
-                    <input type="submit" class="btn btn-primary btn-lg" value = "확인">
-                </div>
-            </div>
-
         </div>
     </div>
-</div>
 
-<% include ./common/footer %>
+    <% include ./common/footer %>

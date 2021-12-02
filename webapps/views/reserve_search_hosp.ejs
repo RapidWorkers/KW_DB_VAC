@@ -10,11 +10,13 @@
     </div>
     <div class="p-5 mb-4 bg-light">
         <div class="container-fluid py-5">
+
+        <form method="POST" name="form">
             <div class="row">
                 <div class="col-3">
                     <h6 class="dislpay-8">시/도 선택</h6>
-                    <select class="form-select" style="width:auto" aria-label=".form-select-lg example">
-                        <option selected disabled>시/도 선택</option>
+                    <select class="form-select" name ="city" style="width:auto" aria-label=".form-select-lg example">
+                        <option value="0" selected disabled>시/도 선택</option>
                         <option value="1">서울특별시</option>
                         <option value="2">부산광역시</option>
                         <option value="3">대구광역시</option>
@@ -34,19 +36,21 @@
                         <option value="17">제주특별자치도</option>
                     </select>
                 </div>
+                
                 <div class="col-3">
                     <h6 class="dislpay-8">구/군/시 선택</h6>
-                    <select class="form-select" style="width:auto" aria-label=".form-select-lg example">
-                        <option selected disabled>구/군/시 선택</option>
+                    <select class="form-select" name="district" style="width:auto" aria-label=".form-select-lg example">
+                        <option value = "0" selected disabled>구/군/시 선택</option>
                         <option value="1">구로구</option>
                         <option value="2">노원구</option>
                         <option value="3">성북구</option>
                     </select>
                 </div>
+
                 <div class="col-3">
                     <h6 class="dislpay-8">동/면/리 선택</h6>
-                    <select class="form-select" style="width:auto" aria-label=".form-select-lg example">
-                        <option selected disabled>동/면/리 선택</option>
+                    <select class="form-select" name="town" style="width:auto" aria-label=".form-select-lg example">
+                        <option  value = "0" selected disabled>동/면/리 선택</option>
                         <option value="1">상계동</option>
                         <option value="2">하계동</option>
                         <option value="3">월계동</option>
@@ -54,24 +58,38 @@
                 </div>
 
                 <div class="col-3">
-                  <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action">홍길동 병원</a>
-                    <a href="#" class="list-group-item list-group-item-action active" aria-current="true">연세나눔소아과</a>
-                    <a href="#" class="list-group-item list-group-item-action">김씨일해병원</a>
-                    <a href="#" class="list-group-item list-group-item-action">이씨놀아병원</a>
-                    <a href="#" class="list-group-item list-group-item-action">권씨들일안해병원</a>
-                </div>
+                    <h6 class="dislpay-8">병원 선택</h6>
+                    <select class="form-select" name="hospital_name" style="width:auto" aria-label=".form-select-lg example">
+                        <option  value = "0" selected disabled>병원 선택</option>
+                        <option value="1">홍길동 병원</option>
+                        <option value="2">연세나눔소아과</option>
+                        <option value="3">김씨일해병원</option>
+                        <option value="4">이씨놀아병원</option>
+                        <option value="5">권씨들일안해병원</option>
+                    </select>
                 </div>
                 
             </div>
 
-        <div class="row-md-3 mt-5 me-3 text-center">
-            <button type="button" class="btn btn-primary me-3">병원 선택</button>
-            <button type="button" class="btn btn-warning">잔여 백신</button>
-        </div>    
-
+            <div class="row-md-3 mt-5 me-3 text-center">
+                <input type="submit" class="btn btn-primary me-3" name="reserve_select_date" value="날짜 선택" onclick="submit_action(1)">
+                <input type="submit" class="btn btn-warning" name="left_vacc" value="잔여 백신 선택" onclick="submit_action(2)">
+            </div>    
+        </form>
         </div>
     </div>
 </div>
+
+<script>
+    function submit_action(index){
+        if(index == 1){
+            document.form.action="reserve_select_date";
+        }
+        else if(index ==2){
+            document.form.method="GET";
+            document.form.action="leftvacc_select";
+        }
+    }
+</script>
 
 <% include ./common/footer %>
