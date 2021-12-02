@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const getSqlConnection = require('../configs/mysql_load');
+const getSqlConnection = require('../configs/mysql_load').getSqlConnection;
 var bcrypt = require('bcrypt');
 
 /* GET home page. */

@@ -1,11 +1,12 @@
+var exports = module.exports = {};
+
 var mysql = require('mysql');
 var mysql2 = require('mysql2/promise');
-
 var mysqlConfig = require('./mysql_config.json');
 
 var pool = mysql.createPool(mysqlConfig);
 
-function getSqlConnection(callback){
+exports.getSqlConnection = function (callback){
     pool.getConnection(function (err, conn){
         if(!err){
             callback(conn);
@@ -14,7 +15,7 @@ function getSqlConnection(callback){
 }
 
 var async_pool = mysql2.createPool(mysqlConfig);
-async function getSqlConnectionAsync(){
+exports.getSqlConnectionAsync = async function (){
     try{
         conn = await async_pool.getConnection();
         return conn;
@@ -22,6 +23,3 @@ async function getSqlConnectionAsync(){
         console.log("Error: MySQL returned ERROR :"+err);
     }
 }
-
-module.exports = getSqlConnection;
-module.exports = getSqlConnectionAsync;
