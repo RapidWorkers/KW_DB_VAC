@@ -10,14 +10,12 @@
 
                 <h1 class="px-4 display-8 my-5 fw-bold text-center">당신에게 현재 시점에서 <br> 백신 접종 대상자가 아닙니다.</h1>
                 
-                <% if (vac_recommend_age === "no") { %>
+                <% if (age < 14) { %>
                     <h3 class="px-4 display-8 my-5 fw-bold text-center">사유: 접종 가능 나이에 맞지 않습니다.</h3>
                 <% } else { %>
                     <h3 class="px-4 display-8 my-5 fw-bold text-center">사유: 고열 등 몸 상태가 안 좋을 경우 백신 접종이 제한됩니다.</h3>
                 <% } %>
                 
-
-
 
                 <div class="row my-5 justify-content-md-center">
                     <div class="d-grid col col-2 mx-auto">

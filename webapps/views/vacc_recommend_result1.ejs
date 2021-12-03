@@ -12,10 +12,10 @@
                 <div class="row mb-5 justify-content-md-center">
                     <div class="d-grid col col-3 mx-1">
                         <span style="background-color: aquamarine;">
-                            <% if (vac_recommend_sideeffect === "no") { %>
-                                <h1 class="display-8 fw-bold text-center">아스트라제네카</h1>
-                            <% } else { %>
+                            <% if (age < 19) { %>
                                 <h1 class="display-8 fw-bold text-center">화이자</h1>
+                            <% } else { %>
+                                <h1 class="display-8 fw-bold text-center"> <%= request.getParameter("vac_recommend_res") %></h1>
                             <% } %>
                         </span>
                     </div>
@@ -28,12 +28,12 @@
 
                 <div class="row mb-5  justify-content-md-center">
                     <div class="d-grid col col-4 mx-1">
-                        <h4 class="display-8 fw-bold text-center">국내 총 접종 인원: 100,000 명</h4>
+                        <h4 class="display-8 fw-bold text-center">국내 총 접종 인원: <%= request.getParameter("vaccined_num") %> 명</h4>
 
                     </div>
 
                     <div class="d-grid col col-4">
-                        <h4 class="display-8 fw-bold text-center">부작용 확률: 0.01%(10명)</h4>
+                        <h4 class="display-8 fw-bold text-center">부작용 확률: <%= request.getParameter("vac_sideeffect_rate") %> % (<%= request.getParameter("vac_sideeffect_num") %>명)</h4>
                     </div>
                 </div>
 
