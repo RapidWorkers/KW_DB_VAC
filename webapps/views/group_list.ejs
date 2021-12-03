@@ -30,6 +30,7 @@
 
                         </div>
                     </div>
+                    
                     <% for(var i =0; i < rows.length; i++) { %>
                          <div class="col col-md-auto gx-5">
                             <div class="group1">
@@ -37,7 +38,7 @@
                                  class="rounded-circle border border-danger ms-5 me-5 mt-3 mb-1" width="100px"
                                     height="100px" />
                                 <p>
-                                <h5><%= rows[i].team_name %></h5>
+                                <h5><a href = "/group_mem_list"><%= rows[i].team_name %></a></h5>
                                 </p>
                                 <form method = "DELETE" action="/group_list">
                                     <input type="hidden" value="<%=rows[i].gid %>">
@@ -46,6 +47,7 @@
                             </div>
                         </div>
                     <% };   %> 
+                    
                     
 
                     <div class="row mt-5 justify-content-md-center">
