@@ -7,8 +7,8 @@ router.get('/', async function (req, res, next) {
 
     var sqlSearchDistrict = 'SELECT DISTINCT SUBSTRING_INDEX(SUBSTRING_INDEX(address, " ", 2), " ", -1) as district from HOSPITAL where address like ? ORDER BY district;';
     var sqlSearchDong = 'SELECT DISTINCT SUBSTRING_INDEX(SUBSTRING_INDEX(address, " ", 3), " ", -1) as dong from HOSPITAL where address like ? ORDER BY dong;';
-    var sqlSearchHospital = 'SELECT id, name from HOSPITAL where address like ? and emergency = 0 ORDER BY name;';
-    var sqlSearchHospitalEmergency = 'SELECT id, name, department from HOSPITAL where address like ? ORDER BY name;';
+    var sqlSearchHospital = 'SELECT id, name, address from HOSPITAL where address like ? and emergency = 0 ORDER BY name;';
+    var sqlSearchHospitalEmergency = 'SELECT id, name, address, department from HOSPITAL where address like ? and emergency = 1 ORDER BY name;';
 
     /*
         Input:
@@ -43,12 +43,11 @@ router.get('/', async function (req, res, next) {
             var districtArray = [];
 
             rows.forEach(element => {
-                districtArray.push(element.district);
+                districtArray.push({name: element.district});
             });
 
-            var resultJson = JSON.stringify(Object.assign({}, districtArray));
-            resultJson.success = true;
-            res.json(resultJson);
+            districtArray.success = true;
+            res.json(districtArray);
 
             conn.release();
         } catch(err) {
@@ -69,12 +68,11 @@ router.get('/', async function (req, res, next) {
             var dongArray = [];
 
             rows.forEach(element => {
-                dongArray.push(element.dong);
+                dongArray.push({name: element.dong});
             });
 
-            var resultJson = JSON.stringify(Object.assign({}, dongArray));
-            resultJson.success = true;
-            res.json(resultJson);
+            dongArray.success = true;
+            res.json(dongArray);
             
             conn.release();
         } catch(err) {
@@ -87,38 +85,35 @@ router.get('/', async function (req, res, next) {
     {
         if(!metropol) return res.json({success: false});
         if(!district) return res.json({success: false});
-        if(!dong) return res.json({success: false});
 
         try {
             var conn = await getSqlConnectionAsync();
-
-            if(!emergency)
+            if(!emergency || emergency == 0)
             {
+            if(!dong) return res.json({success: false});//Only when non-emergency
             var [rows, fields] = await conn.query(sqlSearchHospital, [metropol+" "+district+" "+dong+"%"]);
             
             var hospitalArray = [];
 
             rows.forEach(element => {
-                hospitalArray.push([element.id, element.name]);
+                hospitalArray.push({id: element.id, name: element.name, addr: element.address});
             });
 
-            var resultJson = JSON.stringify(Object.assign({}, hospitalArray));
-            resultJson.success = true;
-            res.json(resultJson);
+            hospitalArray.success = true;
+            res.json(hospitalArray);
             }
             else
             {
-                var [rows, fields] = await conn.query(sqlSearchHospitalEmergency, [metropol+" "+district+" "+dong+"%"]);
+                var [rows, fields] = await conn.query(sqlSearchHospitalEmergency, [metropol+" "+district+"%"]);
             
                 var hospitalArray = [];
     
                 rows.forEach(element => {
-                    hospitalArray.push([element.id, element.name, element.department]);
+                    hospitalArray.push({id: element.id, name: element.name, addr: element.address, department: element.department});
                 });
     
-                var resultJson = JSON.stringify(Object.assign({}, hospitalArray));
-                resultJson.success = true;
-                res.json(resultJson);
+                hospitalArray.success = true;
+                res.json(hospitalArray);
             }
 
             conn.release();
