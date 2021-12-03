@@ -42,6 +42,7 @@ router.post('/', function(req, res, next) {
           if(err) console.log("Error: MySQL returned ERROR: " + err);
           else{
             res.render('email_auth', { title: '이메일 인증', loggedin: 0, email: email});
+            conn.release();
           }
         })
       })
