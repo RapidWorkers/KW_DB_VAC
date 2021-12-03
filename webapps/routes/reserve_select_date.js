@@ -12,8 +12,9 @@ router.post('/', function(req, res, next) {
 
     var renderInfo = {
       title: '예약 날짜 선택',
+      legal_name: req.session.legal_name,
       loggedin: 1,
-      hospital_name
+      hospital_name: hospital_name
     };
 
     res.render('reserve_select_date', renderInfo);
