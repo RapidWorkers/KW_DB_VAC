@@ -8,19 +8,22 @@
         function drawChart() {
 
             var data = google.visualization.arrayToDataTable([
-                ['부작용', '발생수'],
-                ['Work', 11],
-                ['Eat', 2],
-                ['Commute', 2],
-                ['Watch TV', 2],
-                ['Sleep', 7]
+                ['reserve_date', 'first', 'second'],
+
+                <% for(var i=0; i<rows.length;i++){
+                    var oneItem = rows[i];
+                %>
+                ["<%=oneItem.reserve_date%>", parseInt("<%=oneItem.first%>"), parseInt("<%=oneItem.second%>")],
+                <% } %>
             ]);
 
             var options = {
-                title: 'My Daily Activities'
+                title: '전국 백신 접종 현황',
+                hAxis: {title: '접종 수'},
+                vAxis: {title: '접종 날짜'},
             };
 
-            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+            var chart = new google.visualization.LineChart(document.getElementById('vacc_chart'));
 
             chart.draw(data, options);
         }
@@ -44,12 +47,12 @@
 
                                 <div class="row" style="background-color: rgba(204, 205, 211, 0.945);">
                                     <div class="col-6 text-center fs-3 fw-bold mt-1">
-                                        79.6%
+                                        <%= (rows[rows.length-1].first/user_num*100).toFixed(2) %> %
                                     </div>
 
                                     <div class="col-6 text-center fs-6 mb-1">
-                                        누적 40,891,088 <br>
-                                        신규 40,305
+                                        누적 <%= rows[rows.length-1].first %> <br>
+                                        신규 <%= rows[rows.length-1].first - rows[rows.length-2].first %>
                                     </div>
                                 </div>
 
@@ -60,18 +63,19 @@
                                 </div>
                                 <div class="row" style="background-color: rgba(204, 205, 211, 0.945);">
                                     <div class="col-6 text-center fs-3 fw-bold mt-1">
-                                        71.5%
+                                        <%= (rows[rows.length-1].second/user_num*100).toFixed(2) %> %
                                     </div>
                                     <div class="col-6 text-center fs-6 mb-1">
-                                        누적 36,709,777 <br>
-                                        신규 278,236
+                                        누적 <%= rows[rows.length-1].second %> <br>
+                                        신규 <%= rows[rows.length-1].second - rows[rows.length-2].second %>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    
                     <div class="col-md-8 my-3">
-                        <div id="piechart" class="py-1"
+                        <div id="vacc_chart" class="py-1"
                             style="width: 500px; height: 300px; display: block; margin: 0 auto;"></div>
                     </div>
                 </div>
