@@ -1,71 +1,63 @@
 <% include ./common/header %>
 
 <div class="container">
+    <div id = "reserveHospital">
     <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
         <h2 class="px-4 display-8 fw-bold text-white">병원 조회</h2>
     </div>
     <div class="py-4 px-5 pb-3 text-start border-bottom" style="background-color: #0077CD;">
-        <h4 class="px-4 display-8 text-white">병원: 연세 나눔 소아과</h4>
+        <h4 class="px-4 display-8 text-white">병원: {{ hospital_name }}</h4>
         <h4 class="px-4 display-8 text-white">백신: -</h4>
     </div>
     <div class="p-5 mb-4 bg-light">
         <div class="container-fluid py-5">
-
         <form method="POST" name="form">
             <div class="row">
                 <div class="col-3">
                     <h6 class="dislpay-8">시/도 선택</h6>
-                    <select class="form-select" name ="city" style="width:auto" aria-label=".form-select-lg example">
-                        <option value="0" selected disabled>시/도 선택</option>
-                        <option value="1">서울특별시</option>
-                        <option value="2">부산광역시</option>
-                        <option value="3">대구광역시</option>
-                        <option value="4">인천광역시</option>
-                        <option value="5">광주광역시</option>
-                        <option value="6">대전광역시</option>
-                        <option value="7">울산광역시</option>
-                        <option value="8">세종특별자치시</option>
-                        <option value="9">경기도</option>
-                        <option value="10">강원도</option>
-                        <option value="11">충청북도</option>
-                        <option value="12">충청남도</option>
-                        <option value="13">전라북도</option>
-                        <option value="14">전라남도</option>
-                        <option value="15">경상북도</option>
-                        <option value="16">경상남도</option>
-                        <option value="17">제주특별자치도</option>
+                    <select class="form-select" name ="city" style="width:auto" aria-label=".form-select-lg example" v-model = "metropol" @change="searchByMetropol">
+                        <option selected disabled hidden>시/도 선택</option>
+                        <option value="서울특별시">서울특별시</option>
+                        <option value="부산광역시">부산광역시</option>
+                        <option value="대구광역시">대구광역시</option>
+                        <option value="인천광역시">인천광역시</option>
+                        <option value="광주광역시">광주광역시</option>
+                        <option value="대전광역시">대전광역시</option>
+                        <option value="울산광역시">울산광역시</option>
+                        <option value="세종특별자치시">세종특별자치시</option>
+                        <option value="경기도">경기도</option>
+                        <option value="강원도">강원도</option>
+                        <option value="충청북도">충청북도</option>
+                        <option value="충청남도">충청남도</option>
+                        <option value="전라북도">전라북도</option>
+                        <option value="전라남도">전라남도</option>
+                        <option value="경상북도">경상북도</option>
+                        <option value="경상남도">경상남도</option>
+                        <option value="제주특별자치도">제주특별자치도</option>
                     </select>
                 </div>
                 
                 <div class="col-3">
                     <h6 class="dislpay-8">구/군/시 선택</h6>
-                    <select class="form-select" name="district" style="width:auto" aria-label=".form-select-lg example">
-                        <option value = "0" selected disabled>구/군/시 선택</option>
-                        <option value="1">구로구</option>
-                        <option value="2">노원구</option>
-                        <option value="3">성북구</option>
+                    <select class="form-select" name="district" style="width:auto" aria-label=".form-select-lg example" v-model="district" @change="searchByDistrict">
+                        <option selected disabled hidden>구/군/시 선택</option>
+                        <option v-for="item in districtList.data" v-bind:key="" :value="item.name">{{ item.name }}</option>
                     </select>
                 </div>
 
                 <div class="col-3">
                     <h6 class="dislpay-8">동/면/리 선택</h6>
-                    <select class="form-select" name="town" style="width:auto" aria-label=".form-select-lg example">
-                        <option  value = "0" selected disabled>동/면/리 선택</option>
-                        <option value="1">상계동</option>
-                        <option value="2">하계동</option>
-                        <option value="3">월계동</option>
+                    <select class="form-select" name="town" style="width:auto" aria-label=".form-select-lg example" v-model="town" @change="searchByTown">
+                        <option selected disabled hidden>동/면/리 선택</option>
+                        <option v-for="item in townList.data" v-bind:key="" :value="item.name">{{ item.name }}</option>
                     </select>
                 </div>
 
                 <div class="col-3">
                     <h6 class="dislpay-8">병원 선택</h6>
-                    <select class="form-select" name="hospital_name" style="width:auto" aria-label=".form-select-lg example">
-                        <option  value = "0" selected disabled>병원 선택</option>
-                        <option value="1">홍길동 병원</option>
-                        <option value="2">연세나눔소아과</option>
-                        <option value="3">김씨일해병원</option>
-                        <option value="4">이씨놀아병원</option>
-                        <option value="5">권씨들일안해병원</option>
+                    <select class="form-select" name="hospital_id" style="width:auto" aria-label=".form-select-lg example" v-model="hospital" @change="getHospitalName">
+                        <option selected disabled hidden>병원 선택</option>
+                       <option v-for="item in hospitalList" v-bind:key="" :value="item.id">{{ item.name }}</option>
                     </select>
                 </div>
                 
@@ -76,6 +68,7 @@
                 <input type="submit" class="btn btn-warning" name="left_vacc" value="잔여 백신 선택" onclick="submit_action(2)">
             </div>    
         </form>
+        </div>
         </div>
     </div>
 </div>
@@ -90,6 +83,56 @@
             document.form.action="leftvacc_select";
         }
     }
+    
+    const axios_inst = axios.create({
+            baseURL: 'http://localhost:3000/api/'
+        })
+    
+    function fetchHospitalApi(params){
+        return axios_inst.get("get_hospital_list_by_area", params)
+    }
+
+    var reserveHospitalApp = new Vue({
+        el: "#reserveHospital", 
+        data: {
+            metropol: "시/도 선택",
+            district: "구/군/시 선택",
+            town: "동/면/시 선택",
+            hospital: "병원 선택",
+            hospital_name: "-",
+            districtList: [],
+            townList: [],
+            hospital_id: null,
+            hospitalList: [],
+        },
+        methods: {
+            searchByMetropol: async function(){
+                var searchParams = {params: {searchType: 0, metropol: this.metropol}};
+                var districtData = await fetchHospitalApi(searchParams);
+                this.districtList = districtData;
+            },
+            
+            searchByDistrict: async function(){
+                var searchParams = {params: {searchType: 1, metropol: this.metropol, district: this.district}};
+                var townData = await fetchHospitalApi(searchParams);
+                this.townList = townData; 
+            },
+            searchByTown: async function(){
+                var searchParams = {params: {searchType: 2, metropol: this.metropol, district: this.district, dong: this.town, emergency: 0}};
+                var hospitalData = await fetchHospitalApi(searchParams);
+                this.hospitalList = hospitalData.data;
+            },
+
+            getHospitalName: async function(){
+                for(i = 0; i < this.hospitalList.length; i++)
+                    {
+                        if(this.hospitalList[i].id == this.hospital){
+                            this.hospital_name = this.hospitalList[i].name;
+                        }
+                    }
+            }
+        }
+    })
 </script>
 
 <% include ./common/footer %>
