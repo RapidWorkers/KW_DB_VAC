@@ -104,6 +104,7 @@
                     var searchParams = {params: {searchType: 0, metropol: this.metropol}};
                     var districtData = await fetchHospitalApi(searchParams);
                     this.districtList = districtData;
+                    this.district = "구/군/시 선택"
                     this.hospitalList = [];
                 },
 

@@ -97,7 +97,7 @@
         data: {
             metropol: "시/도 선택",
             district: "구/군/시 선택",
-            town: "동/면/시 선택",
+            town: "동/면/리 선택",
             hospital: "병원 선택",
             hospital_name: "-",
             districtList: [],
@@ -110,12 +110,21 @@
                 var searchParams = {params: {searchType: 0, metropol: this.metropol}};
                 var districtData = await fetchHospitalApi(searchParams);
                 this.districtList = districtData;
+                this.district = "구/군/시 선택"
+                this.townList = [];
+                this.town = "동/면/리 선택"
+                this.hospital = "병원 선택";
+                this.hospital_name = "-";
+                this.hospitalList = [];
             },
             
             searchByDistrict: async function(){
                 var searchParams = {params: {searchType: 1, metropol: this.metropol, district: this.district}};
                 var townData = await fetchHospitalApi(searchParams);
                 this.townList = townData; 
+                this.hospital = "병원 선택";
+                this.hospital_name = "-";
+                this.hospitalList = [];
             },
             searchByTown: async function(){
                 var searchParams = {params: {searchType: 2, metropol: this.metropol, district: this.district, dong: this.town, emergency: 0}};
