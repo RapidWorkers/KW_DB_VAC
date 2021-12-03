@@ -36,6 +36,7 @@ router.post('/', function (req, res, next) {
                 req.session.loggedin = 1;//then login
                 req.session.uid = rows[0].uid;//set uid to use later
                 req.session.legal_name = rows[0].legal_name;//set name to use later
+                
                 res.redirect("/");
               }
               else {//otherwise
