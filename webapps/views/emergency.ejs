@@ -1,56 +1,51 @@
 <% include ./common/header %>
 
     <div class="container">
-
         <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
             <h2 class="px-4 display-8 fw-bold text-white">근처 응급실 안내</h2>
         </div>
-     
+        <div id="emergencySearch">
         <div class="p-5 mb-4 bg-light">
             <div class="container-fluid py-5">
                 <div class="row">
 
                     <div class="col-2">
                         <h6 class="dislpay-8">시/도 선택</h6>
-                            <select class="form-select" style="width:auto" aria-label=".form-select-lg example">
-                                <option selected>시/도 선택</option>
-                                <option value="1">서울특별시</option>
-                                <option value="2">부산광역시</option>
-                                <option value="3">대구광역시</option>
-                                <option value="4">인천광역시</option>
-                                <option value="5">광주광역시</option>
-                                <option value="6">대전광역시</option>
-                                <option value="7">울산광역시</option>
-                                <option value="8">세종특별자치시</option>
-                                <option value="9">경기도</option>
-                                <option value="10">강원도</option>
-                                <option value="11">충청북도</option>
-                                <option value="12">충청남도</option>
-                                <option value="13">전라북도</option>
-                                <option value="14">전라남도</option>
-                                <option value="15">경상북도</option>
-                                <option value="16">경상남도</option>
-                                <option value="17">제주특별자치도</option>
+                            <select class="form-select" style="width:auto" aria-label=".form-select-lg example" id="metropol" v-model="metropol" @change="searchByMetropol">
+                                <option selected disabled hidden>시/도 선택</option>
+                                <option value="서울특별시">서울특별시</option>
+                                <option value="부산광역시">부산광역시</option>
+                                <option value="대구광역시">대구광역시</option>
+                                <option value="인천광역시">인천광역시</option>
+                                <option value="광주광역시">광주광역시</option>
+                                <option value="대전광역시">대전광역시</option>
+                                <option value="울산광역시">울산광역시</option>
+                                <option value="세종특별자치시">세종특별자치시</option>
+                                <option value="경기도">경기도</option>
+                                <option value="강원도">강원도</option>
+                                <option value="충청북도">충청북도</option>
+                                <option value="충청남도">충청남도</option>
+                                <option value="전라북도">전라북도</option>
+                                <option value="전라남도">전라남도</option>
+                                <option value="경상북도">경상북도</option>
+                                <option value="경상남도">경상남도</option>
+                                <option value="제주특별자치도">제주특별자치도</option>
                             </select>
                     </div>
 
                     <div class="col-3">
                         <h6 class="dislpay-8">구/군/시 선택</h6>
-                        <select class="form-select" style="width:auto" aria-label=".form-select-lg example">
-                            <option selected>구/군/시 선택</option>
-                            <option value="1">구로구</option>
-                            <option value="2">노원구</option>
-                            <option value="3">성북구</option>
+                        <select class="form-select" style="width:auto" aria-label=".form-select-lg example" id="district" v-model="district" @change="searchByDistrict">
+                            <option selected disabled hidden>구/군/시 선택</option>
+                            <option v-for="item in districtList.data" v-bind:key="" :value="item.name">{{ item.name }}</option>
                         </select>
                     </div>
                     
                     <div class="col-3">
-                        <div class="list-group">
-                            <a href="#" class="list-group-item list-group-item-action">홍길동 병원</a>
-                            <a href="#" class="list-group-item list-group-item-action active" aria-current="true">연세나눔소아과</a>
-                            <a href="#" class="list-group-item list-group-item-action">김씨일해병원</a>
-                            <a href="#" class="list-group-item list-group-item-action">이씨놀아병원</a>
-                            <a href="#" class="list-group-item list-group-item-action">권씨들일안해병원</a>
+                        <h6 class="dislpay-8">병원 선택</h6>
+                        <div class="list-group" id="hList">
+                            <a href="#" v-for="item in hospitalList.data" class="list-group-item list-group-item-action" 
+                                @click="selectHospital(item.id)" v-bind:class="{active: item.isActive}">{{ item.name }}</a>
                         </div>
                     </div>
 
@@ -61,8 +56,7 @@
                         style="border:0"
                         loading="lazy"
                         allowfullscreen
-                        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyB1NTBVf81XlMwtZGOUnqLGRLc0Vp53DEA
-                            &q=서울특별시+도봉구+쌍문2동+652">
+                        :src="mapAPIUrl">
                         </iframe>
                     </div>
 
@@ -70,15 +64,90 @@
 
                 <div class="p-4 mt-5" style="background-color: rgba(204, 205, 211, 0.945);">
                     <div class="container-fluid py-6">
-                        <h5 class="dislpay-8 fw-bold">서울의료원</h5>
-                        <h5 class="dislpay-8 fw-bold">진료 과목 - 내과, 소화기내과, 순환기내과, 가정의학과, 응급의학과</h5>
-                        <h5 class="dislpay-8 fw-bold">주소: 서울 특별시 으슥하게 마약 밀매 할 것 같은 곳 어딘가</h5>
+                        <h5 class="dislpay-8 fw-bold" v-model="hospitalName">병원명: {{ hospitalName }}</h5>
+                        <h5 class="dislpay-8 fw-bold" v-model="hospitalDept">진료 안내: {{ hospitalDept }}</h5>
+                        <h5 class="dislpay-8 fw-bold" v-model="hospitalAddr">주소: {{ hospitalAddr }}</h5>
                     </div>
                 </div> 
+            </div>
 
             </div>
         </div>
 
     </div>
+
+    <script>
+        const axios_inst = axios.create({
+            baseURL: 'http://localhost:3000/api/'
+        })
+    
+        function fetchHospitalApi(params){
+            return axios_inst.get("get_hospital_list_by_area", params)
+        }
+    
+        var emergencySearchApp = new Vue({
+            el: '#emergencySearch',
+            data: {
+                metropol: '시/도 선택',
+                district: '구/군/시 선택',
+                districtList: [],
+                hospitalId: null,
+                hospitalList: [],
+                hospitalName: "",
+                hospitalDept: "",
+                hospitalAddr: "",
+                mapAPIBaseUrl: "https://www.google.com/maps/embed/v1/place?key=AIzaSyB1NTBVf81XlMwtZGOUnqLGRLc0Vp53DEA&q=",
+                mapAPIUrl: "https://www.google.com/maps/embed/v1/place?key=AIzaSyB1NTBVf81XlMwtZGOUnqLGRLc0Vp53DEA&q=광운대학교"
+            },
+            methods: {
+                searchByMetropol: async function(){
+                    var searchParams = {params: {searchType: 0, metropol: this.metropol}};
+                    var districtData = await fetchHospitalApi(searchParams);
+                    this.districtList = districtData;
+                    this.hospitalList = [];
+                },
+
+                searchByDistrict: async function(){
+                    var searchParams = {params: {searchType: 2, metropol: this.metropol, district: this.district, emergency: 1}};
+                    var hospitalData = await fetchHospitalApi(searchParams);
+                    for(i = 0; i < hospitalData.data.length; i++)
+                    {
+                        hospitalData.data[i].isActive = false;
+                    }
+                    this.hospitalList = hospitalData;
+                },
+
+                selectHospital: async function(id){
+
+                    var prevId = this.hospitalId;
+
+                    var prevIndex = this.hospitalList.data.findIndex(function(curArray){
+                        return curArray.id === prevId;
+                    });
+
+                    if(prevIndex != -1)
+                    {
+                        this.hospitalList.data[prevIndex].isActive = false;
+                    }
+
+                    var index = this.hospitalList.data.findIndex(function(curArray){
+                        return curArray.id === id;
+                    });
+
+                    if(index != -1)
+                    {
+                        this.hospitalList.data[index].isActive = true;
+                    }
+
+                    this.hospitalId = id;
+                    this.hospitalName = this.hospitalList.data[index].name;
+                    this.hospitalDept = this.hospitalList.data[index].department;
+                    this.hospitalAddr = this.hospitalList.data[index].addr;
+                    this.mapAPIUrl = this.mapAPIBaseUrl + this.hospitalList.data[index].name;
+
+                }
+            }
+        })
+    </script>
 
 <% include ./common/footer %>
