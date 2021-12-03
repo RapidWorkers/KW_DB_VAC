@@ -47,8 +47,8 @@ router.get('/', async function(req, res, next) {
 router.post('/', async function(req, res, next) {
   if(req.session.loggedin === 1)
   {
-    var sqlGetPwdofUser = "SELECT passwd from USER where username = ?;";
-    var sqlCheckPhoneDup = "SELECT count(phone) from USER where phone = ? ";
+    var sqlGetPwdofUser = "SELECT passwd from USER where uid = ?;";
+    var sqlCheckPhoneDup = "SELECT count(phone) as duplicate from USER where phone = ? and uid != ?;";
     var sqlUpdateMyInfo = "UPDATE USER SET zip = ?, address = ?, address2 = ?, phone = ? where uid = ?;";
     var sqlUpdateMyPwd = "UPDATE USER SET passwd = ? where uid = ?;";
 
@@ -57,13 +57,16 @@ router.post('/', async function(req, res, next) {
 
       var current_passwd = req.body.current_passwd;
       var new_passwd = req.body.new_passwd;
-      var zip = req.body.zipcode;
+      var zip = req.body.zip;
       var address = req.body.address;
       var address2 = req.body.address2;
       var phone = req.body.phone;
       
 
       var [rows, fields] = await conn.query(sqlGetPwdofUser, [req.session.uid]);
+
+      console.log(current_passwd);
+
       bcrypt.compare(current_passwd, rows[0].passwd, async (err, isSame) => {//첫번째로 비밀번호 비교
         if(err) throw err;
         if(!isSame) 
@@ -72,8 +75,9 @@ router.post('/', async function(req, res, next) {
           return res.redirect("modify_personal?hasError=1");
         }
 
-        [rows, fields] = await conn.query(sqlCheckPhoneDup, [req.query.phone]);//두번째로 전화번호 중복 체크
-        if(rows.length) 
+        [rows, fields] = await conn.query(sqlCheckPhoneDup, [phone, req.session.uid]);//두번째로 전화번호 중복 체크
+        console.log(rows[0].duplicate);
+        if(rows[0].duplicate != 0) 
         {
           conn.release();
           return res.redirect("modify_personal?hasError=2");
@@ -98,8 +102,6 @@ router.post('/', async function(req, res, next) {
       console.log("Error: MySQL returned ERROR : " + err);
       conn.release();
     }
-
-    res.render('modify_personal', { title: 'Express', loggedin: 1, legal_name: req.session.legal_name});//놔둡시다 로직처리 할거라
   }
   else
   {

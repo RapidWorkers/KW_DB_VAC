@@ -25,7 +25,7 @@
                                 <div class="col-9">
                                     <label for="username" class="form-label">아이디</label>
                                     <div class="input-group has-validation">
-                                        <input type="text" class="form-control" id="username" placeholder="아이디"
+                                        <input type="text" class="form-control" name = "username" id="username" placeholder="아이디"
                                             readonly value="<%= username %>">
                                         <div class="invalid-feedback">
                                             Your username is required.
@@ -36,7 +36,7 @@
                                 <div class="col-12">
                                     <label for="username" class="form-label">현재 비밀번호</label>
                                     <div class="input-group has-validation">
-                                        <input type="password" class="form-control" id="current_passwd" placeholder="현재 비밀번호"
+                                        <input type="password" class="form-control" name = "current_passwd" id="current_passwd" placeholder="현재 비밀번호"
                                             required>
                                         <div class="invalid-feedback">
                                             Your username is required.
@@ -47,7 +47,7 @@
                                 <div class="col-12">
                                     <label for="username" class="form-label">변경할 비밀번호</label>
                                     <div class="input-group has-validation">
-                                        <input type="password" class="form-control" id="new_passwd" placeholder="변경할 비밀번호"
+                                        <input type="password" class="form-control" name = "new_passwd" id="new_passwd" placeholder="변경할 비밀번호"
                                             required>
                                         <div class="invalid-feedback">
                                             Your username is required.
@@ -57,7 +57,7 @@
 
                                 <div class="col-md-3">
                                     <label for="zip" class="form-label">Zip</label>
-                                    <input type="text" class="form-control" id="zip" placeholder="01422" required value="<%= zipcode %>">
+                                    <input type="text" class="form-control" name = "zip" id="zip" placeholder="01422" required value="<%= zipcode %>">
                                     <div class="invalid-feedback">
                                         Zip code required.
                                     </div>
@@ -65,7 +65,7 @@
 
                                 <div class="col-md-9">
                                     <label for="address" class="form-label">주소</label>
-                                    <input type="text" class="form-control" id="address" placeholder="서울시 노원구 광운로 20"
+                                    <input type="text" class="form-control" name = "address" id="address" placeholder="서울시 노원구 광운로 20"
                                         required value="<%= address %>">
                                     <div class="invalid-feedback">
                                         Please enter your shipping address.
@@ -73,7 +73,7 @@
                                 </div>
                                 <div class="col-12">
                                     <label for="address2" class="form-label">상세 주소</label>
-                                    <input type="text" class="form-control" id="address2"
+                                    <input type="text" class="form-control" name = "address2" id="address2"
                                         placeholder="111동 1110호 (월계동, 광운대학교)" value="<%= address2 %>">
                                 </div>
 
@@ -83,7 +83,7 @@
 
                                 <div class="col-12">
                                     <label for="address2" class="form-label">전화번호</label>
-                                    <input type="text" class="form-control" id="address2" placeholder="010-1234-5678" value="<%= phone %>">
+                                    <input type="text" class="form-control" name = "phone" id="phone" placeholder="010-1234-5678" value="<%= phone %>">
                                 </div>
 
                                 <hr class="my-4">
