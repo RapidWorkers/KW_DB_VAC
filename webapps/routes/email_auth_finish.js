@@ -24,6 +24,7 @@ router.get('/', async function (req, res, next) {
         var email = rows[0].email;
         [rows, fields] = await conn.query(sqlUpdateIsUsed, [auth_link]);
         res.render('email_auth_finish', { title: '회원가입 완료', loggedin: 0, email: email});
+        conn.release();
       }
 
     }catch(err){
