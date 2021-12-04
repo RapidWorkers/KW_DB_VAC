@@ -30,5 +30,10 @@
   "bugs": {
     "url": "https://github.com/RapidWorkers/KW_DB_VAC/issues"
   },
-  "homepage": "https://github.com/RapidWorkers/KW_DB_VAC#readme"
+  "homepage": "https://github.com/RapidWorkers/KW_DB_VAC#readme",
+  "nodemonConfig": {
+
+    "ignore": ["sessions/*.json"]
+
+  }
 }
