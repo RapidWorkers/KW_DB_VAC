@@ -65,34 +65,35 @@
                 </div>
 
 -->
+                <form name = "reportForm" method="POST" action="/report">
                 <div class = "px-5 py-4 fs-5">
                     <ul class="list-group">
                         <li class="list-group-item">
-                        <input class="form-check-input me-1" type="checkbox" value="" aria-label="report_fever" id="report_fever">
+                        <input class="form-check-input me-1" type="checkbox" name = "report" value="1" aria-label="report_fever" id="report_fever">
                         열이 있었나요?
                         </li>
                         <li class="list-group-item">
-                        <input class="form-check-input me-1" type="checkbox" value="" aria-label="report_covidarm" id="report_covidarm">
+                        <input class="form-check-input me-1" type="checkbox" name = "report" value="2" aria-label="report_covidarm" id="report_covidarm">
                         접종부위에 이상이 있었나요?
                         </li>
                         <li class="list-group-item">
-                        <input class="form-check-input me-1" type="checkbox" value="" aria-label="report_headache" id="report_headache">
+                        <input class="form-check-input me-1" type="checkbox" name = "report" value="3" aria-label="report_headache" id="report_headache">
                         두통이나 보채는 증상이 있었나요?
                         </li>
                         <li class="list-group-item">
-                        <input class="form-check-input me-1" type="checkbox" value="" aria-label="report_digestive" id="report_digestive">
+                        <input class="form-check-input me-1" type="checkbox" name = "report" value="4" aria-label="report_digestive" id="report_digestive">
                         토하거나 설사, 복통 등 소화기 증상이 있었나요?
                         </li>
                         <li class="list-group-item">
-                        <input class="form-check-input me-1" type="checkbox" value="" aria-label="report_faint" id="report_faint">
+                        <input class="form-check-input me-1" type="checkbox" name = "report" value="5" aria-label="report_faint" id="report_faint">
                         접종 후 일시적인 실신이나 경련이 있었나요?
                         </li>
                         <li class="list-group-item">
-                        <input class="form-check-input me-1" type="checkbox" value="" aria-label="report_rash" id="report_rash">
+                        <input class="form-check-input me-1" type="checkbox" name = "report" value="6" aria-label="report_rash" id="report_rash">
                         접종부위가 아닌 곳에 발진(붉은 반점)과 붓기가 생겼나요?
                         </li>
                         <li class="list-group-item">
-                        <input class="form-check-input me-1" type="checkbox" value="" aria-label="report_anaphylaxis" id="report_anaphylaxis">
+                        <input class="form-check-input me-1" type="checkbox" name = "report" value="7" aria-label="report_anaphylaxis" id="report_anaphylaxis">
                         아나필락시스(접종 후 수 분에서 수 시간 내에 갑자기 혈압이 떨어지거나 숨쉬기 어렵거나 전신 두드러기가 생기는 증상)가 있었나요?
                         </li>
                     </ul>
@@ -103,6 +104,7 @@
                         <input type="submit" class="btn btn-primary btn-lg" value = "제출하기">
                     </div>
                 </div>
+            </form>
 
             </div>
         </div>
