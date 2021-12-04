@@ -7,7 +7,8 @@
 
     <div class="p-5 mb-4 bg-light">
         <div class="container-fluid py-5">
-            <form class="needs-validation"  method = "POST" action = "join" novalidate>
+            <div id="joinForm">
+            <form method = "POST" action = "join" novalidate @submit="validateUserdata" ref="form">
                 <div class="row g-5 align-items-center justify-content-center">
                     <div class="col-md-7 col-lg-8">
                         <h4 class="mb-3">개인 정보 입력</h4>
@@ -16,74 +17,80 @@
                                 <label for="username" class="form-label">아이디</label>
                                 <div class="input-group has-validation">
                                     <span class="input-group-text">#</span>
-                                    <input type="text" class="form-control" name = "username" id="username" placeholder="아이디"
-                                        required>
+                                    <input type="text" class="form-control" name = "username" id="username" v-model = "username" placeholder="아이디" 
+                                    v-bind:class = "{'is-valid': dupUser, 'is-invalid': dupUser === false}" required>
+                                    <div class="valid-feedback">
+                                        사용할 수 있는 아이디 입니다.
+                                    </div>
                                     <div class="invalid-feedback">
-                                        Your username is required.
+                                        유효하지 않은 아이디 입니다.
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">&nbsp;</label>
-                                <button class="form-control btn btn-primary" >중복 확인</button>
+                                <button class="form-control btn btn-primary" type = "button" @click = "validateUsername">중복 확인</button>
                             </div>
                             <div class="col-12">
                                 <label for="passwd" class="form-label">비밀번호</label>
                                 <div class="input-group has-validation">
-                                    <input type="password" class="form-control" name="passwd" id="passwd" placeholder="비밀번호"
-                                        required>
+                                    <input type="password" class="form-control" name="passwd" id="passwd"  v-model = "passwd" placeholder="비밀번호"
+                                    v-bind:class = "{'is-valid': valPwd, 'is-invalid': valPwd === false}" required>
                                     <div class="invalid-feedback">
-                                        Your username is required.
+                                        비밀번호가 입력되어야 합니다.
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-sm-12">
                                 <label for="legal_name" class="form-label">이름</label>
-                                <input type="text" class="form-control" name ="legal_name" id="legal_name" placeholder="홍길동" value="" required>
+                                <input type="text" class="form-control" name ="legal_name" id="legal_name" v-model = "name" placeholder="홍길동" value="" 
+                                v-bind:class = "{'is-valid': valName, 'is-invalid': valName === false}" required>
                                 <div class="invalid-feedback">
-                                    Valid first name is required.
+                                    이름이 입력되어야 합니다.
                                 </div>
                             </div>
 
                             <div class="col-sm-6">
                                 <label for="birthdate" class="form-label">생년월일</label>
-                                <input type="text" class="form-control m-datepicker" name="birthdate" id="birthdate"  placeholder="Click here to open datepicker" required>
+                                <input type="text" class="form-control m-datepicker" name="birthdate" id="birthdate" v-model="birth" placeholder="입력하려면 클릭하세요"
+                                v-bind:class = "{'is-valid': valBirth, 'is-invalid': valBirth === false}" required>
                                 <div class="invalid-feedback">
-                                    Valid first name is required.
+                                    생년월일이 입력되어야 합니다.
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <label for="sex" class="form-label">성별</label>
                                 <div>
                                     <div class="fs-5 form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="sex" id="male" value="0" checked>
+                                        <input class="form-check-input" type="radio" name="sex" id="male" value="0" v-model = "sex" v-bind:class = "{'is-valid': valSex, 'is-invalid': valSex === false}" checked>
                                         <label class="form-check-label" for="male">남자</label>
                                     </div>
                                     <div class="fs-5 form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="sex" id="female" value="1">
+                                        <input class="form-check-input" type="radio" name="sex" id="female" v-model = "sex" v-bind:class = "{'is-valid': valSex, 'is-invalid': valSex === false}" value="1">
                                         <label class="form-check-label" for="female">여자</label>
                                     </div>
                                 </div>
                                 <div class="invalid-feedback">
-                                    Valid first name is required.
+                                    성별이 입력되어야 합니다.
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <label for="zip" class="form-label">Zip</label>
-                                <input type="text" class="form-control" name = "zip" id="zip" placeholder="01422" required>
+                                <input type="text" class="form-control" name = "zip" id="zip" placeholder="01422" 
+                                v-bind:class = "{'is-valid': valZip, 'is-invalid': valZip === false}" v-model = "zip" required>
                                 <div class="invalid-feedback">
-                                    Zip code required.
+                                    유효하지 않은 우편번호 입니다.
                                 </div>
                             </div>
 
                             <div class="col-md-9">
                                 <label for="address" class="form-label">주소</label>
                                 <input type="text" class="form-control" name ="address" id="address" placeholder="서울시 노원구 광운로 20"
-                                    required>
+                                v-bind:class = "{'is-valid': valAddr, 'is-invalid': valAddr === false}" v-model = "addr" required readonly>
                                 <div class="invalid-feedback">
-                                    Please enter your shipping address.
+                                    주소가 입력되어야 합니다.
                                 </div>
                             </div>
                             <div class="col-12">
@@ -97,33 +104,49 @@
 
                             <div class="col-12">
                                 <label for="phone" class="form-label">전화번호</label>
-                                <input type="text" class="form-control" name="phone" id="phone" placeholder="010-1234-5678">
+                                <input type="text" class="form-control" name="phone" id="phone" placeholder="010-1234-5678"
+                                v-bind:class = "{'is-valid': valPhone, 'is-invalid': valPhone === false}" v-model = "phone" required>
+                                <div class="valid-feedback">
+                                    사용할 수 있는 전화번호 입니다.
+                                </div>
+                                <div class="invalid-feedback">
+                                    유효하지 않은 전화번호 입니다.
+                                </div>
                             </div>
 
                             <div class="col-9">
                                 <label for="email" class="form-label">이메일</label>
-                                <input type="email" class="form-control" name="email" id="email" placeholder="you@example.com">
+                                <input type="email" class="form-control" name="email" id="email" placeholder="you@example.com" v-model="email" 
+                                v-bind:class = "{'is-valid': dupEmail, 'is-invalid': dupEmail === false}" required>
+                                <div class="valid-feedback">
+                                    사용할 수 있는 이메일 입니다.
+                                </div>
                                 <div class="invalid-feedback">
-                                    Please enter a valid email address for shipping updates.
+                                    유효하지 않은 이메일 입니다.
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">&nbsp;</label>
-                                <button class="form-control btn btn-primary" type = "button">중복 확인</button>
+                                <button class="form-control btn btn-primary" type = "button" @click = "validateEmail">중복 확인</button>
                             </div>
                         </div>
 
                         <hr class="my-4">
 
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="save-info">
-                            <label class="form-check-label" for="save-info">이용 약관에 동의합니다</label>
+                            <input type="checkbox" class="form-check-input" id="save-info"
+                            v-bind:class = "{'is-valid': valAgree, 'is-invalid': valAgree === false}" v-model = "agree" required>
+                            <label class="form-check-label" for="save-info"><a href="terms" target="_blank">이용 약관</a>에 동의합니다</label>
+                            <div class="invalid-feedback">
+                                약관에 동의해야 합니다.
+                            </div>
                         </div>
 
                         <hr class="my-4">
 
                         <button class="w-100 btn btn-primary btn-lg" type="submit">회원 가입</button>
                     </form>
+                </div>
         </div>
 
     </div>
@@ -136,8 +159,120 @@
         format: "yyyy/mm/dd",
         language: "ko",
         todayHighlight: true,
-        autoclose: true
-        });
+        autoclose: true,
+        }).on('changeDate', function (e){
+            joinFormApp.birth = $('#birthdate').val();
+        })
+    });
+
+    const axios_inst = axios.create({
+            baseURL: 'http://localhost:3000/api/'
+    });
+    
+    function fetchValidationAPI(params){
+        return axios_inst.post("validate_join", params)
+    };
+
+    var joinFormApp = new Vue({
+        el: "#joinForm",
+        data: {
+            email: "",
+            username: "",
+            dupUser: null,
+            dupEmail: null,
+
+            passwd: "",
+            valPwd: null,
+            name: "",
+            valName: null,
+            birth: "",
+            valBirth:null,
+            sex: "0",
+            valSex: null,
+            zip: "",
+            valZip: null,
+            addr: "",
+            valAddr: null,
+            phone: "",
+            valPhone: null,
+            agree: null,
+            valAgree: null
+        },
+        methods: {
+            validateUsername: async function(){
+                var vParam = {
+                    validateType: 1,
+                    username: username._value
+                }
+                var vResult = await fetchValidationAPI(vParam);
+                if(!vResult.data.success) this.dupUser = false;
+                else this.dupUser = true;
+            },
+            validateEmail: async function(){
+                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                if(!re.test(this.email)) 
+                {
+                    this.dupEmail = false;
+                    return;
+                }
+
+                var vParam = {
+                    validateType: 2,
+                    email: email._value
+                }
+                var vResult = await fetchValidationAPI(vParam);
+                if(!vResult.data.success) this.dupEmail = false;
+                else this.dupEmail = true;
+            },
+            validatePhone: async function(){
+                var vParam = {
+                    validateType: 3,
+                    phone: phone._value
+                }
+                var vResult = await fetchValidationAPI(vParam);
+                if(!vResult.data.success) this.valPhone = false;
+                else this.valPhone = true;
+            },
+            validateUserdata: function(e){
+
+                if(!this.dupUser) this.validateUsername();
+                if(!this.dupEmail) this.validateEmail();
+                this.validatePhone();
+
+                if(!this.passwd) this.valPwd = false;
+                else this.valPwd = true;
+
+                if(!this.name) this.valName = false;
+                else this.valName = true;
+
+                if(!this.birth) this.valBirth = false;
+                else 
+                {
+                    if (isNaN(Date.parse(this.birth))) this.valBirth = false;
+                    else this.valBirth = true;
+                }
+
+                if(this.sex != 0 && this.sex != 1) this.valSex = false;
+                else this.valSex = true;
+
+                if(!this.zip || this.zip.length != 5) this.valZip = false;
+                else this.valZip = true;
+
+                if(!this.addr) this.valAddr = false;
+                else this.valAddr = true;
+
+                if(!this.agree) this.valAgree = false;
+                else this.valAgree = true;
+
+                if(this.dupUser && this.dupEmail && this.valName && this.valBirth && this.valSex && this.valZip && this.valAddr && this.valPhone && this.valAgree)
+                {
+                    return true;
+                }
+                
+                e.preventDefault();
+
+            }
+        }
     });
 
 </script>
@@ -149,6 +284,9 @@
         oncomplete: function(data) {
             document.querySelector("#zip").value = data.zonecode;
             document.querySelector("#address").value = data.address;
+
+            joinFormApp.zip = data.zonecode;
+            joinFormApp.addr = data.address;
         }
     }).open();
 }
