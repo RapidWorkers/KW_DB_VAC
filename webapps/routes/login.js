@@ -25,7 +25,12 @@ router.post('/', async function (req, res, next) {
   else {
 
     var sqlGetPwdofUser = "SELECT uid, legal_name, passwd from USER where username = ?;";
-    var sqlChkActivatedUser = "";
+    var sqlChkActivatedUser = "SELECT E.is_used FROM EMAIL_AUTH E INNER JOIN USER U ON E.email = U.email WHERE U.uid = ?;";
+
+    if(!username || !username.length || !passwd || !passwd.length)
+    {
+      return res.redirect("login?hasError=3");
+    }
 
     try{
       var conn = await getSqlConnectionAsync();
@@ -38,7 +43,7 @@ router.post('/', async function (req, res, next) {
       }
 
       //Compare user password with saved password
-      bcrypt.compare(passwd, rows[0].passwd, (err, isMatched) => {
+      bcrypt.compare(passwd, rows[0].passwd, async (err, isMatched) => {
         if (err) console.log("Error: bcrypt returned ERROR : " + err);//bcrypt error
         else {
           if (isMatched) {//password match
@@ -46,6 +51,13 @@ router.post('/', async function (req, res, next) {
             /*
             TODO: Check activated user
             */
+            [activated, fields] = await conn.query(sqlChkActivatedUser, [rows[0].uid]);
+            console.log(activated[0].is_used);
+            if(activated[0].is_used != 1)
+            {
+              conn.release();
+              return res.redirect("login?hasError=2");
+            }
 
             /* NOTE: 자주 쓰는 정보는 Session에 담아두기, 매번 Query 요청은 성능 저하 */
             req.session.loggedin = 1;//then login
