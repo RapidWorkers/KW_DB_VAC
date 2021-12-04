@@ -12,6 +12,7 @@ router.post('/', async function (req, res, next) {
     
     var sqlChkUsernameDup = "SELECT count(*) as dup from USER where username = ?;";
     var sqlChkEmailDup = "SELECT count(*) as dup from USER where email = ?;";
+    var sqlChkPhoneDup = "SELECT count(*) as dup from USER where phone = ?;";
 
     if(req.body.validateType == 1)//username validation
     {
@@ -40,6 +41,25 @@ router.post('/', async function (req, res, next) {
         try{
             var conn = await getSqlConnectionAsync();
             var [rows, fields] = await conn.query(sqlChkEmailDup, [email]);
+            
+            if(rows[0].dup === 0) res.json({success: true});
+            else res.json({success: false});
+
+            conn.release();
+        }
+        catch(err){
+            console.log("Error: MySQL returned ERROR: " + err);
+            conn.release();
+        }
+    }
+    else if(req.body.validateType == 3)//phone validation
+    {
+        var phone = req.body.phone;
+        if(!phone || !phone.length) return res.json({success: false});
+
+        try{
+            var conn = await getSqlConnectionAsync();
+            var [rows, fields] = await conn.query(sqlChkPhoneDup, [phone]);
             
             if(rows[0].dup === 0) res.json({success: true});
             else res.json({success: false});
