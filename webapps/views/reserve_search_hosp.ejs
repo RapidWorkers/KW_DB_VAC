@@ -15,8 +15,8 @@
             <div class="row">
                 <div class="col-3">
                     <h6 class="dislpay-8">시/도 선택</h6>
-                    <select class="form-select" name ="city" style="width:auto" aria-label=".form-select-lg example" v-model = "metropol" @change="searchByMetropol">
-                        <option selected disabled hidden>시/도 선택</option>
+                    <select class="form-select" name ="city" style="width:auto" aria-label=".form-select-lg example" v-model = "metropol" @change="searchByMetropol" required>
+                        <option hidden>시/도 선택</option>
                         <option value="서울특별시">서울특별시</option>
                         <option value="부산광역시">부산광역시</option>
                         <option value="대구광역시">대구광역시</option>
@@ -47,16 +47,16 @@
 
                 <div class="col-3">
                     <h6 class="dislpay-8">동/면/리 선택</h6>
-                    <select class="form-select" name="town" style="width:auto" aria-label=".form-select-lg example" v-model="town" @change="searchByTown">
-                        <option selected disabled hidden>동/면/리 선택</option>
+                    <select class="form-select" name="town" style="width:200px;" aria-label=".form-select-lg example" v-model="town" @change="searchByTown">
+                        <option style="width:auto" selected disabled hidden>동/면/리 선택</option>
                         <option v-for="item in townList.data" v-bind:key="" :value="item.name">{{ item.name }}</option>
                     </select>
                 </div>
 
                 <div class="col-3">
                     <h6 class="dislpay-8">병원 선택</h6>
-                    <select class="form-select" name="hospital_id" style="width:auto" aria-label=".form-select-lg example" v-model="hospital" @change="getHospitalName">
-                        <option selected disabled hidden>병원 선택</option>
+                    <select class="form-select" name="hospital_id" style="width:200px;" aria-label=".form-select-lg example" v-model="hospital" @change="getHospitalName">
+                        <option style="width:auto" selected disabled hidden>병원 선택</option>
                        <option v-for="item in hospitalList" v-bind:key="" :value="item.id">{{ item.name }}</option>
                     </select>
                 </div>
