@@ -11,7 +11,7 @@
     </div>
     <div class="p-5 mb-4 bg-light">
         <div class="container-fluid py-5">
-        <form method="POST" name="form">
+        <form method="POST" name="form" @submit="chkHospitalSelect">
             <div class="row">
                 <div class="col-3">
                     <h6 class="dislpay-8">시/도 선택</h6>
@@ -55,10 +55,14 @@
 
                 <div class="col-3">
                     <h6 class="dislpay-8">병원 선택</h6>
-                    <select class="form-select" name="hospital_id" style="width:200px;" aria-label=".form-select-lg example" v-model="hospital" @change="getHospitalName">
+                    <select class="form-select" name="hospital_id" style="width:200px;" aria-label=".form-select-lg example" v-model="hospital" @change="getHospitalName"
+                    v-bind:class = "{'is-valid': valHospital, 'is-invalid': valHospital === false}">
                         <option style="width:auto" selected disabled hidden>병원 선택</option>
                        <option v-for="item in hospitalList" v-bind:key="" :value="item.id">{{ item.name }}</option>
                     </select>
+                    <div class="invalid-feedback">
+                        병원 선택은 필수입니다.
+                    </div>
                 </div>
                 
             </div>
@@ -104,6 +108,7 @@
             townList: [],
             hospital_id: null,
             hospitalList: [],
+            valHospital: null
         },
         methods: {
             searchByMetropol: async function(){
@@ -116,20 +121,26 @@
                 this.hospital = "병원 선택";
                 this.hospital_name = "-";
                 this.hospitalList = [];
+                this.hospital_id = null;
             },
             
             searchByDistrict: async function(){
                 var searchParams = {params: {searchType: 1, metropol: this.metropol, district: this.district}};
                 var townData = await fetchHospitalApi(searchParams);
                 this.townList = townData; 
+                this.town = "동/면/리 선택"
                 this.hospital = "병원 선택";
                 this.hospital_name = "-";
                 this.hospitalList = [];
+                this.hospital_id = null;
             },
             searchByTown: async function(){
                 var searchParams = {params: {searchType: 2, metropol: this.metropol, district: this.district, dong: this.town, emergency: 0}};
                 var hospitalData = await fetchHospitalApi(searchParams);
+                this.hospital = "병원 선택";
+                this.hospital_name = "-";
                 this.hospitalList = hospitalData.data;
+                this.hospital_id = null;
             },
 
             getHospitalName: async function(){
@@ -137,8 +148,21 @@
                     {
                         if(this.hospitalList[i].id == this.hospital){
                             this.hospital_name = this.hospitalList[i].name;
+                            this.hospital_id = this.hospitalList[i].id;
                         }
                     }
+            },
+
+            chkHospitalSelect: function(e){
+                if(!this.hospital_id) this.valHospital = false;
+                else this.valHospital = true;
+
+                if(this.valHospital)
+                {
+                    return true;
+                }
+                e.preventDefault();
+
             }
         }
     })
