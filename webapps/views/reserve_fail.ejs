@@ -5,16 +5,16 @@
         <h2 class="px-4 display-8 fw-bold text-white">백신 예약 페이지</h2>
     </div>
     <div class="py-4 px-5 pb-3 text-start border-bottom" style="background-color: #0077CD;">
-        <h4 class="px-4 display-8 text-white">병원: 연세 나눔 소아과</h4>
-        <h4 class="px-4 display-8 text-white">백신: 모더나</h4>
+        <h4 class="px-4 display-8 text-white">병원: <%= hospital_name%></h4>
+        <h4 class="px-4 display-8 text-white">백신: <%= vaccine_name %></h4>
     </div>
     <div class="p-5 mb-4 bg-light">
         <div class="container-fluid py-5">
           <h1 class="px-4 display-8 my-5 fw-bold text-center">백신 예약에 실패하였습니다.</h1>
-          <h3 class="px-4 display-8 my-5 fw-bold text-center">사유: 백신 수량 부족.</h3>
+          <h3 class="px-4 display-8 my-5 fw-bold text-center">사유: <%= reason %></h3>
             <div class="row mt-4 justify-content-md-center">
                 <div class="d-grid col col-2 mx-auto">
-                    <input type="submit" class="btn btn-primary btn-lg" value = "돌아가기">
+                    <button type="button" class="btn btn-primary btn-lg px-4 gap-3" onclick="location.href = 'reserve_search_hosp'">돌아가기</button>
                 </div>
             </div>
         </div>

@@ -33,8 +33,11 @@
                             {{ item.name }}: {{ item.num }}
                         </button>
                         
-                        <input type="hidden" id = "" name = "" value = >
+
+                        <input type="hidden" id = "vaccine_id" name = "vaccine_id" :value = "vaccine_id">
+                        <input type="hidden" id = "vaccine_name" name = "vaccine_name" :value = "vaccine_name">
                         <input type="hidden" id = "hospital_id" name = "hospital_id" value ="<%=hospital%>">
+                        <input type="hidden" id = "hospital_name" name = "hospital_name" value ="<%=hospital_name%>">
                         <!-- 
                         <button type="button" class="list-group-item list-group-item-action active" aria-current="true">모더나: 9</button>
                         <button type="button" class="list-group-item list-group-item-action">화이자: 3</button>
