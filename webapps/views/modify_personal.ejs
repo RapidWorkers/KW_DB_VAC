@@ -7,7 +7,8 @@
 
         <div class="p-5 mb-4 bg-light">
             <div class="container-fluid py-5">
-                <form class="needs-validation" novalidate method="POST" action="modify_personal">
+                <div id="modifyForm">
+                <form class="needs-validation" novalidate method="POST" action="modify_personal" @submit="validateUserdata">
                     <div class="row g-5 align-items-center justify-content-center">
                         <div class="col-md-7 col-lg-8">
                             <% if(hasError == 1) { %>
@@ -21,15 +22,13 @@
                             <% } %>
 
                             <h4 class="mb-3">개인 정보 변경</h4>
+                            
                             <div class="row g-3">
                                 <div class="col-9">
                                     <label for="username" class="form-label">아이디</label>
                                     <div class="input-group has-validation">
                                         <input type="text" class="form-control" name = "username" id="username" placeholder="아이디"
                                             readonly value="<%= username %>">
-                                        <div class="invalid-feedback">
-                                            Your username is required.
-                                        </div>
                                     </div>
                                 </div>
 
@@ -37,9 +36,9 @@
                                     <label for="username" class="form-label">현재 비밀번호</label>
                                     <div class="input-group has-validation">
                                         <input type="password" class="form-control" name = "current_passwd" id="current_passwd" placeholder="현재 비밀번호"
-                                            required>
+                                        v-bind:class = "{'is-valid': valPwd, 'is-invalid': valPwd === false}" v-model = "passwd" required>
                                         <div class="invalid-feedback">
-                                            Your username is required.
+                                            현재 비밀번호 값은 필수입니다.
                                         </div>
                                     </div>
                                 </div>
@@ -47,28 +46,25 @@
                                 <div class="col-12">
                                     <label for="username" class="form-label">변경할 비밀번호</label>
                                     <div class="input-group has-validation">
-                                        <input type="password" class="form-control" name = "new_passwd" id="new_passwd" placeholder="변경할 비밀번호"
-                                            required>
-                                        <div class="invalid-feedback">
-                                            Your username is required.
-                                        </div>
+                                        <input type="password" class="form-control" name = "new_passwd" id="new_passwd" placeholder="변경할 비밀번호">
                                     </div>
                                 </div>
 
                                 <div class="col-md-3">
                                     <label for="zip" class="form-label">Zip</label>
-                                    <input type="text" class="form-control" name = "zip" id="zip" placeholder="01422" required value="<%= zipcode %>">
+                                    <input type="text" class="form-control" name = "zip" id="zip" placeholder="01422" 
+                                    v-bind:class = "{'is-valid': valZip, 'is-invalid': valZip === false}" v-model = "zip" required value="<%= zipcode %>">
                                     <div class="invalid-feedback">
-                                        Zip code required.
+                                        유효하지 않은 우편번호
                                     </div>
                                 </div>
 
                                 <div class="col-md-9">
                                     <label for="address" class="form-label">주소</label>
                                     <input type="text" class="form-control" name = "address" id="address" placeholder="서울시 노원구 광운로 20"
-                                        required value="<%= address %>">
+                                    v-bind:class = "{'is-valid': valAddr, 'is-invalid': valAddr === false}" v-model = "addr" required value="<%= address %>">
                                     <div class="invalid-feedback">
-                                        Please enter your shipping address.
+                                        주소가 입력되어야 합니다.
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -83,16 +79,65 @@
 
                                 <div class="col-12">
                                     <label for="address2" class="form-label">전화번호</label>
-                                    <input type="text" class="form-control" name = "phone" id="phone" placeholder="010-1234-5678" value="<%= phone %>">
+                                    <input type="text" class="form-control" name = "phone" id="phone" placeholder="010-1234-5678" value="<%= phone %>"
+                                    v-bind:class = "{'is-valid': valPhone, 'is-invalid': valPhone === false}" v-model = "phone" >
+                                    <div class="valid-feedback">
+                                        사용할 수 있는 전화번호 입니다.
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        유효하지 않은 전화번호 입니다.
+                                    </div>
                                 </div>
 
                                 <hr class="my-4">
                                 <button class="w-100 btn btn-primary btn-lg" type="submit">정보 변경</button>
                 </form>
             </div>
+            </div>
         </div>
     </div>
+    <script>
+        var joinFormApp = new Vue({
+            el: "#modifyForm",
+            data: {
+                passwd: "",
+                valPwd: null,
+                zip: "<%= zipcode %>",
+                valZip: null,
+                addr: "<%= address %>",
+                valAddr: null,
+                phone: "<%= phone %>",
+                valPhone: null
+            },
+            methods: {
+                validatePhone: async function(){
+                    var re = /^\d{2,3}-\d{3,4}-\d{4}$/;
+                    if(!re.test(this.phone)) this.valPhone = false;
+                    else this.valPhone = true;
+                },
+                validateUserdata: function(e){
+                    this.validatePhone();
 
+                    if(!this.passwd) this.valPwd = false;
+                    else this.valPwd = true;
+
+                    if(!this.zip || this.zip.length != 5) this.valZip = false;
+                    else this.valZip = true;
+
+                    if(!this.addr) this.valAddr = false;
+                    else this.valAddr = true;
+
+                    if(this.valPwd && this.valZip && this.valAddr && this.valPhone)
+                    {
+                        return true;
+                    }
+
+                    e.preventDefault();
+
+                }
+            }
+        })
+    </script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script>
         function post(){
@@ -100,6 +145,8 @@
             oncomplete: function(data) {
                 document.querySelector("#zip").value = data.zonecode;
                 document.querySelector("#address").value = data.address;
+                joinFormApp.zip = data.zonecode;
+                joinFormApp.addr = data.address;
             }
         }).open();
     }

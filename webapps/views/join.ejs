@@ -81,7 +81,7 @@
                                 <input type="text" class="form-control" name = "zip" id="zip" placeholder="01422" 
                                 v-bind:class = "{'is-valid': valZip, 'is-invalid': valZip === false}" v-model = "zip" required>
                                 <div class="invalid-feedback">
-                                    유효하지 않은 우편번호 입니다.
+                                    유효하지 않은 우편번호
                                 </div>
                             </div>
 
@@ -225,6 +225,12 @@
                 else this.dupEmail = true;
             },
             validatePhone: async function(){
+                var re = /^\d{2,3}-\d{3,4}-\d{4}$/;
+                if(!re.test(this.phone))
+                {
+                    this.valPhone = false;
+                    return;
+                }
                 var vParam = {
                     validateType: 3,
                     phone: phone._value
