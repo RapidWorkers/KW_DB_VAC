@@ -9,13 +9,19 @@
         <div class="container-fluid py-5">
 
             <div class="row justify-content-center text-center g-0">
-                <div class="col col-md-auto group1">
-                    <div class="h-100">
-                        <img src="./image/syringe.png" class="rounded-circle border border-danger ms-3 me-3 mt-3 mb-1"
+                <div class="d-flex col col-md-auto group1 align-items-center">
+                    <div id="profileApp">
+                        <form>
+                            <input type="file" ref="file" id = "profile_image" name = "profile_image" style="display: none" @change="uploadImg">
+                        </form>
+                    <div>
+                        <img :src="profile_img_path" class="rounded-circle border border-danger ms-3 me-3 mt-3 mb-1"
                             width="100px" height="100px" />
+                        <div style="font-size:x-small"><a href="#" @click="$refs.file.click()">변경</a> <a class="ms-2" href="#" @click="deleteImg">삭제</a></div>
                         <p>
                         <h5><%= legal_name %> 님</h5>
                         </p>
+                    </div>
                     </div>
                 </div>
                 <div class="col col-md-5 group1">
@@ -51,7 +57,7 @@
                             <% } else { %>
                             <div class="col col-md-3 text-start ms-4 mb-3">1차 예정일</div>
                             <% } }  %>
-                            <div class="col col-md-5 text-end ms-4 mb-3">2021. 11. 28.</div>
+                            <div class="col col-md-5 text-end ms-4 mb-3"><%= vaccineDate %></div>
                         </div>
                     </div>
                 </div>
@@ -87,5 +93,52 @@
         </div>
     </div>
 </div>
+
+<script>
+    const axios_inst = axios.create({
+            baseURL: 'http://localhost:3000/api/'
+    })
+    
+    function uploadProfileImage(frm){
+        return axios_inst.post("profile_image_upload", frm, {headers: { 'Content-Type': 'multipart/form-data' }})
+    }
+
+    function deleteProfileImage(frm){
+        return axios_inst.delete("profile_image_upload")
+    }
+    
+    var profileApp = new Vue({
+       el: "#profileApp",
+       data: {
+        profile_img_path: "<% if(profile_img === -1) { %>./image/syringe.png<% } else { %>./profile/<%=profile_img %><% } %>"
+       },
+       methods: {
+           uploadImg: async function(e){
+                var frm = new FormData();
+                var profile_img = document.getElementById("profile_image");
+                frm.append("profile_image", profile_img.files[0]);
+
+                var result = await uploadProfileImage(frm);
+
+                if(result.data.success == true) 
+                {                
+                    this.profile_img_path = "./profile/" + result.data.path;
+                }
+                else alert("프로필 업로드에 실패했습니다.");
+
+           },
+           deleteImg: async function(){
+                var result = await deleteProfileImage();
+
+                if(result.data.success == true) 
+                {                
+                    this.profile_img_path = "./image/syringe.png";
+                }
+                else alert("프로필 삭제에 실패했습니다.");
+
+           }
+       }
+    });
+</script>
 
 <% include ./common/footer %>

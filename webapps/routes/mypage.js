@@ -6,7 +6,7 @@ var router = express.Router();
 router.get('/', async function(req, res, next) {
   if(req.session.loggedin === 1)//check login
   {
-    var sqlGetUserInfo = "SELECT sex, birthdate, address, email, phone from USER where uid = ?;";
+    var sqlGetUserInfo = "SELECT sex, birthdate, address, email, phone, profile_img from USER where uid = ?;";
     var sqlGetVaccinatedSeries = "SELECT Vaccinated from USER_VACCINATED where uid = ?;";
     var sqlGetFirstDoseInfo = "SELECT V.vac_name, R.reserve_date FROM RESERVATION R INNER JOIN VACCINE V ON R.vaccine_type = V.id WHERE uid = ? and current_series = 1;";
     var sqlGetSecondDoseInfo = "SELECT V.vac_name, R.reserve_date FROM RESERVATION R INNER JOIN VACCINE V ON R.vaccine_type = V.id WHERE uid = ? and current_series = 2;";
@@ -26,19 +26,23 @@ router.get('/', async function(req, res, next) {
         bday:(bdate.getDate()).toString().padStart(2,"0"),
         phone: rows[0].phone,
         email: rows[0].email,
-        address: rows[0].address
+        address: rows[0].address,
+        profile_img: (rows[0].profile_img === null)?-1:rows[0].profile_img,
+        vaccineDate: "-"
       };
 
       [rows, fields] = await conn.query(sqlGetVaccinatedSeries, [req.session.uid]);
       renderInfo.vaccinatedStatus = rows[0].Vaccinated;
 
       [rows, fields] = await conn.query(sqlGetFirstDoseInfo, [req.session.uid]);
-      if(rows.length != 0)//No vaccine reservation
+      if(rows.length != 0)//vaccine reservation first
       {
         renderInfo.firstVaccineName = rows[0].vac_name;
         renderInfo.first_reserve_date = rows[0].reserve_date;
+        var vDate = new Date(rows[0].reserve_date);
+        renderInfo.vaccineDate = vDate.getFullYear() + '. ' + (vDate.getMonth()+1).toString().padStart(2,"0") + '. ' + (vDate.getDate()).toString().padStart(2,"0") + '.';
       }
-      else
+      else//no reservation
       {
         renderInfo.firstVaccineName = "-";
         renderInfo.first_reserve_date = null;
@@ -49,6 +53,8 @@ router.get('/', async function(req, res, next) {
       {
         renderInfo.secondVaccineName = rows[0].vac_name;
         renderInfo.second_reserve_date = rows[0].reserve_date;
+        var vDate = new Date(rows[0].reserve_date);
+        renderInfo.vaccineDate = vDate.getFullYear() + '. ' + (vDate.getMonth()+1).toString().padStart(2,"0") + '. ' + (vDate.getDate()).toString().padStart(2,"0") + '.';
       }
       else
       {
