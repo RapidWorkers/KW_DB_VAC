@@ -5,7 +5,6 @@ const getSqlConnectionAsync = require('../../configs/mysql_load').getSqlConnecti
 router.post('/', async function (req, res, next) {
 
     if(req.session.loggedin === 1) return res.json({success: false});//not for logged in user
-    console.log(req.body);
     if(!req.body.validateType) return res.json({success: false});
 
     console.log('test');
