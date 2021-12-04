@@ -13,12 +13,21 @@ else
 
 /* POST home page. */
 router.post('/', function(req, res, next) {
+
+  var sqlInsertReport = "INSERT INTO VACC_REPORT(reserve_id, report_type, report_time) VALUES(?, ?, ?)"
 if(req.session.loggedin === undefined || req.session.loggedin ===0)
   res.send("<script>alert('로그인이 필요합니다.');location.href='login';</script>");
 else{
   const {report} = req.body;
   console.log(report);
-  res.render('report_result', { title: '이상반응 신고 완료', loggedin: 1, legal_name: req.session.legal_name});
+  try{
+    var conn = getSqlConnectionAsync();
+    conn.release();
+    res.render('report_result', { title: '이상반응 신고 완료', loggedin: 1, legal_name: req.session.legal_name});
+  }catch(err){
+
+  }
+  
 }
   
 });
