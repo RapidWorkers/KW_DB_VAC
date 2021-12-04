@@ -1,8 +1,17 @@
 <% include ./common/header %>
+<script>
+    function selectAll(selectAll){
+        const checkboxes = document.getElementsByName('group_mem');
+
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = selectAll.checked;
+        })
+    }
+</script>
 
 <div class="container">
     <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
-        <h2 class="px-4 display-8 fw-bold text-white">[친구] 그룹원 목록</h2>
+        <h2 class="px-4 display-8 fw-bold text-white">[<%=groups[0].team_name %>] 그룹원 목록</h2>
     </div>
     <div class="p-5 mb-4 bg-light">
         <div class="container-fluid py-5">
@@ -11,39 +20,28 @@
                     <img src="./image/syringe.png" class="rounded-circle border border-dark ms-5 me-5 mt-5 mb-5"
                         width="100px" height="100px" />
                     <p>
-                    <h5>[친구]</h5>
+                    <h5><%=groups[0].team_name %></h5>
                     </p>
-                    <p>사진 수정</p>
+                    <p><a href=#>사진 수정</p>
                 </div>
 
                 <div class="col col-6 gx-5" style="background-color: rgba(204, 205, 211, 0.945);">
                     <div class="py-4 fs-5">
                         <ul class="list-group">
                             <li class="list-group-item ">
-                                <input class="form-check-input me-1" type="checkbox" value="" aria-label="selectAll"
-                                    id="selectAll">
+                                <input class="form-check-input me-1" type="checkbox" name = "group_mem" value="selectAll" aria-label="selectAll"
+                                    id="selectAll" onclick = "selectAll(this)">
                                 모두 선택
                             </li>
+                            <% for(var i=0;i<rows.length;i++){ %>
+
                             <li class="list-group-item">
-                                <input class="form-check-input me-1" type="checkbox" value="" aria-label="friend1"
-                                    id="friend1 ">
-                                권유진
+                                <input class="form-check-input me-1" type="checkbox" name = "group_mem" value="<%=rows[i].uid%>" aria-label="friend1"
+                                    id="<%=rows[i].uid%>">
+                                <%=rows[i].legal_name %>
                             </li>
-                            <li class="list-group-item">
-                                <input class="form-check-input me-1" type="checkbox" value="" aria-label="friend2"
-                                    id="friend2">
-                                권지윤
-                            </li>
-                            <li class="list-group-item">
-                                <input class="form-check-input me-1" type="checkbox" value="" aria-label="friend3"
-                                    id="friend3">
-                                김수현
-                            </li>
-                            <li class="list-group-item">
-                                <input class="form-check-input me-1" type="checkbox" value="" aria-label="friend4"
-                                    id="friend4">
-                                이희진
-                            </li>
+                            <% } %>
+                            
                         </ul>
                     </div>
                 </div>
@@ -53,7 +51,7 @@
                     <h6 class="fw-bold"><a href="/group_mem_add">친구 추가</a></h6>
                 </div>
                 <div class="col col-3">
-                    <h6 class="fw-bold">선택된 친구 삭제</h6>
+                    <h6 class="fw-bold"><a href=#>선택된 친구 삭제</h6>
                 </div>
             </div>
             <div class="row mt-5 justify-content-md-center">
