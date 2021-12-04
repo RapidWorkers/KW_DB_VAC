@@ -31,6 +31,8 @@ router.post('/', function(req, res, next) {
     var email = req.body.email;
     var phone = req.body.phone;
 
+    /* TODO: VALIDATION */
+
 
     bcrypt.hash(passwd, 10, (err, hashedPasswd) => {
       //암호화 이후 실행할 내용
