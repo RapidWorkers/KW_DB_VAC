@@ -68,6 +68,7 @@ app.use('/mypage', myPageRouter);
 app.use('/modify_personal', modifyPersonalRouter);
 app.use('/group_list', groupListRouter);
 app.use('/group_mem_list', groupMemListRouter);
+app.use('/group_mem_list', express.static(path.join(__dirname, '/public')));
 app.use('/group_mem_info', groupMemInfoRouter);
 app.use('/reserve_confirm', reserveConfirmRouter);
 app.use('/leftvacc_select', leftVaccSelectRouter);

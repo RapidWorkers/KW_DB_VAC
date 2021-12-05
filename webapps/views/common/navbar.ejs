@@ -17,8 +17,8 @@
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown10" data-bs-toggle="dropdown"
                     aria-expanded="false">백신 예약</a>
                 <ul class="dropdown-menu" aria-labelledby="dropdown10">
-                    <li><a class="dropdown-item" href="reserve_search_hosp">백신 예약</a></li>
-                    <li><a class="dropdown-item" href="vacc_recommend">백신 추천</a></li>
+                    <li><a class="dropdown-item" href="/reserve_search_hosp">백신 예약</a></li>
+                    <li><a class="dropdown-item" href="/vacc_recommend">백신 추천</a></li>
                 </ul>
                 </li>
                 
@@ -27,8 +27,8 @@
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown10" data-bs-toggle="dropdown"
                         aria-expanded="false">통계</a>
                     <ul class="dropdown-menu" aria-labelledby="dropdown10">
-                        <li><a class="dropdown-item" href="vacc_stat">백신 접종 현황</a></li>
-                        <li><a class="dropdown-item" href="side_effect_stat">백신 부작용 통계</a></li>
+                        <li><a class="dropdown-item" href="/vacc_stat">백신 접종 현황</a></li>
+                        <li><a class="dropdown-item" href="/side_effect_stat">백신 부작용 통계</a></li>
                     </ul>
                 </li>
 
@@ -37,29 +37,29 @@
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown10" data-bs-toggle="dropdown"
                         aria-expanded="false">친구</a>
                     <ul class="dropdown-menu" aria-labelledby="dropdown10">
-                        <li><a class="dropdown-item" href="group_list">친구 리스트</a></li>
-                        <li><a class="dropdown-item" href="group_calc_meetup">모임 계산기</a></li>
+                        <li><a class="dropdown-item" href="/group_list">친구 리스트</a></li>
+                        <li><a class="dropdown-item" href="/group_calc_meetup">모임 계산기</a></li>
                     </ul>
                 </li>
 
                 <div class="vr"></div>
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="report">부작용 신고</a>
+                  <a class="nav-link active" aria-current="page" href="/report">부작용 신고</a>
                 </li>
 
                 <div class="vr"></div>
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="emergency">응급실 안내</a>
+                  <a class="nav-link active" aria-current="page" href="/emergency">응급실 안내</a>
                 </li>
             </ul>
 
             <% if(typeof loggedin !== 'undefined' && loggedin === 1) { %>
               <div class="nav-item fw-bold"><%= legal_name %></div><div class = "mx-3"> 님</div>
-              <button type="button" class="btn btn-outline-primary me-2" onclick="location.href='mypage'">내 정보</button>
-              <button type="button" class="btn btn-primary" onclick="location.href='logout'">로그아웃</button>
+              <button type="button" class="btn btn-outline-primary me-2" onclick="location.href='/mypage'">내 정보</button>
+              <button type="button" class="btn btn-primary" onclick="location.href='/logout'">로그아웃</button>
             <% } else { %>
               <button type="button" class="btn btn-outline-primary me-2" onclick="location.href='login'">로그인</button>
-              <button type="button" class="btn btn-primary" onclick="location.href='join'">회원 가입</button>
+              <button type="button" class="btn btn-primary" onclick="location.href='/join'">회원 가입</button>
             <% } %>
 
         </div>
