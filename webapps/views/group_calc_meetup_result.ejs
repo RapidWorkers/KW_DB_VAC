@@ -1,0 +1,37 @@
+<% include ./common/header %>
+
+<div class="container">
+    <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
+        <h2 class="px-4 display-8 fw-bold text-white">모임 계산기</h2>
+    </div>
+    
+    <div class="bg-light">
+        <div class="container-fluid py-5">
+
+            <h1 class="px-4 display-8 mt-5 fw-bold text-center">해당 그룹은 모임이</h1>
+
+            <div class="row mb-5 justify-content-md-center">
+                <div class="d-grid col col-2 mx-1">
+                    <span style="background-color: red;">
+                    <h1 class="display-8 fw-bold text-center">불가능</h1>
+                    </span>
+                </div>
+
+                <div class="d-grid col col-2">
+                    <h1 class="display-8 fw-bold text-center">합니다.</h1>
+                </div>
+            </div>
+
+            <img src="./image/result_no_meeting.png" class="mx-auto d-block" width="300px">
+
+            <div class="row my-5 justify-content-md-center">
+                <div class="d-grid col col-2 mx-3">
+                    <input type="submit" class="btn btn-primary btn-lg" value = "돌아가기">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include ./common/footer %>
