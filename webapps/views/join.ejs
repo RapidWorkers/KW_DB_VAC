@@ -8,7 +8,7 @@
     <div class="p-5 mb-4 bg-light">
         <div class="container-fluid py-5">
             <div id="joinForm">
-            <form method = "POST" action = "join" novalidate @submit="validateUserdata" ref="form">
+            <form method = "POST" action = "join" novalidate @submit.prevent="validateUserdata" ref="form">
                 <div class="row g-5 align-items-center justify-content-center">
                     <div class="col-md-7 col-lg-8">
                         <% if(hasError == 1) { %>
@@ -248,11 +248,11 @@
                 if(!vResult.data.success) this.valPhone = false;
                 else this.valPhone = true;
             },
-            validateUserdata: function(e){
+            validateUserdata: async function(e){
 
-                if(!this.dupUser) this.validateUsername();
-                if(!this.dupEmail) this.validateEmail();
-                this.validatePhone();
+                if(!this.dupUser) await this.validateUsername();
+                if(!this.dupEmail) await this.validateEmail();
+                await this.validatePhone();
 
                 if(!this.passwd) this.valPwd = false;
                 else this.valPwd = true;
@@ -286,7 +286,7 @@
 
                 if(this.dupUser && this.dupEmail && this.valPwd && this.valName && this.valBirth && this.valSex && this.valZip && this.valAddr && this.valPhone && this.valAgree)
                 {
-                    return true;
+                    return e.target.submit();
                 }
                 
                 e.preventDefault();

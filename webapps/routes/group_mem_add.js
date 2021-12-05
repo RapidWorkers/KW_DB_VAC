@@ -19,7 +19,8 @@ router.get('/', function(req, res, next) {
             title: '친구 추가',
             loggedin: 1,
             legal_name: req.session.legal_name,
-            rows: rows
+            rows: rows,
+            selected_gid: (!req.query.gid)?-1:req.query.gid
           };
           conn.release();
           res.render('group_mem_add', renderInfo);

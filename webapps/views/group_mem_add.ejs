@@ -1,36 +1,4 @@
 <% include ./common/header %>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
-<script type="text/javascript">
-
-    const btn = document.querySelector('#add_submit');
-    const userid = document.querySelector('#username');
-    
-    async function userid_chk(){
-        let data = await axios.get(`http://localhost:3000/user/userid_check?userid=${userid.value}`);
-        // Ajax ID값 가져와서 중복 아니면 TRUE, 중복이면 FALSE
-
-        console.log(data);
-
-        overlap_flag = data.data.login; 
-        if(login_flag){ // 중복 없음 -> 존재하지 않는 아이디
-            userid_msg.innerHTML = '존재하지 않는 아이디입니다.';
-            userid_msg.style.color = 'red';
-        }    
-    }
-</script>
-
-<script>
-    function onWriteSubmit(){
-        if($("#username").val().trim()==""){
-            var message="아이디를 입력해 주세요.";
-            $("#username").val("");
-            $("#username").focus();
-            alert(message);
-            return false;
-        }
-    }
-</script>
-
 <div class="container">
 
     <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
@@ -39,41 +7,103 @@
 
     <div class="p-5 mb-4 bg-light">
         <div class="container-fluid py-5">
-            <form method = "post" action = "/group_mem_add" class="needs-validation" novalidate>
+            <div id="groupMemAdd">
+            <form method = "POST" action = "group_mem_add" class="needs-validation" novalidate @submit.prevent="validateData">
                 <div class="row g-5 align-items-center justify-content-center">
                     <div class="col-md-7 col-lg-8">
+                        
                         <div class="row g-3">
-
                             <div class="col-12">
-                                
                                 <label for="username" class="form-label">친구의 아이디</label>
-                                    <input type="username" class="form-control" name="username" id="username" placeholder="abcd1234">
+                                <input type="username" class="form-control" name="username" id="username" v-model="friendName" placeholder="친구의 아이디"
+                                v-bind:class = "{'is-valid': valUser, 'is-invalid': valUser === false}">
                                 <div class="invalid-feedback">
-                                    Please enter a valid email address for shipping updates.
+                                    유효하지 않은 친구 아이디 입니다.
                                 </div>
                             </div>
-
                             <div class="col-md-12">
                                 <label class="form-label">그룹 선택</label>
-                                    <select class="form-select" name = 'group' aria-label=".form-select-lg example">
-                                        <option selected>그룹 선택</option>
-                                        <% for(var i=0;i<rows.length;i++) { %>
-                                            <option value="<%= rows[i].id %>"><%=rows[i].team_name %></option>
-                                        <% } %>
+                                    <select class="form-select" name = 'group' v-model="selGroup" aria-label=".form-select-lg example" @change="selectGroup"
+                                    v-bind:class = "{'is-valid': valGroup, 'is-invalid': valGroup === false}">
+                                        <option selected disabled hidden value="-1">그룹 선택</option>
+                                        <option v-for="group in groupList" v-bind:key="" :value="group.gid">{{ group.name }}</option>
                                     </select>
+                                    <div class="invalid-feedback">
+                                        그룹 선택은 필수입니다.
+                                    </div>
                             </div>
-
                         </div>
-
                         <hr class="my-4">
-
-                        <button class="w-100 btn btn-primary btn-lg" onclick = "onWriteSubmit()" id = "add_submit" type="submit">친구 추가</button>
+                        <button class="w-100 btn btn-primary btn-lg" id = "add_submit" type="submit">친구 추가</button>
             </form>
-
+        </div>
         </div>
     </div>
-
 </div>
+
+<script>
+    const axios_inst = axios.create({
+            baseURL: 'http://localhost:3000/api/'
+    })
+    
+    function usernameChk(params){
+        return axios_inst.post("validate_join", params)
+    }
+
+    function doFetchGroup(){
+            return axios_inst.get("group_api")
+    }
+
+    var groupMemAddApp = new Vue({
+        el: "#groupMemAdd", 
+        data: {
+            friendName: "",
+            selGroup: "<%= selected_gid %>",
+            groupList: [],
+            group_id: "<%= selected_gid %>",
+            valGroup: null,
+            valUser: null
+        },
+        methods: {
+            loadGroupList: async function () {
+                var groupData = await doFetchGroup();
+                if(!groupData.data.success)
+                {
+                    alert("그룹 API 호출에 실패했습니다.");
+                    return;
+                }
+
+                this.groupList = groupData.data.groups;
+            },
+            selectGroup: async function(){
+                this.group_id = this.selGroup;
+            },
+            validateUser: async function(){
+                var vParam = {
+                    validateType: 1,
+                    username: this.friendName
+                }
+
+                var vResult = await usernameChk(vParam);
+                if(!vResult.data.success) this.valUser = true;
+                else this.valUser = false;
+            },
+
+            validateData: async function(e){
+                if(this.group_id && this.group_id != -1) this.valGroup = true;
+                else this.valGroup = false;
+
+                if(!this.friendName) this.valUser = false;
+                else await this.validateUser();
+
+                if(this.valGroup && this.valUser) return e.target.submit();
+            },
+        },
+        mounted: async function () {
+                await this.loadGroupList();
+        }
+    })
+</script>
 
 <% include ./common/footer %>
 

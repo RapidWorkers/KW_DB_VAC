@@ -4,7 +4,7 @@ const getSqlConnectionAsync = require('../../configs/mysql_load').getSqlConnecti
 
 router.post('/', async function (req, res, next) {
 
-    if(req.session.loggedin === 1) return res.json({success: false});//not for logged in user
+    //if(req.session.loggedin === 1) return res.json({success: false});//not for logged in user
     if(!req.body.validateType) return res.json({success: false});
     
     var sqlChkUsernameDup = "SELECT count(*) as dup from USER where username = ?;";
