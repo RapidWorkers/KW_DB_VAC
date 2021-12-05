@@ -19,6 +19,10 @@
                                 <div class="alert alert-danger" role="alert">
                                     핸드폰 번호가 다른 사용자와 중복됩니다.
                                 </div>
+                            <% } else if(hasError == 3) { %>
+                                <div class="alert alert-danger" role="alert">
+                                    유효하지 않은 데이터가 존재합니다.
+                                </div>
                             <% } %>
 
                             <h4 class="mb-3">개인 정보 변경</h4>
@@ -53,7 +57,7 @@
                                 <div class="col-md-3">
                                     <label for="zip" class="form-label">Zip</label>
                                     <input type="text" class="form-control" name = "zip" id="zip" placeholder="01422" 
-                                    v-bind:class = "{'is-valid': valZip, 'is-invalid': valZip === false}" v-model = "zip" required value="<%= zipcode %>">
+                                    v-bind:class = "{'is-valid': valZip, 'is-invalid': valZip === false}" v-model = "zip" readonly required value="<%= zipcode %>">
                                     <div class="invalid-feedback">
                                         유효하지 않은 우편번호
                                     </div>
@@ -62,7 +66,7 @@
                                 <div class="col-md-9">
                                     <label for="address" class="form-label">주소</label>
                                     <input type="text" class="form-control" name = "address" id="address" placeholder="서울시 노원구 광운로 20"
-                                    v-bind:class = "{'is-valid': valAddr, 'is-invalid': valAddr === false}" v-model = "addr" required value="<%= address %>">
+                                    v-bind:class = "{'is-valid': valAddr, 'is-invalid': valAddr === false}" v-model = "addr" readonly required value="<%= address %>">
                                     <div class="invalid-feedback">
                                         주소가 입력되어야 합니다.
                                     </div>
@@ -122,7 +126,12 @@
                     else this.valPwd = true;
 
                     if(!this.zip || this.zip.length != 5) this.valZip = false;
-                    else this.valZip = true;
+                    else 
+                    {
+                        var re = /^\d{5}$/
+                        if(re.test(this.zip)) this.valZip = true;
+                        else this.valZip = false;
+                    }
 
                     if(!this.addr) this.valAddr = false;
                     else this.valAddr = true;

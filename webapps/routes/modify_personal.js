@@ -65,7 +65,18 @@ router.post('/', async function(req, res, next) {
 
       var [rows, fields] = await conn.query(sqlGetPwdofUser, [req.session.uid]);
 
-      console.log(current_passwd);
+      /* Data validation */
+      var valResult = true;
+
+      var phoneRegex = /^\d{2,3}-\d{3,4}-\d{4}$/;
+      var zipRegex = /^\d{5}$/
+
+      if(!current_passwd) valResult = false;
+      if(!zipRegex.test(zip)) valResult = false;
+      if(!address) valResult = false;
+      if(!phoneRegex.test(phone)) valResult = false;
+
+      if(!valResult) return res.redirect("modify_personal?hasError=3");
 
       bcrypt.compare(current_passwd, rows[0].passwd, async (err, isSame) => {//첫번째로 비밀번호 비교
         if(err) throw err;

@@ -88,7 +88,7 @@
                             <div class="col-md-3">
                                 <label for="zip" class="form-label">Zip</label>
                                 <input type="text" class="form-control" name = "zip" id="zip" placeholder="01422" 
-                                v-bind:class = "{'is-valid': valZip, 'is-invalid': valZip === false}" v-model = "zip" required>
+                                v-bind:class = "{'is-valid': valZip, 'is-invalid': valZip === false}" v-model = "zip" required readonly>
                                 <div class="invalid-feedback">
                                     유효하지 않은 우편번호
                                 </div>
