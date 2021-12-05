@@ -49,6 +49,10 @@ router.post('/',  async function(req, res){
     }  
 })
 
+router.put('/', async function(req, res){
+    
+})
+
 router.delete('/:gid', async function(req, res){
     if(!req.session.uid) res.json({success: false});
 
