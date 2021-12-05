@@ -16,16 +16,13 @@
     <div class="p-5 mb-4 bg-light">
         <div class="container-fluid py-5">
             <div class="row justify-content-center">
-                <div class="col col-md-auto gx-5  text-center" style="background-color: rgba(166, 168, 175, 0.945);">
-                    <img src="./image/syringe.png" class="rounded-circle border border-dark ms-5 me-5 mt-5 mb-5"
+                <div class="col col-md-3 text-center" style="background-color: rgba(166, 168, 175, 0.945);">
+                    <img src="./image/syringe.png" class="rounded-circle border border-dark ms-5 me-5 mt-5 mb-3"
                         width="100px" height="100px" />
-                    <p>
-                    <h5><%=groups[0].team_name %></h5>
-                    </p>
-                    <p><a href=#>사진 수정</p>
+                    <div class = "mb-4" style="font-size:x-small"><a href="#">변경</a> <a class="ms-2" href="#">삭제</a></div>
+                    <div class = "mb-3"><h5><%=groups[0].team_name %></h5></div>
                 </div>
-
-                <div class="col col-6 gx-5" style="background-color: rgba(204, 205, 211, 0.945);">
+                <div class="col col-md-6 " style="background-color: rgba(204, 205, 211, 0.945);">
                     <div class="py-4 fs-5">
                         <ul class="list-group">
                             <li class="list-group-item ">
@@ -34,7 +31,6 @@
                                 모두 선택
                             </li>
                             <% for(var i=0;i<rows.length;i++){ %>
-
                             <li class="list-group-item">
                                 <input class="form-check-input me-1" type="checkbox" name = "group_mem" value="<%=rows[i].uid%>" aria-label="friend1"
                                     id="<%=rows[i].uid%>">
@@ -46,11 +42,11 @@
                     </div>
                 </div>
             </div>
-            <div class="row justify-content-end me-3 mt-2">
-                <div class="col col-1">
+            <div class="row justify-content-end mt-2">
+                <div class="col col-md-auto">
                     <h6 class="fw-bold"><a href="/group_mem_add">친구 추가</a></h6>
                 </div>
-                <div class="col col-3">
+                <div class="col col-md-3 me-5">
                     <h6 class="fw-bold"><a href=#>선택된 친구 삭제</h6>
                 </div>
             </div>
