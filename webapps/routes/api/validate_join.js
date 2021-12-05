@@ -6,8 +6,6 @@ router.post('/', async function (req, res, next) {
 
     if(req.session.loggedin === 1) return res.json({success: false});//not for logged in user
     if(!req.body.validateType) return res.json({success: false});
-
-    console.log('test');
     
     var sqlChkUsernameDup = "SELECT count(*) as dup from USER where username = ?;";
     var sqlChkEmailDup = "SELECT count(*) as dup from USER where email = ?;";
