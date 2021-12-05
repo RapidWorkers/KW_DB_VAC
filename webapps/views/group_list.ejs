@@ -14,7 +14,7 @@
                                     class="rounded-circle border border-danger ms-5 me-5 mt-3 mb-1" width="100px"
                                     height="100px" />
                                 <p>
-                                <h5>[전체 목록 보기]</h5>
+                                <h5><a href="/group_show_all" class="text-decoration-none">[전체 목록 보기]</a></h5>
                                 </p>
                                 <div>&nbsp;</div>
                             </div>
@@ -59,10 +59,6 @@
 
         function doDeleteGroup(gid){
             return axios_inst.delete("group_api/"+gid)
-        }
-
-        function uploadProfileImage(frm){
-        return axios_inst.post("group_profile_image_upload", frm, {headers: { 'Content-Type': 'multipart/form-data' }})
         }
 
         var groupApp = new Vue({
