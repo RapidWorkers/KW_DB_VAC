@@ -50,9 +50,7 @@ router.post('/', async function(req, res, next) {
       
       
       conn.release();
-      res.redirect('group_mem_add');
-      
-
+      res.redirect('group_mem_list/'+gids);
       
     }catch(err){
         console.log("Error: MySQL returned ERROR :" + err);
