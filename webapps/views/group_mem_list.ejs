@@ -13,13 +13,17 @@
     <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
         <h2 class="px-4 display-8 fw-bold text-white">[<%=groups[0].team_name %>] 그룹원 목록</h2>
     </div>
+    <div id="groupMemListApp">
     <div class="p-5 mb-4 bg-light">
         <div class="container-fluid py-5">
             <div class="row justify-content-center">
+                <form>
+                    <input type="file" ref="file" id = "profile_image" name = "profile_image" style="display: none" @change="uploadImg">
+                </form>
                 <div class="col col-md-3 text-center" style="background-color: rgba(166, 168, 175, 0.945);">
-                    <img src="./image/syringe.png" class="rounded-circle border border-dark ms-5 me-5 mt-5 mb-3"
+                    <img :src="profile_img_path" class="rounded-circle border border-dark ms-5 me-5 mt-5 mb-3"
                         width="100px" height="100px" />
-                    <div class = "mb-4" style="font-size:x-small"><a href="#">변경</a> <a class="ms-2" href="#">삭제</a></div>
+                    <div class = "mb-4" style="font-size:x-small"><a href="#" @click="$refs.file.click()">변경</a> <a class="ms-2" href="#" @click="deleteImg">삭제</a></div>
                     <div class = "mb-3"><h5><%=groups[0].team_name %></h5></div>
                 </div>
                 <div class="col col-md-6 " style="background-color: rgba(204, 205, 211, 0.945);">
@@ -57,6 +61,54 @@
             </div>
         </div>
     </div>
+    </div>
 </div>
+
+<script>
+    const axios_inst = axios.create({
+            baseURL: 'http://localhost:3000/api/'
+    })
+    
+    function uploadProfileImage(frm){
+        return axios_inst.post("group_profile_image_upload/<%= groups[0].id %>", frm, {headers: { 'Content-Type': 'multipart/form-data' }})
+    }
+
+    function deleteProfileImage(frm){
+        return axios_inst.delete("group_profile_image_upload/<%= groups[0].id %>")
+    }
+
+    var groupMemListApp = new Vue({
+       el: "#groupMemListApp",
+       data: {
+        profile_img_path: "<% if(groups[0].profile_img === null) { %>./image/syringe.png<% } else { %>./grp_profile/<%=groups[0].profile_img %><% } %>"
+       },
+       methods: {
+           uploadImg: async function(e){
+                var frm = new FormData();
+                var profile_img = document.getElementById("profile_image");
+                frm.append("profile_image", profile_img.files[0]);
+
+                var result = await uploadProfileImage(frm);
+
+                if(result.data.success == true) 
+                {                
+                    this.profile_img_path = "./grp_profile/" + result.data.path;
+                }
+                else alert("프로필 업로드에 실패했습니다.");
+
+           },
+           deleteImg: async function(){
+                var result = await deleteProfileImage();
+
+                if(result.data.success == true) 
+                {                
+                    this.profile_img_path = "./image/syringe.png";
+                }
+                else alert("프로필 삭제에 실패했습니다.");
+
+           }
+       }
+    });
+</script>
 
 <% include ./common/footer %>

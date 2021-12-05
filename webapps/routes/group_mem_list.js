@@ -7,7 +7,7 @@ router.get('/:gid', async function(req, res, next) {
   if(req.session.loggedin === 1)
   {
     // TEAM_MEM에서 gid인 사람의 uid들을 전부 불러와서 USER 테이블에서 정보 얻어오기
-    var sqlGetTeam = "SELECT id, team_name FROM TEAM WHERE id=?;";
+    var sqlGetTeam = "SELECT id, team_name, profile_img FROM TEAM WHERE id=?;";
     var sqlGetMemList = "SELECT * FROM USER WHERE uid IN (SELECT uid FROM TEAM_MEM T WHERE gid = ?);";
     try{
       var conn = await getSqlConnectionAsync();

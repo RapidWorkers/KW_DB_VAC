@@ -37,7 +37,7 @@ router.post('/:gid', upload.single('profile_image'), async function(req, res){
 
             [rows, fields] = await conn.query(sqlUpdateProfileImage, [profileImg, req.params.gid, req.session.uid]);
 
-            res.json({success: true});
+            res.json({success: true, path: profileImg});
         }
         else //no match group
         {
