@@ -1,14 +1,4 @@
 <% include ./common/header %>
-<script>
-    function selectAll(selectAll){
-        const checkboxes = document.getElementsByName('group_mem');
-
-        checkboxes.forEach((checkbox) => {
-            checkbox.checked = selectAll.checked;
-        })
-    }
-</script>
-
 <div class="container">
     <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
         <h2 class="px-4 display-8 fw-bold text-white">[<%=groups[0].team_name %>] 그룹원 목록</h2>
@@ -31,17 +21,14 @@
                         <ul class="list-group">
                             <li class="list-group-item ">
                                 <input class="form-check-input me-1" type="checkbox" name = "group_mem" value="selectAll" aria-label="selectAll"
-                                    id="selectAll" onclick = "selectAll(this)">
+                                    id="selectAll" @click = "selectAll">
                                 모두 선택
                             </li>
-                            <% for(var i=0;i<rows.length;i++){ %>
-                            <li class="list-group-item">
-                                <input class="form-check-input me-1" type="checkbox" name = "group_mem" value="<%=rows[i].uid%>" aria-label="friend1"
-                                    id="<%=rows[i].uid%>">
-                                <%=rows[i].legal_name %>
+                            <li v-for="member in groupMembers" v-bind:key = "" class="list-group-item">
+                                <input class="form-check-input me-1" type="checkbox" name = "group_mem" :value="member.uid" aria-label="friend1"
+                                    :id="member.uid" v-model="deleteMember">
+                                <a class = "text-decoration-none" :href = "'/group_mem_info/<%= groups[0].id %>/'+member.uid">{{ member.legal_name }}</a>
                             </li>
-                            <% } %>
-                            
                         </ul>
                     </div>
                 </div>
@@ -51,7 +38,7 @@
                     <h6 class="fw-bold"><a href="/group_mem_add?gid=<%= groups[0].id %>">친구 추가</a></h6>
                 </div>
                 <div class="col col-md-3 me-5">
-                    <h6 class="fw-bold"><a href=#>선택된 친구 삭제</h6>
+                    <h6 class="fw-bold"><a href=# @click="removeMembers">선택된 친구 삭제</h6>
                 </div>
             </div>
             <div class="row mt-5 justify-content-md-center">
@@ -77,12 +64,36 @@
         return axios_inst.delete("group_profile_image_upload/<%= groups[0].id %>")
     }
 
+    function fetchGroupMemList(){
+        return axios_inst.get("group_api/<%= groups[0].id %>");
+    }
+
+    function deleteGroupMem(friend_uid){
+        return axios_inst.delete("group_api/<%= groups[0].id %>/"+friend_uid);
+    }
+
     var groupMemListApp = new Vue({
        el: "#groupMemListApp",
        data: {
-        profile_img_path: "<% if(groups[0].profile_img === null) { %>./image/syringe.png<% } else { %>./grp_profile/<%=groups[0].profile_img %><% } %>"
+        profile_img_path: "<% if(groups[0].profile_img === null) { %>./image/syringe.png<% } else { %>./grp_profile/<%=groups[0].profile_img %><% } %>",
+        groupMembers: [],
+        deleteMember: []
        },
        methods: {
+           loadGroupMem: async function(){
+                var memberData = await fetchGroupMemList();
+                this.groupMembers = memberData.data.uids;
+           },
+           removeMembers: async function(){
+                if(!confirm("정말 친구를 삭제하시겠습니까?")) return;
+
+                for(i=0; i < this.deleteMember.length; i++)
+                {
+                    console.log(this.deleteMember[i]);
+                    await deleteGroupMem(this.deleteMember[i]);
+                }
+                this.loadGroupMem();
+           },
            uploadImg: async function(e){
                 var frm = new FormData();
                 var profile_img = document.getElementById("profile_image");
@@ -105,10 +116,19 @@
                     this.profile_img_path = "./image/syringe.png";
                 }
                 else alert("프로필 삭제에 실패했습니다.");
-
+           },
+           selectAll: async function(){
+                const checkboxes = document.getElementsByName('group_mem');
+                checkboxes.forEach((checkbox) => {
+                    checkbox.checked = selectAll.checked;
+                    if(selectAll.checked && checkbox != selectAll) this.deleteMember.push(checkbox.value);
+                    else this.deleteMember = [];
+                })
            }
+       },
+       mounted: async function(){
+        this.loadGroupMem();
        }
     });
 </script>
-
 <% include ./common/footer %>
