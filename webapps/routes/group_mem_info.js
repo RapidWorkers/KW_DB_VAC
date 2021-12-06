@@ -9,8 +9,10 @@ router.get('/:gid/:id', async function(req, res, next) {
     // 프로필 이미지, 이름, 그루ㅂ이름, 접종여부, 백신 접종 종류, 접종일
 
     var sqlValInfo = "SELECT T.id, M.uid, T.team_name FROM TEAM T JOIN TEAM_MEM M ON T.owner_uid= ? AND T.id=M.gid AND M.uid = ? AND T.id=?;"
-    var sqlGetMemInfo = "SELECT uid, legal_name, profile_img FROM USER WHERE uid=?"
-    var sqlGetMemVacInfo = "SELECT DISTINCT R.reserve_date, R.vaccine_type, R.current_series, R.is_complete, V.Vaccinated, VV.vac_name FROM RESERVATION R, USER_VACCINATED V, VACCINE VV WHERE R.uid = ? AND V.uid=R.uid AND V.vaccine_type=VV.id ORDER BY reserve_date DESC;"
+    var sqlGetUserInfo = "SELECT legal_name, sex, birthdate, profile_img from USER where uid = ?;";
+    var sqlGetVaccinatedSeries = "SELECT Vaccinated from USER_VACCINATED where uid = ?;";
+    var sqlGetFirstDoseInfo = "SELECT V.vac_name, R.reserve_date FROM RESERVATION R INNER JOIN VACCINE V ON R.vaccine_type = V.id WHERE uid = ? and current_series = 1;";
+    var sqlGetSecondDoseInfo = "SELECT V.vac_name, R.reserve_date FROM RESERVATION R INNER JOIN VACCINE V ON R.vaccine_type = V.id WHERE uid = ? and current_series = 2;";
     
     try{
       var conn = await getSqlConnectionAsync();
@@ -23,27 +25,49 @@ router.get('/:gid/:id', async function(req, res, next) {
         return res.send('<script>alert("잘못된 경로로 접근하였습니다.");location.href="/group_mem_list/'+req.params.gid+'";</script>'); 
       }
       
-      console.log(req.params.gid);
-      console.log(req.params.id);
-      var [rows, fields] = await conn.query(sqlGetMemInfo, [req.params.id]);
-      var [vacs, fields] = await conn.query(sqlGetMemVacInfo, [req.params.id]);
-      if(vacs.length==0){
-        // 백신 접종내역 없을 때 예외처리
-       
-      }
-      else{
-        
-        var renderInfo = {
-          title: '친구 정보 보기',
-          loggedin: 1, 
-          legal_name: req.session.legal_name,
-          rows: rows,
-          vacs: vacs,
-          vals: vals
-        }
+      var [rows, fields] = await conn.query(sqlGetUserInfo, [vals[0].uid]);
 
+      var renderInfo = {
+        title: '내 정보 보기',
+        loggedin: 1,
+        legal_name: req.session.legal_name,
+        friend_legal_name: rows[0].legal_name,
+        team_name: vals[0].team_name,
+        sex: (rows[0].sex === 1)?"여자":"남자",
+        profile_img: (rows[0].profile_img === null)?-1:rows[0].profile_img,
+        vaccineDate: "-"
+      };
+
+      [rows, fields] = await conn.query(sqlGetVaccinatedSeries, [vals[0].uid]);
+      renderInfo.vaccinatedStatus = rows[0].Vaccinated;
+
+      [rows, fields] = await conn.query(sqlGetFirstDoseInfo, [vals[0].uid]);
+      if(rows.length != 0)//vaccine reservation first
+      {
+        renderInfo.firstVaccineName = rows[0].vac_name;
+        renderInfo.first_reserve_date = rows[0].reserve_date;
+        var vDate = new Date(rows[0].reserve_date);
+        renderInfo.vaccineDate = vDate.getFullYear() + '. ' + (vDate.getMonth()+1).toString().padStart(2,"0") + '. ' + (vDate.getDate()).toString().padStart(2,"0") + '.';
       }
-      console.log(vacs);
+      else//no reservation
+      {
+        renderInfo.firstVaccineName = "-";
+        renderInfo.first_reserve_date = null;
+      }
+
+      [rows, fields] = await conn.query(sqlGetSecondDoseInfo, [vals[0].uid]);
+      if(rows.length != 0)//No vaccine reservation
+      {
+        renderInfo.secondVaccineName = rows[0].vac_name;
+        renderInfo.second_reserve_date = rows[0].reserve_date;
+        var vDate = new Date(rows[0].reserve_date);
+        renderInfo.vaccineDate = vDate.getFullYear() + '. ' + (vDate.getMonth()+1).toString().padStart(2,"0") + '. ' + (vDate.getDate()).toString().padStart(2,"0") + '.';
+      }
+      else
+      {
+        renderInfo.secondVaccineName = "-";
+        renderInfo.second_reserve_date = null;
+      }
 
       
       res.render('group_mem_info', renderInfo);

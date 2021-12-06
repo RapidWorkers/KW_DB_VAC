@@ -1,23 +1,20 @@
 <% include ./common/header %>
-
     <div class="container">
         <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
-            <h2 class="px-4 display-8 fw-bold text-white"><%=rows[0].legal_name%> 님의 페이지</h2>
+            <h2 class="px-4 display-8 fw-bold text-white"><%=friend_legal_name%> 님의 페이지</h2>
         </div>
-
         <div class="bg-light">
             <div class="container-fluid py-5">
-
                 <div class="row justify-content-center text-center g-0">
                     <div class="col col-md-auto group1">
                         <div class="h-100">
-                            <img src="./image/syringe.png"
+                            <img src="<% if(profile_img === -1) { %>/image/syringe.png<% } else { %>/profile/<%=profile_img %><% } %>"
                                 class="rounded-circle border border-danger ms-3 me-3 mt-3 mb-1" width="100px"
                                 height="100px" />
                             <p>
-                            <h5><%=rows[0].legal_name%></h5>
+                            <h5><%=friend_legal_name%></h5>
                             </p>
-                            <p><%=vals[0].team_name%></p>
+                            <p><%=team_name%></p>
 
                         </div>
                     </div>
@@ -26,24 +23,39 @@
                             <h5 class="mb-5 mt-3">코로나 19 예방접종 정보</h5>
                             <div class="row">
                                 <div class="col col-md-3 text-start ms-4 mb-3">접종여부</div>
+                                <% if (vaccinatedStatus === "NO") { %>
+                                <div class="col col-md-5 text-end ms-4 mb-3">미접종</div>
+                                <%} else if (vaccinatedStatus === "PARTIAL") { %>
                                 <div class="col col-md-5 text-end ms-4 mb-3">1차 접종 완료</div>
+                                <%} else { %>
+                                <div class="col col-md-5 text-end ms-4 mb-3">2차 접종 완료</div>
+                                <% } %>
                             </div>
                             <div class="row">
-                                <div class="col col-md-3 text-start ms-4 mb-3">백신 제조사</div>
-                                <div class="col col-md-5 text-end ms-4 mb-3">화이자</div>
+                                <div class="col col-md-3 text-start ms-4 mb-3">1차 제조사</div>
+                                <div class="col col-md-5 text-end ms-4 mb-3"><%= firstVaccineName %></div>
+                                <div class="col col-md-3 text-start ms-4 mb-3">2차 제조사</div>
+                                <div class="col col-md-5 text-end ms-4 mb-3"><%= secondVaccineName %></div>
                             </div>
                             <div class="row">
+                                <% if (vaccinatedStatus === "FULL") { %>
                                 <div class="col col-md-3 text-start ms-4 mb-3">접종일</div>
-                                <div class="col col-md-5 text-end ms-4 mb-3"><%=vacs[0].reserve_date%></div>
+                                <% } else if (vaccinatedStatus === "PARTIAL") { 
+                                    if(second_reserve_date === null) { %>
+                                <div class="col col-md-3 text-start ms-4 mb-3">1차 접종일</div>
+                                <% } else { %>
+                                <div class="col col-md-3 text-start ms-4 mb-3">2차 예정일</div>
+                                <% }} else { 
+                                    if(first_reserve_date === null) { %>
+                                <div class="col col-md-3 text-start ms-4 mb-3">정보 없음</div>
+                                <% } else { %>
+                                <div class="col col-md-3 text-start ms-4 mb-3">1차 예정일</div>
+                                <% } }  %>
+                                <div class="col col-md-5 text-end ms-4 mb-3"><%= vaccineDate %></div>
                             </div>
                         </div>
-                        <p class="text-end">친구 삭제</p>
                     </div>
                 </div>
-
-
-
-
             </div>
         </div>
     </div>
