@@ -55,7 +55,7 @@
 
                 <div class="col-3">
                     <h6 class="dislpay-8">병원 선택</h6>
-                    <select class="form-select" name="hospital_id" style="width:200px;" aria-label=".form-select-lg example" v-model="hospital" @change="getHospitalName"
+                    <select class="form-select" style="width:200px;" aria-label=".form-select-lg example" v-model="hospital" @change="getHospitalName"
                     v-bind:class = "{'is-valid': valHospital, 'is-invalid': valHospital === false}">
                         <option style="width:auto" selected disabled hidden>병원 선택</option>
                        <option v-for="item in hospitalList" v-bind:key="" :value="item.id">{{ item.name }}</option>
@@ -65,7 +65,12 @@
                     </div>
                 </div>
                 
+                <input type="hidden" id = "hospital_id" name = "hospital_id" :value ="hospital_id">
+                <input type="hidden" id = "hospital_name" name = "hospital_name" :value ="hospital_name">
+
+
             </div>
+
 
             <div class="row-md-3 mt-5 me-3 text-center">
                 <input type="submit" class="btn btn-primary me-3" name="reserve_select_date" value="날짜 선택" onclick="submit_action(1)">
