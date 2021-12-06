@@ -4,33 +4,59 @@
     <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
         <h2 class="px-4 display-8 fw-bold text-white">병원 조회</h2>
     </div>
+    <div id = "dateSelect">
     <div class="py-4 px-5 pb-3 text-start border-bottom" style="background-color: #0077CD;">
         <div class="row">
             <div class="col-6">
-                <h4 class="px-4 display-8 text-white">병원: <%= hospital_id %> </h4>
+                <h4 class="px-4 display-8 text-white">병원: <%= hospital_name %> </h4>
             </div>
             <div class="col-6">
-                <h4 class="px-4 display-8 text-white">일자: 2021년 11월 8일</h4>
+                <h4 class="px-4 display-8 text-white">일자: {{ formatDate }}</h4>
             </div>
         </div>
-        <h4 class="px-4 display-8 text-white">백신: 모더나</h4>
+        <h4 class="px-4 display-8 text-white" v-model="vaccine_name">백신: {{ vaccine_name }}</h4>
     </div>
     <div class="p-5 mb-4 bg-light">
+        <form method="POST" action = "reserve_confirm" @submit="validateData" novalidate class="needs-validation">
         <div class="container-fluid py-5">
             <div class="row justify-content-center ">
                 
-                <div class="col-3">
-                  <input type="text" class="form-control m-datepicker" placeholder="예약 날짜 선택" required>
+                <div class="col-3" class="input-group has-validation" v-bind:class = "{'is-valid': valDate, 'is-invalid': valDate === false}">
+                  <input type="text" class="form-control m-datepicker" name="selected_date" id="selected_date" placeholder="예약 날짜 선택" required>
+                  <div class="invalid-feedback">
+                    유효하지 않은 예약 날짜 입니다.
+                  </div>
                 </div>
 
                 <div class="col-3">
-                    <ol class="list-group list-group-numbered">
+                  <div class="list-group" class="has-validation" v-bind:class = "{'is-valid': valVacc, 'is-invalid': valVacc === false}">
+                    <!-- 선택할 수 있도록 vue 추가 -->
+                    <button type="button" class="list-group-item list-group-item-action" 
+                    v-for="item in vaccine_list" v-bind:key=""
+                    @click="selectVaccine(item.id, item.vac_name)" 
+                        v-bind:class="{active: item.isActive}">
+                        {{ item.vac_name }}: {{ item.max_num }}
+                    </button>
+                    
+
+                    <input type="hidden" id = "vaccine_id" name = "vaccine_id" :value = "vaccine_id">
+                    <input type="hidden" id = "vaccine_name" name = "vaccine_name" :value = "vaccine_name">
+                    <input type="hidden" id = "hospital_id" name = "hospital_id" value ="<%=hospital_id%>">
+                    <input type="hidden" id = "hospital_name" name = "hospital_name" value ="<%=hospital_name%>">
+                    <input type="hidden" id = "reserve_date" name = "reserve_date" :value = "reserveDate">
+                    <div class="invalid-feedback">
+                      유효하지 않은 백신입니다.
+                    </div>
+                </div>
+                  <!--
+                    <ol class="list-group">
                         <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-start active">
                           <div class="ms-2 me-auto">
                             모더나
                           </div>
                           <span class="badge bg-primary rounded-pill">5</span>
                         </li>
+                        
                         <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                           <div class="ms-2 me-auto">
                             화이자
@@ -43,28 +69,114 @@
                           </div>
                           <span class="badge bg-primary rounded-pill">7</span>
                         </li>
+                        
                       </ol>
+                      -->
                 </div>
                 
             </div>
 
         <div class="row-md-3 mt-5 me-3 text-center">
-            <button type="button" class="btn btn-primary me-3">예약하기</button>
+            <button type="submit" class="btn btn-primary me-3">예약하기</button>
         </div>    
-
+        </form>
         </div>
     </div>
+  </div>
 </div>
+
+
+
 
 <script>
   $(document).ready(function(){
   $('.m-datepicker').datepicker({
-      format: "yyyy/mm/dd",
+      format: "yyyy-mm-dd",
       todayHighlight: true,
       autoclose: true
+      }).on('changeDate', function (e){
+        reserveSelectDate.reserveDate = $('#selected_date').val();
+
+        var date = new Date($('#selected_date').val());
+
+        date = date.getFullYear() + "년 " + (date.getMonth()+1) + "월 " + date.getDate() +"일";
+        reserveSelectDate.formatDate = date;
+
+        reserveSelectDate.searchByDate();
       });
   });
 
+  const axios_inst = axios.create({
+            baseURL: 'http://localhost:3000/api/'
+        })
+    
+  function fetchGetVaccineApi(params){
+      return axios_inst.get("get_vaccine_num_api", params)
+  }
+
+  var reserveSelectDate = new Vue({
+    el: '#dateSelect',
+    data: {
+      reserveDate: "-",
+      formatDate: "-",
+      hospital_id: <%= hospital_id %>,
+      vaccine_list: [],
+      vaccine_id: -1,
+      vaccine_name: "-",
+      valVacc: null,
+      valDate: null
+    },
+    methods: {
+      searchByDate: async function(){
+        var searchParams = {params: {hospital_id: this.hospital_id, reserve_date: this.reserveDate}};
+        var vaccineData = await fetchGetVaccineApi(searchParams);
+        //vacineData: {vac_name, max_num, V.id}
+
+        for(var i=0; i<vaccineData.data.rows.length;i++){
+          vaccineData.data.rows[i].isActive = false;
+        }
+
+        this.vaccine_list = vaccineData.data.rows;
+
+      },
+      selectVaccine: async function(id, name){
+        var prevId = this.vaccine_id;
+            if(prevId != -1)
+            {
+                var preIndex = this.vaccine_list.findIndex(function(curArray){
+                    return curArray.id === prevId;
+                });
+
+                this.vaccine_list[preIndex].isActive = false;
+                
+            }
+
+            if(id != -1)
+            {
+                var index = this.vaccine_list.findIndex(function(curArray){
+                    return curArray.id === id;
+                });
+
+                this.vaccine_list[index].isActive = true;
+            }
+
+            this.vaccine_name = name;
+            this.vaccine_id = id;
+      },
+      validateData: function(e){
+        if(!vaccine_id) valVacc = false;
+        else valVacc = true;
+
+        if (isNaN(Date.parse(this.reserveDate))) valDate = false;
+        else valDate = true;
+
+        if(valDate && valVacc) return true;
+        else alert("날짜 혹은 백신이 선택되지 않았습니다");
+
+        e.preventDefault();
+      }
+    }
+  })
 </script>
 
 <% include ./common/footer %>
