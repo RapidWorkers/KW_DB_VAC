@@ -11,23 +11,21 @@ router.get('/', async function(req, res, next) {
   }
   else
   {
-    var hospital = req.query.hospital_id;
+    var hospital_id = req.query.hospital_id;
+    var hospital_name = req.query.hospital_name;
     var today = new Date();
     var todayDate = today.getFullYear() + "-" + (today.getMonth()+1) + "-" + today.getDate();
 
-
-    var sqlGetLeftVacc = "SELECT V.vac_name, D.max_num, V.id FROM VACC_DIST AS D, VACCINE AS V WHERE D.vaccine_type=V.id and D.hospital_id =? and D.vaccine_date = ?";
-    var sqlGetHospitalName = "SELECT name FROM HOSPITAL WHERE id=?";
-    var sqlGetReservationNum = "SELECT vaccine_type, count(*) as count FROM RESERVATION WHERE  hospital_id=? and reserve_date=? GROUP BY vaccine_type";
-
+    var sqlGetLeftVacc = "SELECT V.vac_name, D.max_num, V.id FROM VACC_DIST AS D, VACCINE AS V WHERE D.vaccine_type = V.id and D.hospital_id = ? and D.vaccine_date = ?";
+    var sqlGetReservationNum = "SELECT vaccine_type, count(*) as count FROM RESERVATION WHERE  hospital_id = ? and reserve_date = ? GROUP BY vaccine_type";
 
     try{
       var conn = await getSqlConnectionAsync();
-      var [rows, fields] = await conn.query(sqlGetLeftVacc, [hospital, todayDate]);
-      var [names, fields] = await conn.query(sqlGetHospitalName, [hospital]);
-      var [reserve_nums, fields] = await conn.query(sqlGetReservationNum, [hospital, todayDate]);
+      var [rows, fields] = await conn.query(sqlGetLeftVacc, [hospital_id, todayDate]);
 
-      
+      var [reserve_nums, fields] = await conn.query(sqlGetReservationNum, [hospital_id, todayDate]);
+
+      //병원에 분배된 최대 백신 수에서 이미 예약된 백신 수를 빼, 잔여 백신 수를 구함
       for(var i=0;i<reserve_nums.length;i++){
         var index = rows.findIndex(function(curArray){
           return curArray.id === reserve_nums[i].vaccine_type;
@@ -44,14 +42,13 @@ router.get('/', async function(req, res, next) {
         title: '잔여백신 예약', 
         loggedin: 1, 
         legal_name: req.session.legal_name,
-        hospital: hospital,
-        hospital_name: names[0].name,
+        hospital_id: hospital_id,
+        hospital_name: hospital_name,
         todayDate: todayDate,
         rows: rows
       }
 
-      
-      
+
       res.render('left_vacc', renderInfo);
       
       conn.release();
@@ -85,14 +82,13 @@ router.post('/', async function(req, res, next) {
     var sqlGetUserAge = "SELECT birthdate, Vaccinated FROM USER_VACCINATED WHERE uid = ?";
     var sqlGetVaccInfo = "SELECT min_age FROM VACCINE WHERE id = ?";
     var sqlInsertLeftVaccReserve = "INSERT INTO RESERVATION(reserve_date, uid, vaccine_type, hospital_id, current_series) VALUE(?,?,?,?,?)";
+    var sqlGetReservation = "SELECT id FROM RESERVATION WHERE uid = ? and current_series = ?";
     
     try{
       var conn = await getSqlConnectionAsync();
 
       var [userInfo, fields] = await conn.query(sqlGetUserAge, [uid]);
       var [vaccineInfo, fields] = await conn.query(sqlGetVaccInfo,[vaccine_id]);
-
-
 
       //백신 접종 차수 구하기
       var series = 0;
@@ -103,8 +99,9 @@ router.post('/', async function(req, res, next) {
       else
         series = 3;
 
-        console.log(series);
+      console.log(series);
 
+      var [reserveInfo, fields] = await conn.query(sqlGetReservation, [uid, series]);
 
       //만 나이 계산
       var today = new Date();
@@ -117,16 +114,21 @@ router.post('/', async function(req, res, next) {
         age = age - 1;
       }
       
+
+
+      var reason = null;
+
       if(vaccineInfo[0].min_age > age)
-      {
         var reason = "접종 연령 미달";
-        res.render('reserve_fail', { title: '잔여백신 예약 실패', loggedin: 1, legal_name: req.session.legal_name, 
-        reason: reason ,vaccine_name: vaccine_name, hospital_name: hospital_name});
-        
-      }
-      else if(series === 3)
-      {
+       
+      if(series === 3)
         var reason = "접종 완료";
+  
+      if(reserveInfo.length > 0)
+        var reason = "기예약건 존재";
+      
+      if(reason)
+      {
         res.render('reserve_fail', { title: '잔여백신 예약 실패', loggedin: 1, legal_name: req.session.legal_name, 
         reason: reason ,vaccine_name: vaccine_name, hospital_name: hospital_name});
       }
@@ -139,6 +141,7 @@ router.post('/', async function(req, res, next) {
         res.render('reserve_confirm', { title: '잔여백신 예약 성공', loggedin: 1, legal_name: req.session.legal_name
         ,vaccine_name: vaccine_name, hospital_name: hospital_name});
       }
+
       conn.release();
     }
     catch(err){
