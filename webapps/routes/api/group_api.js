@@ -33,8 +33,6 @@ router.post('/',  async function(req, res){
 
     var sqlAddGrp = "INSERT INTO TEAM (team_name, owner_uid) VALUE (?, ?);";
 
-    console.log(req.body);
-
     try{
         var conn = await getSqlConnectionAsync();
         var [rows, fields] = await conn.query(sqlAddGrp, [req.body.team_name, req.session.uid]);
@@ -52,6 +50,73 @@ router.post('/',  async function(req, res){
 router.put('/', async function(req, res){
     
 })
+
+router.get('/:gid', async function(req, res){
+    if(!req.session.uid) res.json({success: false});
+
+
+    var sqlChkGroupOwn = "SELECT * FROM TEAM WHERE id = ? and owner_uid = ?;";
+    var sqlGetMemList = "SELECT uid, legal_name FROM USER WHERE uid IN (SELECT uid FROM TEAM_MEM T WHERE gid = ?);";
+
+    try{
+        var conn = await getSqlConnectionAsync();
+
+        var [rows, fields] = await conn.query(sqlChkGroupOwn, [req.params.gid, req.session.uid]);
+        if(rows.length == 0)
+        {
+            res.json({success: false});
+        }
+        else
+        {
+            [rows, fields] = await conn.query(sqlGetMemList, [req.params.gid]);
+
+            var groupJson = {success: true, uids: rows};
+            res.json(groupJson);
+        }
+
+    }
+    catch(err){
+        console.log("API ERROR: " + err);
+        res.json({success: false});
+    }
+    finally{
+        conn.release();
+    }  
+})
+
+router.delete('/:gid/:uid', async function(req, res){
+    if(!req.session.uid) res.json({success: false});
+
+
+    var sqlChkGroupOwn = "SELECT * FROM TEAM WHERE id = ? and owner_uid = ?;";
+    var sqlDelTeamMem = "DELETE FROM TEAM_MEM WHERE gid = ? and uid = ?;";
+
+    try{
+        var conn = await getSqlConnectionAsync();
+
+        var [rows, fields] = await conn.query(sqlChkGroupOwn, [req.params.gid, req.session.uid]);
+        if(rows.length == 0)
+        {
+            res.json({success: false});
+        }
+        else
+        {
+            [rows, fields] = await conn.query(sqlDelTeamMem, [req.params.gid, req.params.uid]);
+            
+            if(rows.affectedRows !== 1) res.json({success: false});
+            else res.json({success: true});
+        }
+
+    }
+    catch(err){
+        console.log("API ERROR: " + err);
+        res.json({success: false});
+    }
+    finally{
+        conn.release();
+    }  
+})
+
 
 router.delete('/:gid', async function(req, res){
     if(!req.session.uid) res.json({success: false});
