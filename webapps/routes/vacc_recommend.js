@@ -11,15 +11,6 @@ router.get('/', function (req, res, next) {
 
 router.post('/', async function (req, res, next) {
 
-  //부작용 1개도 없던 백신까지 전부 들고와야함 ㅇㅇ vaccine 이름에서 가져오기 그냥 전부 Join해서 거대 table 만들어버리고 싶다
-  //min age에서 가장 작은 나이를 찾아 그것도 안 되면 안됨 result2로 가고, 아니면 잘 조정
-  //열 나면 db 볼 필요도 없이 바로 render
-  //가장 먼저 나이가 충족되어야하고, 그 다음이 부작용률 가장 낮은 백신
-  //해당 백신의 이름, 접종 인원 (ischecked=1), 부작용 수, 부작용률을 계산 해서 render할 때 넘겨줌.
-  //만약 아스트라제네카 부작용이 있던 사람이라면 그 백신을 제외한 나머지 백신으로 동일한 계산.
-  //이 모든 걸 sql문과 자바 스크립트로 짜야함 개싫음
-  //밥
-
   var birthday = new Date(req.body.birthdate);
   var vac_recommend_fever = req.body.vac_recommend_fever;
   var vac_recommend_sideeffect = req.body.vac_recommend_sideeffect;
@@ -34,15 +25,23 @@ router.post('/', async function (req, res, next) {
     age = age - 1;
   }
 
-  var sqlCountVaccinedCnt = "SELECT COUNT(id) AS vaccined_cnt, vaccine_type FROM RESERVATION WHERE is_complete = 1 GROUP BY vaccine_type;";
-  var sqlCountReportCnt = "SELECT COUNT(RE.id) AS report_cnt, RE.vaccine_type FROM RESERVATION AS RE LEFT OUTER JOIN RESERVE_REPORT AS VR ON VR.reserve_id = RE.id GROUP BY VR.reserve_id;";
-  var sqlSubQuery = "SELECT A.vaccined_cnt, B.report_cnt, A.vaccine_type FROM ("+sqlCountVaccinedCnt+ ") AS A JOIN (" +sqlCountReportCnt+ ") AS B where A.vaccine_type = B.vaccine_type;";
-  var sqlGetVaccInfo = "WITH VACC_INFO AS (SELECT S.report_cnt, S.vaccined_cnt, (S.report_cnt / S.vaccined_cnt) AS report_rate, S.vaccine_type, V.vaccine_name, V.min_age FROM ("+sqlSubQuery+ ") AS S JOIN VACCINE AS V ON S.vaccine_type = V.id ORDER BY report_rate)"; 
+  //sql
+  var sqlCountVaccinedCnt = "SELECT COUNT(id) AS vaccined_cnt, vaccine_type FROM RESERVATION WHERE is_complete = 1 GROUP BY vaccine_type";
+  var sqlCountReportCnt = "SELECT COUNT(DISTINCT VR.reserve_id) AS report_cnt, RE.vaccine_type FROM RESERVATION AS RE LEFT OUTER JOIN VACC_REPORT AS VR ON VR.reserve_id = RE.id GROUP BY RE.vaccine_type";
+  var sqlSubQuery = "SELECT A.vaccined_cnt, B.report_cnt, B.vaccine_type FROM ( "+sqlCountVaccinedCnt+ " ) AS A JOIN ( " +sqlCountReportCnt+ " ) AS B ON A.vaccine_type = B.vaccine_type";
+  var sqlGetVaccInfo = "WITH VACC_INFO AS (SELECT S.report_cnt, S.vaccined_cnt, (S.report_cnt / S.vaccined_cnt) AS report_rate, S.vaccine_type, V.vac_name, V.min_age FROM ( "+sqlSubQuery+ " ) AS S JOIN VACCINE AS V ON S.vaccine_type = V.id)"; 
   
-  var sqlCheckMinAge = "SELECT * FROM VACC_INFO WHERE min_age < ?;"
-  var sqlDeleteVacc = "DELETE FROM VACC_INFO WHERE vaccine_name like "+"아스트라제네카" +";";
-
+  var sqlCheckMinAge = "SELECT * FROM VACC_INFO WHERE min_age < ? ORDER BY report_rate, vaccined_cnt DESC;"
+  //var sqlDeleteVacc = "DELETE FROM VACC_INFO WHERE vac_name like "+"아스트라제네카" +";";
   var sqlGetPossibleVacc = sqlGetVaccInfo + sqlCheckMinAge;
+
+  //renderinfo
+  var renderInfo = {
+    title: '백신 결과',
+    age,
+    vac_recommend_fever,
+    vac_recommend_sideeffect,
+  };
 
   //고열 시 백신 접종 불가
   if(vac_recommend_fever === "yes"){
@@ -50,7 +49,7 @@ router.post('/', async function (req, res, next) {
   }
   else{
     try{
-      var conn = getSqlConnectionAsync();
+      var conn = await getSqlConnectionAsync();
 
       var [rows, fields] = await conn.query(sqlGetPossibleVacc, [age]);
 
@@ -58,26 +57,37 @@ router.post('/', async function (req, res, next) {
       if(!rows.length) 
         {
           conn.release();
-          res.render('vacc_recommend_result2', renderInfo);
+          return res.render('vacc_recommend_result2', renderInfo);
         }
 
         //아스트라제네카 부작용 있는 사람은 해당 백신 접종 불가.
       var checked = 0;
-      if (vac_recommend_sideeffect === "yes" && rows[0].vaccine_name ==="아스트라제네카") {
+      if (vac_recommend_sideeffect === "yes" && rows[0].vac_name ==="아스트라제네카") {
         if(rows.length == 1){
           conn.release();
-          res.render('vacc_recommend_result2', renderInfo);
+          return res.render('vacc_recommend_result2', renderInfo);
         }
         else
           checked = 1;
       }
 
-      //가장 부작용률이 적은 백신을 추천
+      //가장 부작용률이 적은 백신을 추천. 만약 부작용률이 같을 시, 접종인원이 많은 백신을 추천
 
-      vac_recommend_name = rows[checked].vaccine_name;
+      vac_recommend_name = rows[checked].vac_name;
       vac_sideeffect_num = rows[checked].report_cnt;
       vaccined_num = rows[checked].vaccined_cnt;
       vac_sideeffect_rate = rows[checked].report_rate;
+
+      var renderInfo = {
+        title: '백신 결과',
+        age,
+        vac_recommend_fever,
+        vac_recommend_sideeffect,
+        vac_recommend_name,
+        vaccined_num,
+        vac_sideeffect_num,
+        vac_sideeffect_rate
+      };
 
       conn.release();
       res.render('vacc_recommend_result1', renderInfo);
@@ -115,18 +125,7 @@ router.post('/', async function (req, res, next) {
     conn.release();
   }
 */
-  var renderInfo = {
-    title: '백신 결과',
-    age,
-    vac_recommend_fever,
-    vac_recommend_sideeffect,
-    vac_recommend_name,
-    vaccined_num,
-    vac_sideeffect_num,
-    vac_sideeffect_rate
-  };
-
-  res.render('vacc_recommend_result2', renderInfo);
+  
 });
 
 module.exports = router;
