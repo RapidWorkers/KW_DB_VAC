@@ -75,7 +75,7 @@
     var groupMemListApp = new Vue({
        el: "#groupMemListApp",
        data: {
-        profile_img_path: "<% if(groups[0].profile_img === null) { %>./image/syringe.png<% } else { %>./grp_profile/<%=groups[0].profile_img %><% } %>",
+        profile_img_path: "<% if(groups[0].profile_img === null) { %>/image/syringe.png<% } else { %>/grp_profile/<%=groups[0].profile_img %><% } %>",
         groupMembers: [],
         deleteMember: []
        },
@@ -103,7 +103,7 @@
 
                 if(result.data.success == true) 
                 {                
-                    this.profile_img_path = "./grp_profile/" + result.data.path;
+                    this.profile_img_path = "/grp_profile/" + result.data.path;
                 }
                 else alert("프로필 업로드에 실패했습니다.");
 
@@ -113,7 +113,7 @@
 
                 if(result.data.success == true) 
                 {                
-                    this.profile_img_path = "./image/syringe.png";
+                    this.profile_img_path = "/image/syringe.png";
                 }
                 else alert("프로필 삭제에 실패했습니다.");
            },
