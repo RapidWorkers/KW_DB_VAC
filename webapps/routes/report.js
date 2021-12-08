@@ -20,7 +20,7 @@ router.post('/', async function(req, res, next) {
   if(req.session.loggedin === undefined || req.session.loggedin ===0)
     res.send("<script>alert('로그인이 필요합니다.');location.href='login';</script>");
   else{
-    req.body = JSON.parse(JSON.stringify(req.body));
+    
     const {report} = req.body;
 
     var today = new Date();
