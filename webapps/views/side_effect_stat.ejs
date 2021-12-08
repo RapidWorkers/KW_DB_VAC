@@ -5,19 +5,19 @@
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
 
-function drawChart() {
+function drawChart(vaccineSideeffectList) {
+    var datArray = [['부작용', '발생수']];
+    
+    for (var i=0; i<vaccineSideeffectList.length;i++){
+        var oneItem = vaccineSideeffectList[i];
+        datArray.push([oneItem.report_desc, parseInt(oneItem.report_cnt)]);
+    }
 
-    var data = google.visualization.arrayToDataTable([
-    ['부작용', '발생수'],
-    ['Work',     11],
-    ['Eat',      2],
-    ['Commute',  2],
-    ['Watch TV', 2],
-    ['Sleep',    7]
-    ]);
+    var data = google.visualization.arrayToDataTable(datArray);
+    
 
     var options = {
-    title: 'My Daily Activities'
+    title: '백신 부작용 그래프'
     };
 
     var chart = new google.visualization.PieChart(document.getElementById('piechart'));
@@ -30,26 +30,83 @@ function drawChart() {
     <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
         <h2 class="px-4 display-8 fw-bold text-white">백신 부작용 통계</h2>
     </div>
+    <div id = "sideeffectSearch">
     <div class="p-5 mb-4 bg-light">
         <div class="container-fluid py-3">
             <div class="row">
                 <div class="col-4">
                     <h6 class="dislpay-8">백신 선택</h6>
-                    <select class="form-select" style="width:auto" aria-label=".form-select-lg example">
+                    <select class="form-select" v-on:change = "loadChart()" v-model="vaccineId" style="width:auto" aria-label=".form-select-lg example">
                         <option selected disabled>백신 선택</option>
-                        <option value="1">모더나</option>
-                        <option value="2">화이자</option>
+                        <option value="1" selected="selected">화이자</option>
+                        <option value="2">모더나</option>
                         <option value="3">아스트라제네카</option>
                         <option value="4">얀센</option>
                     </select>
                 </div>
                 <div class="col-8">
-                    <h6 class="dislpay-8">그래프</h6>
+                    <h6 class="dislpay-8">백신 부작용 그래프</h6>
                     <div id="piechart" class = "py-2" style="width: 720px; height: 400px; display: block; margin: 0 auto;"></div>
                 </div>
             </div>
         </div>
     </div>
+    </div>
 </div>
+
+<script>
+  
+    const axios_inst = axios.create({
+            baseURL: 'http://localhost:3000/api/'
+    })
+
+    function getVaccineSideeffectApi(params){
+        return axios_inst.get("get_vaccine_sideeffect_api", params)
+    }
+
+    var sideeffectSearchApp = new Vue({
+        el: '#sideeffectSearch',
+        data: {
+            vaccineId: 1,
+            vaccineReportList: 
+                [
+                <% for(var i=0; i<vaccine_report_list.length; i++) { %>
+                        {
+                            report_type:   <%= vaccine_report_list[i].report_type %>,
+                            report_desc: "<%= vaccine_report_list[i].report_desc %>"
+                        },
+                <% }; %>
+                ]
+        },
+        methods: {
+            loadChart: async function()
+            {
+                console.log("hi");
+                var vaccine_id = this.vaccineId;
+                var searchParams = {params: {vaccine_id: vaccine_id}};
+                var vaccineSideeffectData =  await getVaccineSideeffectApi(searchParams);
+                var vaccineSideeffectList = vaccineSideeffectData.data.rows;
+
+                for(i =0; i<vaccineSideeffectList.length;i++)
+                {
+                    var index = this.vaccineReportList.findIndex(function(curArray){
+                        return curArray.report_type = vaccineSideeffectList[i].report_type;
+                    })
+                    vaccineSideeffectList[i].report_desc = this.vaccineReportList[i].report_desc;
+                }
+
+                console.log(vaccineSideeffectList);
+
+                drawChart(vaccineSideeffectList);
+                
+            }
+        },
+        mounted: async function(){
+            this.loadChart();
+        }
+    })
+</script>
+
+
 
 <% include ./common/footer %>
