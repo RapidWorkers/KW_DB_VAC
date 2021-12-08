@@ -8,15 +8,9 @@ router.get('/', async function(req, res, next) {
     res.send("<script>alert('로그인이 필요합니다.');location.href='login';</script>");
   else
   {
-    // TEAM에서 owner_uid = req.session.uid인 사람들의 id(gid), team_name 갖고오기
-    // TEAM_MEM에서 gid=TEAM.id에 IN인 사람들의 uid를 전부 얻어와서 
-    // USER_VACCINATED 뷰에서 Vaccinated 여부 판단(FULL이면 접종자, 그 외에는 미접종자 취급)
-    // 체크 사람 수가 6개 초과 || 체크된 사람 중 미접종자 1명 초과 이면 실패, 아니면 성공
-
-
     // GET에선 gid, team_name, uid, legal_name 
     
-    var sqlGetAllTeamMemInfo = "SELECT U.legal_name, M.uid, T.team_name, M.gid  FROM TEAM T, TEAM_MEM M, USER U WHERE U.uid=M.uid AND T.id = M.gid AND M.gid IN (SELECT T.id FROM TEAM T WHERE owner_uid = ?);";
+    var sqlGetAllTeamMemInfo = "SELECT U.legal_name, M.uid, count(M.uid) as dupCnt, T.team_name, M.gid  FROM TEAM T, TEAM_MEM M, USER U WHERE U.uid=M.uid AND T.id = M.gid AND M.gid IN (SELECT T.id FROM TEAM T WHERE owner_uid = ?) GROUP BY uid;";
 
     
     try{
@@ -29,6 +23,7 @@ router.get('/', async function(req, res, next) {
         legal_name: req.session.legal_name,
         rows: rows
       }
+
       conn.release();
       res.render('group_calc_meetup', renderInfo);
 
@@ -40,14 +35,67 @@ router.get('/', async function(req, res, next) {
 });
 
 /* POST home page. */
-// 사람수 6명 초과 || 미접종자 2명 초과
-//
-/* result1, result2 조건문으로 나눠줘야 함 */
+// 사람수 6명 초과 || 미접종자 2명 이상
+
 router.post('/', async function(req, res, next) {
   if(req.session.loggedin === undefined || req.session.loggedin ===0)
     res.send("<script>alert('로그인이 필요합니다.');location.href='login';</script>");
-  else
-    res.render('group_calc_meetup_result1', { title: '결과 1', loggedin: 1, legal_name: req.session.legal_name});
+  else{
+    
+
+    // 미접종인원 몇명인지 count
+    //var sqlGetUnVacCount = "SELECT COUNT(*) AS VAC FROM USER_VACCINATED WHERE uid IN (?,?,?) AND Vaccinated !='FULL'";
+
+    try{
+      var chkPerson = req.body.group_calc;
+
+      if(!Array.isArray(chkPerson))
+      {
+        chkPerson = [chkPerson];
+      }
+
+      chkPerson.push(req.session.uid);
+      console.log(chkPerson);
+      
+      var len=Object.keys(chkPerson).length;
+      var flag = true; // 모임계산기 결과 true면 모임 가능, false면 모임불가능
+
+      
+      console.log(len);
+      var conn = await getSqlConnectionAsync();
+      // 멍청한 코드
+      var unVacCnt = 0;
+      
+      var sqlChkVac = "SELECT uid FROM USER_VACCINATED WHERE uid = ? AND Vaccinated COLLATE utf8mb4_general_ci != 'FULL';";
+      for (var i=0;i<len;i++){
+        
+        var [rows, fields] = await conn.query(sqlChkVac, [Number(chkPerson[i])]);
+        if(rows.length)
+          unVacCnt += 1;
+      }
+
+      //var [rows, fields] = await conn.query(sqlGetUnVacCount, [1,2,3]);
+  
+
+      // 사람 수 6명 초과이거나 미접종자 1명 초과이면 모임 불가능
+      if(len > 6 || unVacCnt > 1)
+        flag = false;
+
+      console.log(flag);
+
+      var renderInfo = {
+        title: '모임 계산 결과',
+        legal_name: req.session.legal_name,
+        loggedin: 1,
+        flag: flag
+      };
+      res.render('group_calc_meetup_result', renderInfo);
+    }catch(err){
+      console.log("Error: MySQL returned ERROR :" + err);
+      conn.release();
+    }
+   
+  }
   });
 
 module.exports = router;
