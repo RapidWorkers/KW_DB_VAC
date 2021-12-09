@@ -16,8 +16,8 @@ router.get('/', async function(req, res, next) {
     var today = new Date();
     var todayDate = today.getFullYear() + "-" + (today.getMonth()+1) + "-" + today.getDate();
 
-    var sqlGetLeftVacc = "SELECT V.vac_name, D.max_num, V.id FROM VACC_DIST AS D, VACCINE AS V WHERE D.vaccine_type = V.id and D.hospital_id = ? and D.vaccine_date = ?";
-    var sqlGetReservationNum = "SELECT vaccine_type, count(*) as count FROM RESERVATION WHERE  hospital_id = ? and reserve_date = ? GROUP BY vaccine_type";
+    var sqlGetLeftVacc = "SELECT V.vac_name, D.max_num, V.id FROM VACC_DIST AS D, VACCINE AS V WHERE D.vaccine_type = V.id and D.hospital_id = ? and D.vaccine_date = ?;";
+    var sqlGetReservationNum = "SELECT vaccine_type, count(*) as count FROM RESERVATION WHERE  hospital_id = ? and reserve_date = ? GROUP BY vaccine_type;";
 
     try{
       var conn = await getSqlConnectionAsync();
