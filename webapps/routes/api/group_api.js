@@ -47,10 +47,6 @@ router.post('/',  async function(req, res){
     }  
 })
 
-router.put('/', async function(req, res){
-    
-})
-
 router.get('/:gid', async function(req, res){
     if(!req.session.uid) res.json({success: false});
 
@@ -58,20 +54,30 @@ router.get('/:gid', async function(req, res){
     var sqlChkGroupOwn = "SELECT * FROM TEAM WHERE id = ? and owner_uid = ?;";
     var sqlGetMemList = "SELECT uid, legal_name FROM USER WHERE uid IN (SELECT uid FROM TEAM_MEM T WHERE gid = ?);";
 
+    var sqlGetMemFull = "SELECT uid, legal_name FROM USER WHERE uid IN (SELECT DISTINCT uid FROM TEAM_MEM T WHERE gid IN (SELECT id FROM TEAM WHERE owner_uid = ?));"
+
     try{
         var conn = await getSqlConnectionAsync();
 
-        var [rows, fields] = await conn.query(sqlChkGroupOwn, [req.params.gid, req.session.uid]);
-        if(rows.length == 0)
+        if(req.params.gid == 0)
         {
-            res.json({success: false});
+            var [rows, fields] = await conn.query(sqlGetMemFull, [req.session.uid])
+            var groupJson = {success: true, uids: rows};
+            res.json(groupJson);
         }
         else
         {
-            [rows, fields] = await conn.query(sqlGetMemList, [req.params.gid]);
-
-            var groupJson = {success: true, uids: rows};
-            res.json(groupJson);
+            var [rows, fields] = await conn.query(sqlChkGroupOwn, [req.params.gid, req.session.uid]);
+            if(rows.length == 0)
+            {
+                res.json({success: false});
+            }
+            else
+            {
+                [rows, fields] = await conn.query(sqlGetMemList, [req.params.gid]);
+                var groupJson = {success: true, uids: rows};
+                res.json(groupJson);
+            }
         }
 
     }

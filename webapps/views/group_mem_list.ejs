@@ -1,9 +1,14 @@
 <% include ./common/header %>
 <div class="container">
     <div class="py-4 px-3 pb-3 text-start" style="background-color: #00A3FF;">
+        <% if(fullList != 0) { %>
         <h2 class="px-4 display-8 fw-bold text-white">[<%=groups[0].team_name %>] 그룹원 목록</h2>
+        <% } else { %>
+        <h2 class="px-4 display-8 fw-bold text-white">전체 그룹원 목록</h2>
+        <% } %>
     </div>
     <div id="groupMemListApp">
+    <form method="POST" action="/group_calc_meetup" @submit="submit_action">
     <div class="p-5 mb-4 bg-light">
         <div class="container-fluid py-5">
             <div class="row justify-content-center">
@@ -13,21 +18,27 @@
                 <div class="col col-md-3 text-center" style="background-color: rgba(166, 168, 175, 0.945);">
                     <img :src="profile_img_path" class="rounded-circle border border-dark ms-5 me-5 mt-5 mb-3"
                         width="100px" height="100px" />
+                    <% if(fullList != 0) { %>
                     <div class = "mb-4" style="font-size:x-small"><a href="#" @click="$refs.file.click()">변경</a> <a class="ms-2" href="#" @click="deleteImg">삭제</a></div>
                     <div class = "mb-3"><h5><%=groups[0].team_name %></h5></div>
+                    <% } %>
                 </div>
                 <div class="col col-md-6 " style="background-color: rgba(204, 205, 211, 0.945);">
                     <div class="py-4 fs-5">
                         <ul class="list-group">
                             <li class="list-group-item ">
-                                <input class="form-check-input me-1" type="checkbox" name = "group_mem" value="selectAll" aria-label="selectAll"
+                                <input class="form-check-input me-1" type="checkbox" name = "group_calc" value="selectAll" aria-label="selectAll"
                                     id="selectAll" @click = "selectAll">
                                 모두 선택
                             </li>
                             <li v-for="member in groupMembers" v-bind:key = "" class="list-group-item">
-                                <input class="form-check-input me-1" type="checkbox" name = "group_mem" :value="member.uid" aria-label="friend1"
+                                <input class="form-check-input me-1" type="checkbox" name = "group_calc" :value="member.uid" aria-label="friend1"
                                     :id="member.uid" v-model="deleteMember">
+                                <% if(fullList != 0) { %>
                                 <a class = "text-decoration-none" :href = "'/group_mem_info/<%= groups[0].id %>/'+member.uid">{{ member.legal_name }}</a>
+                                <% } else {%>
+                                <a class = "text-decoration-none" href="#">{{ member.legal_name }}</a>
+                                <% } %>
                             </li>
                         </ul>
                     </div>
@@ -35,22 +46,28 @@
             </div>
             <div class="row justify-content-end mt-2">
                 <div class="col col-md-auto">
+                    <% if(fullList != 0) { %>
                     <h6 class="fw-bold"><a href="/group_mem_add?gid=<%= groups[0].id %>">친구 추가</a></h6>
+                    <% } %>
                 </div>
                 <div class="col col-md-3 me-5">
+                    <% if(fullList != 0) { %>
                     <h6 class="fw-bold"><a href=# @click="removeMembers">선택된 친구 삭제</a></h6>
+                    <% } %>
                 </div>
             </div>
             <div class="row mt-5 justify-content-md-center">
                 <div class="d-grid col col-2 mx-auto">
-                    <button type="button" class="btn btn-primary btn-lg" @click="">모임 인원 계산</button>
+                    <input type="submit" class="btn btn-primary btn-lg" value="모임 인원 계산">
                 </div>
             </div>
         </div>
     </div>
+    </form>
     </div>
 </div>
 
+<% if(fullList != 0) { %>
 <script>
     const axios_inst = axios.create({
             baseURL: 'http://localhost:3000/api/'
@@ -59,23 +76,37 @@
     function uploadProfileImage(frm){
         return axios_inst.post("group_profile_image_upload/<%= groups[0].id %>", frm, {headers: { 'Content-Type': 'multipart/form-data' }})
     }
+    
 
     function deleteProfileImage(frm){
         return axios_inst.delete("group_profile_image_upload/<%= groups[0].id %>")
-    }
-
-    function fetchGroupMemList(){
-        return axios_inst.get("group_api/<%= groups[0].id %>");
     }
 
     function deleteGroupMem(friend_uid){
         return axios_inst.delete("group_api/<%= groups[0].id %>/"+friend_uid);
     }
 
+    function fetchGroupMemList(){
+        return axios_inst.get("group_api/<%= groups[0].id %>");
+    }
+</script>
+<% }else{ %>
+<script>
+    const axios_inst = axios.create({
+            baseURL: 'http://localhost:3000/api/'
+    })
+
+    function fetchGroupMemList(){
+        return axios_inst.get("group_api/0");
+    }
+</script>
+<% } %>
+
+<script>
     var groupMemListApp = new Vue({
        el: "#groupMemListApp",
        data: {
-        profile_img_path: "<% if(groups[0].profile_img === null) { %>/image/syringe.png<% } else { %>/grp_profile/<%=groups[0].profile_img %><% } %>",
+        profile_img_path: "<% if(fullList != 0) { if(groups[0].profile_img === null) { %>/image/syringe.png<% } else { %>/grp_profile/<%=groups[0].profile_img %><% } } else { %>/image/syringe.png<% } %>",
         groupMembers: [],
         deleteMember: []
        },
@@ -118,17 +149,25 @@
                 else alert("프로필 삭제에 실패했습니다.");
            },
            selectAll: async function(){
-                const checkboxes = document.getElementsByName('group_mem');
+                const checkboxes = document.getElementsByName('group_calc');
                 checkboxes.forEach((checkbox) => {
                     checkbox.checked = selectAll.checked;
                     if(selectAll.checked && checkbox != selectAll) this.deleteMember.push(checkbox.value);
                     else this.deleteMember = [];
                 })
-           }
+           },
+           submit_action: function (){
+                var checkall = document.getElementById( "selectAll" );
+                if(checkall.checked){
+                    checkall.checked = false;
+                }
+            }
+
        },
        mounted: async function(){
         this.loadGroupMem();
        }
     });
 </script>
+
 <% include ./common/footer %>
