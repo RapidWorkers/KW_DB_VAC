@@ -49,19 +49,19 @@ router.post('/', async function(req, res, next) {
     try{
       var chkPerson = req.body.group_calc;
 
-      if(!Array.isArray(chkPerson))
+      if(chkPerson == undefined) chkPerson = [req.session.uid];
+      else
       {
-        chkPerson = [chkPerson];
+        if(!Array.isArray(chkPerson))
+        {
+          chkPerson = [chkPerson];
+        }
+        chkPerson.push(req.session.uid);
       }
-
-      chkPerson.push(req.session.uid);
-      console.log(chkPerson);
       
       var len=Object.keys(chkPerson).length;
       var flag = true; // 모임계산기 결과 true면 모임 가능, false면 모임불가능
-
       
-      console.log(len);
       var conn = await getSqlConnectionAsync();
       // 멍청한 코드
       var unVacCnt = 0;
