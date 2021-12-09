@@ -1,0 +1,5 @@
+{
+    "key" : "YOUR MAILGUN API KEY",
+    "from" : "YOUR MAILGUN SENDER ADDRESS",
+    "domain": "YOUR MAILGUN DOMAIN"
+}

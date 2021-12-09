@@ -121,3 +121,4 @@ dist
 .pnp.*
 
 mysql_config.json
+mailgun_config.json

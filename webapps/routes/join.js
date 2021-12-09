@@ -4,6 +4,10 @@ const getSqlConnection = require('../configs/mysql_load').getSqlConnection;
 const getSqlConnectionAsync = require('../configs/mysql_load').getSqlConnectionAsync;
 var bcrypt = require('bcrypt');
 
+var nodemailer = require('nodemailer');
+var mgTransport = require('nodemailer-mailgun-transport');
+var mgCfg = require('../configs/mailgun_config.json');
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   if(req.session.loggedin === undefined || req.session.loggedin ===0)
@@ -26,6 +30,7 @@ router.post('/', async function(req, res, next) {
   var sqlChkEmailDup = "SELECT count(*) as dup from USER where email = ?;";
   var sqlChkPhoneDup = "SELECT count(*) as dup from USER where phone = ?;";
   var sqlInsertUser = "INSERT INTO USER(username, passwd, legal_name, sex, birthdate, zip, address, address2, email, phone) VALUE(?,?,?,?,?,?,?,?,?,?);";
+  var sqlGetAuthLink = "SELECT auth_link FROM EMAIL_AUTH where email = ?;"
 
   if(req.session.loggedin === undefined || req.session.loggedin ===0)
   {
@@ -96,17 +101,44 @@ router.post('/', async function(req, res, next) {
         conn.release();
     }
 
-    bcrypt.hash(passwd, 10, (err, hashedPasswd) => {
+    bcrypt.hash(passwd, 10, async (err, hashedPasswd) => {
       //암호화 이후 실행할 내용
-      getSqlConnection((conn) => {
-        conn.query(sqlInsertUser, [username, hashedPasswd, legal_name, sex, birthdate, zip, address, address2, email, phone], function(err, rows){
-          if(err) console.log("Error: MySQL returned ERROR: " + err);
-          else{
-            res.render('email_auth', { title: '이메일 인증', loggedin: 0, email: email});
-            conn.release();
+      try{
+        var conn = await getSqlConnectionAsync();
+        var [rows, fields] = await conn.query(sqlInsertUser, [username, hashedPasswd, legal_name, sex, birthdate, zip, address, address2, email, phone]);
+
+        [rows, fields] = await conn.query(sqlGetAuthLink, [email]);
+
+        if(rows.length == 0) throw "CANNOT FIND ANY EMAIL MATCHED";
+
+        var mailerOpt = {
+          auth: {
+            api_key: mgCfg.key,
+            domain: mgCfg.domain
           }
-        })
-      })
+        }
+
+        var mailerClient = await nodemailer.createTransport(mgTransport(mailerOpt));
+        var emailContent = {
+          from: mgCfg.from,
+          to: email,
+          subject: "회원가입 인증 이메일 입니다.",
+          html: "아래 링크를 클릭하세요.<br><a href='"+mgCfg.base_url + "email_auth?auth_link=" + rows[0].auth_link+"'>"+mgCfg.base_url + "email_auth?auth_link=" + rows[0].auth_link+"</a>"
+        }
+
+        console.log(mgCfg.base_url + "email_auth" + rows[0].auth_link);
+
+        mailerClient.sendMail(emailContent);
+
+        res.render('email_auth', { title: '이메일 인증', loggedin: 0, email: email});
+
+      }
+      catch(err){
+        console.log("Error: MySQL returned ERROR: " + err);
+      }
+      finally{
+        conn.release();
+      }
     }); //비밀번호 암호화(), promise를 실행하겠다는 악속
     
   }

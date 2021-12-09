@@ -2,6 +2,18 @@ var express = require('express');
 var router = express.Router();
 const getSqlConnectionAsync = require('../../configs/mysql_load').getSqlConnectionAsync;
 
+/*
+    Input:
+    validateType:
+        1: 아이디 검증
+        2: 이메일 검증
+        3: 전화번호 검증
+
+    username: 유저 아이디
+    email: 이메일
+    phone: 전화번호
+*/
+
 router.post('/', async function (req, res, next) {
 
     //if(req.session.loggedin === 1) return res.json({success: false});//not for logged in user
