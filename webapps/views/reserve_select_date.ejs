@@ -164,7 +164,7 @@
             this.vaccine_id = id;
       },
       validateData: function(e){
-        if(!vaccine_id) valVacc = false;
+        if(!vaccine_id || this.vaccine_id == -1) valVacc = false;
         else valVacc = true;
 
         if (isNaN(Date.parse(this.reserveDate))) valDate = false;
