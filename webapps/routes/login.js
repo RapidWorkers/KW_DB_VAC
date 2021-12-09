@@ -65,6 +65,7 @@ router.post('/', async function (req, res, next) {
             req.session.legal_name = rows[0].legal_name;//set name to use later
             
             res.redirect("/");
+            conn.release();
           }
           else {//otherwise
             res.redirect("login?hasError=1");//re-login

@@ -68,9 +68,8 @@ router.get('/:gid/:id', async function(req, res, next) {
         renderInfo.secondVaccineName = "-";
         renderInfo.second_reserve_date = null;
       }
-
-      
       res.render('group_mem_info', renderInfo);
+      conn.release();
 
     }catch(err){
       console.log("Error: MySQL returned ERROR :" + err);
