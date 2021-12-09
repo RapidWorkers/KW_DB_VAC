@@ -8,7 +8,6 @@ if(req.session.loggedin === undefined || req.session.loggedin ===0)
   res.send("<script>alert('로그인이 필요합니다.');location.href='login';</script>");
 else
   res.render('report', { title: '이상반응 신고' , loggedin: 1, legal_name: req.session.legal_name});
-  
 });
 
 /* POST home page. */
@@ -31,7 +30,13 @@ router.post('/', async function(req, res, next) {
       var conn = await getSqlConnectionAsync();
       [row, fields] = await conn.query(sqlGetReserveId, [req.session.uid]);
 
+      if(!report)
+      {
+        res.send("<script>alert('선택된 부작용이 없거나 잘못되었습니다');location.href='/report';</script>");
+      }
+
       var len = Object.keys(report).length;
+
       for(var i=0;i<len;i++){
         [rows, fields] = await conn.query(sqlInsertReport, [row[0].id, report[i], todayDate]);
       }
