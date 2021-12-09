@@ -101,12 +101,11 @@ router.post('/', async function(req, res, next) {
           bcrypt.hash(new_passwd, 10, async (err, hashedPasswd) => {
             if(err) throw err;
             [rows, fields] = await conn.query(sqlUpdateMyPwd, [hashedPasswd, req.session.uid]);
-            res.redirect("mypage");
-            conn.release();
           })
         }
         
         res.redirect("mypage");
+        conn.release();
       })
     }
     catch(err){
