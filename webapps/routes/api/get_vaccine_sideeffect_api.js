@@ -4,17 +4,13 @@ var router = express.Router();
 const getSqlConnectionAsync = require('../../configs/mysql_load').getSqlConnectionAsync;
 
 router.get('/', async function(req, res, next){
-
-    if(req.session.loggedin === undefined || req.session.loggedin ===0)
-    {
-        res.json({success: false});
-    }
-  
+    //백신 별, 부작용 수를 가져옴
     var sqlCountReportCnt = "SELECT VR.report_type, COUNT(*) AS report_cnt FROM RESERVATION AS RE RIGHT OUTER JOIN VACC_REPORT AS VR ON VR.reserve_id = RE.id WHERE RE.vaccine_type=? GROUP BY VR.report_type";
     
-    try{
-        var vaccine_id = req.query.vaccine_id;
+    var vaccine_id = req.query.vaccine_id;
+    if(!vaccine_id) return res.json({success: false});
 
+    try{
         var conn = await getSqlConnectionAsync();
         var [rows, fields] = await conn.query(sqlCountReportCnt, [vaccine_id]);
   

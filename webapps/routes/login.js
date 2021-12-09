@@ -20,7 +20,7 @@ router.post('/', async function (req, res, next) {
   var passwd = req.body.passwd;
 
   if (req.session.loggedin === 1) {
-    res.send("<script>alert('잘못된 경로로 접근했습니다!');</script>");
+    res.send("<script>alert('잘못된 경로로 접근했습니다!');location.href='/';</script>");
   }
   else {
 

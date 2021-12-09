@@ -5,7 +5,7 @@ const getSqlConnectionAsync = require('../configs/mysql_load').getSqlConnectionA
 /* GET home page. */
 router.get('/', function (req, res, next) {
 
-  res.render('vacc_recommend', { title: '백신 추천' });
+  res.render('vacc_recommend', { title: '백신 추천', loggedin: +(req.session.loggedin === 1), legal_name: req.session.legal_name});
 });
 
 
@@ -15,6 +15,11 @@ router.post('/', async function (req, res, next) {
   var vac_recommend_fever = req.body.vac_recommend_fever;
   var vac_recommend_sideeffect = req.body.vac_recommend_sideeffect;
   var vac_recommend_name, vaccined_num, vac_sideeffect_num, vac_sideeffect_rate;
+
+  if(!birthday || !vac_recommend_fever || !vac_recommend_sideeffect)
+  {
+    res.send("<script>alert('잘못된 경로로 접근했습니다!');location.href='/';</script>");
+  }
 
   //만 나이 계산
   var today = new Date();
@@ -38,6 +43,8 @@ router.post('/', async function (req, res, next) {
   //renderinfo
   var renderInfo = {
     title: '백신 결과',
+    loggedin: +(req.session.loggedin === 1),
+    legal_name: req.session.legal_name,
     age,
     vac_recommend_fever,
     vac_recommend_sideeffect,
@@ -50,19 +57,18 @@ router.post('/', async function (req, res, next) {
   else{
     try{
       var conn = await getSqlConnectionAsync();
-
       var [rows, fields] = await conn.query(sqlGetPossibleVacc, [age]);
 
       //해당 나이에 맞을 수 있는 백신 없음.
       if(!rows.length) 
-        {
-          conn.release();
-          return res.render('vacc_recommend_result2', renderInfo);
-        }
+      {
+        conn.release();
+        return res.render('vacc_recommend_result2', renderInfo);
+      }
 
         //아스트라제네카 부작용 있는 사람은 해당 백신 접종 불가.
       var checked = 0;
-      if (vac_recommend_sideeffect === "yes" && rows[0].vac_name ==="아스트라제네카") {
+      if (vac_recommend_sideeffect === "yes" && (rows[0].vac_name ==="아스트라제네카" || rows[0].vac_name === "얀센")) {
         if(rows.length == 1){
           conn.release();
           return res.render('vacc_recommend_result2', renderInfo);
@@ -80,6 +86,8 @@ router.post('/', async function (req, res, next) {
 
       var renderInfo = {
         title: '백신 결과',
+        loggedin: +(req.session.loggedin === 1),
+        legal_name: req.session.legal_name,
         age,
         vac_recommend_fever,
         vac_recommend_sideeffect,

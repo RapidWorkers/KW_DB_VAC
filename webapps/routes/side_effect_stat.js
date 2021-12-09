@@ -6,6 +6,7 @@ const getSqlConnectionAsync = require('../configs/mysql_load').getSqlConnectionA
 /* GET home page. */
 router.get('/', async function(req, res, next) {
 
+  //백신 부작용의 종류를 가져와 뷰에 넘겨준다.
   var sqlGetVaccReportType = "SELECT report_type, report_desc FROM VACC_REPORT_TYPE";
   //var sqlGetVaccineList = "SELECT id, vac_name FROM VACCINE";
 

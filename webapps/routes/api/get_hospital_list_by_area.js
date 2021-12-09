@@ -20,8 +20,7 @@ router.get('/', async function (req, res, next) {
             metropol: 광역자치단체 String
             district: 기초자치단체 String
             dong: 동면리 String
-
-            emergency: 응급실 여부
+            emergency: 응급실 여부 0/1
     */
 
     var metropol = req.query.metropol;

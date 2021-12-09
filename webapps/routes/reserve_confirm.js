@@ -20,6 +20,11 @@ router.post('/', async function(req, res, next) {
     var reserve_date = req.body.reserve_date;
     var uid = req.session.uid;
 
+    if(!vaccine_id || !vaccine_name || !hospital_id || !hospital_name || !reserve_date)
+    {
+      res.send("<script>alert('잘못된 경로로 접근했습니다!');location.href='/';</script>");
+    }
+
     var sqlGetUserAge = "SELECT birthdate, Vaccinated FROM USER_VACCINATED WHERE uid = ?";
     var sqlGetVaccInfo = "SELECT min_age FROM VACCINE WHERE id = ?";
     var sqlInsertLeftVaccReserve = "INSERT INTO RESERVATION(reserve_date, uid, vaccine_type, hospital_id, current_series) VALUE(?,?,?,?,?)";
