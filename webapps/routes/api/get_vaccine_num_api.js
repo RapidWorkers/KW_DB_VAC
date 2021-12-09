@@ -21,17 +21,33 @@ router.get('/', async function(req, res, next){
         var [rows, fields] = await conn.query(sqlGetLeftVacc, [hospital_id, reserve_date]);
   
         var [reserve_nums, fields] = await conn.query(sqlGetReservationNum, [hospital_id, reserve_date]);
+
   
         //병원에 분배된 최대 백신 수에서 이미 예약된 백신 수를 빼, 잔여 백신 수를 구함
+        console.log(rows);
         for(var i=0;i<reserve_nums.length;i++){
           var index = rows.findIndex(function(curArray){
             return curArray.id === reserve_nums[i].vaccine_type;
           });
           
-          if(index !== undefined)
+          console.log(index);
+
+          if(index !== -1)
           {
             rows[index].max_num -= reserve_nums[i].count;
           }
+        }
+
+
+        //백신 수량이 0개인 것은 제거
+        var i = 0;
+        while(i<rows.length && i >= 0)
+        {
+          if(rows[i].max_num <= 0){
+            rows.splice(i,1);
+            i -= 1;
+          }
+          i +=1;
         }
   
         res.json({success: true, rows: rows});
