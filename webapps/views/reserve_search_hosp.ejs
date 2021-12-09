@@ -67,6 +67,7 @@
                 
                 <input type="hidden" id = "hospital_id" name = "hospital_id" :value ="hospital_id">
                 <input type="hidden" id = "hospital_name" name = "hospital_name" :value ="hospital_name">
+                <input type="hidden" id = "reserveChange" name = "reserveChange" value="0">
 
 
             </div>
@@ -74,6 +75,7 @@
 
             <div class="row-md-3 mt-5 me-3 text-center">
                 <input type="submit" class="btn btn-primary me-3" name="reserve_select_date" value="날짜 선택" onclick="submit_action(1)">
+                <input type="submit" class="btn btn-danger me-3" name="change_reserve" value="예약 변경" onclick="submit_action(3)">
                 <input type="submit" class="btn btn-warning" name="left_vacc" value="잔여 백신 선택" onclick="submit_action(2)">
             </div>    
         </form>
@@ -91,6 +93,12 @@
         else if(index ==2){
             document.form.method="GET";
             document.form.action="leftvacc_select";
+        }
+        else if(index == 3){
+            console.log("hi");
+            document.getElementById("reserveChange").value="1";
+            document.form.method="POST";
+            document.form.action="reserve_select_date";
         }
     }
     
