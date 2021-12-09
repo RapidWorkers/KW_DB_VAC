@@ -5,14 +5,16 @@
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
 
-function drawChart(vaccineSideeffectList) {
+function drawChart(vaccine_id, vaccineSideeffectList) {
     var datArray = [['부작용', '발생수']];
-    
-    for (var i=0; i<vaccineSideeffectList.length;i++){
-        var oneItem = vaccineSideeffectList[i];
-        datArray.push([oneItem.report_desc, parseInt(oneItem.report_cnt)]);
-    }
 
+    if(vaccine_id)
+    {
+        for (var i=0; i<vaccineSideeffectList.length;i++){
+            var oneItem = vaccineSideeffectList[i];
+            datArray.push([oneItem.report_desc, parseInt(oneItem.report_cnt)]);
+        }
+    }
     var data = google.visualization.arrayToDataTable(datArray);
     
 
@@ -37,7 +39,7 @@ function drawChart(vaccineSideeffectList) {
                 <div class="col-4">
                     <h6 class="dislpay-8">백신 선택</h6>
                     <select class="form-select" v-on:change = "loadChart()" v-model="vaccineId" style="width:auto" aria-label=".form-select-lg example">
-                        <option selected disabled>백신 선택</option>
+                        <option selected disabled value="0">백신 선택</option>
                         <option value="1" selected="selected">화이자</option>
                         <option value="2">모더나</option>
                         <option value="3">아스트라제네카</option>
@@ -67,7 +69,7 @@ function drawChart(vaccineSideeffectList) {
     var sideeffectSearchApp = new Vue({
         el: '#sideeffectSearch',
         data: {
-            vaccineId: 1,
+            vaccineId: 0,
             vaccineReportList: 
                 [
                 <% for(var i=0; i<vaccine_report_list.length; i++) { %>
@@ -87,6 +89,14 @@ function drawChart(vaccineSideeffectList) {
                 var vaccineSideeffectData =  await getVaccineSideeffectApi(searchParams);
                 var vaccineSideeffectList = vaccineSideeffectData.data.rows;
 
+                if(!vaccineSideeffectData.data.success)
+                {
+                    alert("통계 API 호출에 실패했습니다.");
+                    return;
+                }
+
+                console.log(vaccineSideeffectList);
+
                 for(i =0; i<vaccineSideeffectList.length;i++)
                 {
                     var index = this.vaccineReportList.findIndex(function(curArray){
@@ -94,15 +104,12 @@ function drawChart(vaccineSideeffectList) {
                     })
                     vaccineSideeffectList[i].report_desc = this.vaccineReportList[i].report_desc;
                 }
-
-                console.log(vaccineSideeffectList);
-
-                drawChart(vaccineSideeffectList);
+                drawChart(vaccine_id, vaccineSideeffectList);
                 
             }
         },
         mounted: async function(){
-            this.loadChart();
+            await this.loadChart();
         }
     })
 </script>
