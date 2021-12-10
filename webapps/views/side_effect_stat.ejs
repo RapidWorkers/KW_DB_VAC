@@ -95,16 +95,21 @@ function drawChart(vaccine_id, vaccineSideeffectList) {
                     return;
                 }
 
+                console.log(vaccineSideeffectList);
+
                 //부작용 증상 별 이름을 추가
                 for(i =0; i<vaccineSideeffectList.length;i++)
                 {
                     var index = this.vaccineReportList.findIndex(function(curArray){
-                        return curArray.report_type = vaccineSideeffectList[i].report_type;
+                        return curArray.report_type == vaccineSideeffectList[i].report_type;
                     })
-                    vaccineSideeffectList[i].report_desc = this.vaccineReportList[i].report_desc;
+                    vaccineSideeffectList[i].report_desc = this.vaccineReportList[index].report_desc;
                 }
+
+                console.log(vaccineSideeffectList);
                 drawChart(vaccine_id, vaccineSideeffectList);
                 
+
             }
         },
         mounted: async function(){

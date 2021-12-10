@@ -117,6 +117,10 @@
 
         this.vaccine_list = vaccineData.data.rows;//할당
 
+        this.vaccine_id = -1;
+        this.vaccine_name = "-";
+        this.valVacc = null;
+
       },
       selectVaccine: async function(id, name){
         var prevId = this.vaccine_id;

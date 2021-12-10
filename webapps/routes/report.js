@@ -13,7 +13,7 @@ else
 /* POST home page. */
 router.post('/', async function(req, res, next) {
   
-  var sqlGetReserveId = "SELECT id FROM RESERVATION WHERE uid=? ORDER BY current_series DESC;";
+  var sqlGetReserveId = "SELECT id FROM RESERVATION WHERE uid=? AND is_complete = 1 ORDER BY current_series DESC;";
   var sqlInsertReport = "INSERT INTO VACC_REPORT(reserve_id, report_type, report_time) VALUES(?, ?, ?);";
   
   if(req.session.loggedin === undefined || req.session.loggedin ===0) //로그인 예외처리

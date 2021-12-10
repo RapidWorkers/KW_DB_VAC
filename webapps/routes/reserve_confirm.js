@@ -73,10 +73,11 @@ router.post('/', async function(req, res, next) {
         var reason = "접종 완료";
   
      
-      if(reserveInfo.length > 0 && !reserveChange)
+      if(reserveInfo.length > 0 && reserveChange != 1)
         var reason = "기예약건 존재";
 
-      if(reserveInfo.length == 0 && reserveChange)
+      console.log(reserveChange);
+      if(reserveInfo.length == 0 && reserveChange == 1)
         var reason = "기존 예약이 없어 예약변경 불가능"
       
       if(reason)
@@ -90,6 +91,7 @@ router.post('/', async function(req, res, next) {
         
         if(reserveChange==1)  //백신 예약 변경
         {
+          console.log("change");
           var reserveInfo = [reserve_date, vaccine_id, hospital_id, uid, series];
           var [rows, fields] = await conn.query(sqlUpdateOldReserv, reserveInfo);
         }
