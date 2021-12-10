@@ -16,16 +16,16 @@ router.get('/', async function(req, res, next) {
     try{
       var conn = await getSqlConnectionAsync();
 
-      var [rows, fields] = await conn.query(sqlGetAllTeamMemInfo, [req.session.uid]);
+      var [rows, fields] = await conn.query(sqlGetAllTeamMemInfo, [req.session.uid]);//내가 가지는 모든 친구의 정보 가져오기
       var renderInfo = {
         title: '모임 계산기',
         loggedin: 1,
         legal_name: req.session.legal_name,
         rows: rows
-      }
+      }//렌더링 정보
 
       conn.release();
-      res.render('group_calc_meetup', renderInfo);
+      res.render('group_calc_meetup', renderInfo);//렌더링
 
     }catch(err){
       console.log("Error: MySQL returned ERROR :" + err);
@@ -41,55 +41,43 @@ router.post('/', async function(req, res, next) {
   if(req.session.loggedin === undefined || req.session.loggedin ===0)
     res.send("<script>alert('로그인이 필요합니다.');location.href='login';</script>");
   else{
-    
-
-    // 미접종인원 몇명인지 count
-    //var sqlGetUnVacCount = "SELECT COUNT(*) AS VAC FROM USER_VACCINATED WHERE uid IN (?,?,?) AND Vaccinated !='FULL'";
-
     try{
       var chkPerson = req.body.group_calc;
 
-      if(chkPerson == undefined) chkPerson = [req.session.uid];
+      if(chkPerson == undefined) chkPerson = [req.session.uid];//아무도 선택 안하면 나만 넣기
       else
       {
-        if(!Array.isArray(chkPerson))
+        if(!Array.isArray(chkPerson))//한명만 있으면
         {
-          chkPerson = [chkPerson];
+          chkPerson = [chkPerson];//배열로 만들기
         }
-        chkPerson.push(req.session.uid);
+        chkPerson.push(req.session.uid);//배열에 원소 계속 추가
       }
       
       var len=Object.keys(chkPerson).length;
       var flag = true; // 모임계산기 결과 true면 모임 가능, false면 모임불가능
       
       var conn = await getSqlConnectionAsync();
-      // 멍청한 코드
       var unVacCnt = 0;
       
       var sqlChkVac = "SELECT uid FROM USER_VACCINATED WHERE uid = ? AND Vaccinated COLLATE utf8mb4_general_ci != 'FULL';";
-      for (var i=0;i<len;i++){
-        
-        var [rows, fields] = await conn.query(sqlChkVac, [Number(chkPerson[i])]);
+      for (var i=0;i<len;i++){//모든 친구에 대해서
+        var [rows, fields] = await conn.query(sqlChkVac, [Number(chkPerson[i])]);//접종여부 가져오기 특정인
         if(rows.length)
           unVacCnt += 1;
       }
 
-      //var [rows, fields] = await conn.query(sqlGetUnVacCount, [1,2,3]);
-  
-
       // 사람 수 6명 초과이거나 미접종자 1명 초과이면 모임 불가능
       if(len > 6 || unVacCnt > 1)
         flag = false;
-
-      console.log(flag);
 
       var renderInfo = {
         title: '모임 계산 결과',
         legal_name: req.session.legal_name,
         loggedin: 1,
         flag: flag
-      };
-      res.render('group_calc_meetup_result', renderInfo);
+      };//렌더링 정보
+      res.render('group_calc_meetup_result', renderInfo);//렌더링
     }catch(err){
       console.log("Error: MySQL returned ERROR :" + err);
       conn.release();

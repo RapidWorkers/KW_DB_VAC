@@ -6,7 +6,7 @@
         google.charts.setOnLoadCallback(drawChart);
 
         function drawChart() {
-
+            //google chart를 위한 table 생성
             var data = google.visualization.arrayToDataTable([
                 ['reserve_date', 'first', 'second'],
 
@@ -22,7 +22,7 @@
                 hAxis: {title: '접종 수'},
                 vAxis: {title: '접종 날짜'},
             };
-
+            // LineChart 생성
             var chart = new google.visualization.LineChart(document.getElementById('vacc_chart'));
 
             chart.draw(data, options);
@@ -84,6 +84,7 @@
     </div>
 
     <script>
+        //datepicker 사용 script
         $(document).ready(function () {
             $('.m-datepicker').datepicker({
                 format: "yyyy/mm/dd",

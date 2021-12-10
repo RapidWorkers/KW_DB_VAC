@@ -5,13 +5,13 @@ const getSqlConnectionAsync = require('../configs/mysql_load').getSqlConnectionA
 const getSqlConnection = require('../configs/mysql_load').getSqlConnection;
 
 
-/* GET home page. */
+/* GET page. */
 router.get('/', function(req, res, next) {
   // 로그인이 안 되었을 경우 예외처리
   if(req.session.loggedin === undefined || req.session.loggedin ===0)
     res.send("<script>alert('로그인이 필요합니다.');location.href='login';</script>");
   else{
-    getSqlConnection((conn) =>{
+    getSqlConnection((conn) =>{ //사용자가 그룹장인 그룹 리스트 가져옴
       var sqlGetTeamName = "SELECT id, team_name FROM TEAM WHERE owner_uid = ?;";
       conn.query(sqlGetTeamName, [req.session.uid], function (err, rows){
         if(err) console.log("Error: MySQL returned ERROR : " + err);
@@ -22,7 +22,7 @@ router.get('/', function(req, res, next) {
             legal_name: req.session.legal_name,
             rows: rows,
             selected_gid: (!req.query.gid)?-1:req.query.gid
-          };
+          };//정보 출력
           conn.release();
           res.render('group_mem_add', renderInfo);
         }
@@ -31,7 +31,7 @@ router.get('/', function(req, res, next) {
 }
 });
 
-/* POST home page. */
+/* POST page. */
 router.post('/', async function(req, res, next) {
   if(req.session.loggedin === undefined || req.session.loggedin ===0)
     res.send("<script>alert('로그인이 필요합니다.');location.href='login';</script>");
@@ -88,9 +88,9 @@ router.post('/', async function(req, res, next) {
       }
       
 
-      var [gid, fields] = await conn.query(sqlInsertTeamMem, [gids, rows2[0].uid]);
+      var [gid, fields] = await conn.query(sqlInsertTeamMem, [gids, rows2[0].uid]);//그룹 멤버 추가
       conn.release();
-      res.redirect('/group_mem_list/'+gids);
+      res.redirect('/group_mem_list/'+gids);//돌아가기
       
     }catch(err){
         console.log("Error: MySQL returned ERROR :" + err);

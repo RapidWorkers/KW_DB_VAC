@@ -85,6 +85,7 @@
 </div>
 
 <script>
+    //버튼 선택에 따른 페이지 변경
     function submit_action(index){
         if(index == 1){
             document.form.method="POST";
@@ -95,13 +96,13 @@
             document.form.action="leftvacc_select";
         }
         else if(index == 3){
-            console.log("hi");
             document.getElementById("reserveChange").value="1";
             document.form.method="POST";
             document.form.action="reserve_select_date";
         }
     }
     
+    //axios 설정
     const axios_inst = axios.create({
             baseURL: 'http://localhost:3000/api/'
         })
@@ -125,9 +126,9 @@
             valHospital: null
         },
         methods: {
-            searchByMetropol: async function(){
-                var searchParams = {params: {searchType: 0, metropol: this.metropol}};
-                var districtData = await fetchHospitalApi(searchParams);
+            searchByMetropol: async function(){//시/도에 따른 검색
+                var searchParams = {params: {searchType: 0, metropol: this.metropol}};//파라미터 설정
+                var districtData = await fetchHospitalApi(searchParams);//데이터 가져오기
                 this.districtList = districtData;
                 this.district = "구/군/시 선택"
                 this.townList = [];
@@ -138,9 +139,9 @@
                 this.hospital_id = null;
             },
             
-            searchByDistrict: async function(){
-                var searchParams = {params: {searchType: 1, metropol: this.metropol, district: this.district}};
-                var townData = await fetchHospitalApi(searchParams);
+            searchByDistrict: async function(){ //구/군/시에 따른 검색
+                var searchParams = {params: {searchType: 1, metropol: this.metropol, district: this.district}};//파라미터 설정
+                var townData = await fetchHospitalApi(searchParams);//데이터 가져오기
                 this.townList = townData; 
                 this.town = "동/면/리 선택"
                 this.hospital = "병원 선택";
@@ -148,19 +149,19 @@
                 this.hospitalList = [];
                 this.hospital_id = null;
             },
-            searchByTown: async function(){
-                var searchParams = {params: {searchType: 2, metropol: this.metropol, district: this.district, dong: this.town, emergency: 0}};
-                var hospitalData = await fetchHospitalApi(searchParams);
+            searchByTown: async function(){ //동/면/리에 따른 검색
+                var searchParams = {params: {searchType: 2, metropol: this.metropol, district: this.district, dong: this.town, emergency: 0}};//파라미터 설정
+                var hospitalData = await fetchHospitalApi(searchParams);//데이터 가져오기
                 this.hospital = "병원 선택";
                 this.hospital_name = "-";
                 this.hospitalList = hospitalData.data;
                 this.hospital_id = null;
             },
 
-            getHospitalName: async function(){
+            getHospitalName: async function(){ //병원 검색
                 for(i = 0; i < this.hospitalList.length; i++)
                     {
-                        if(this.hospitalList[i].id == this.hospital){
+                        if(this.hospitalList[i].id == this.hospital){//일치하는 병원 아이디 설정
                             this.hospital_name = this.hospitalList[i].name;
                             this.hospital_id = this.hospitalList[i].id;
                         }
@@ -168,14 +169,14 @@
             },
 
             chkHospitalSelect: function(e){
-                if(!this.hospital_id) this.valHospital = false;
+                if(!this.hospital_id) this.valHospital = false;//병원 아이디 있는지 확인
                 else this.valHospital = true;
 
-                if(this.valHospital)
+                if(this.valHospital)//병원 선택 검증
                 {
-                    return true;
+                    return true;//맞으면 return
                 }
-                e.preventDefault();
+                e.preventDefault();//서브밋 방지
 
             }
         }

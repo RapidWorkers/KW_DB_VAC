@@ -163,6 +163,7 @@
 
 
 <script>
+    //datepicker 사용 script
     $(document).ready(function(){
     $('.m-datepicker').datepicker({
         format: "yyyy/mm/dd",
@@ -209,17 +210,19 @@
         },
         methods: {
             validateUsername: async function(){
+                //username 유효 검사
                 var vParam = {
                     validateType: 1,
                     username: username._value
                 }
-                var vResult = await fetchValidationAPI(vParam);
-                if(!vResult.data.success) this.dupUser = false;
-                else this.dupUser = true;
+                var vResult = await fetchValidationAPI(vParam);//API 호출
+                if(!vResult.data.success) this.dupUser = false;//실패시
+                else this.dupUser = true;//성공시
             },
             validateEmail: async function(){
-                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                if(!re.test(this.email)) 
+                //이메일 유효 검사
+                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;//형식 검증용
+                if(!re.test(this.email)) //검증 실패시
                 {
                     this.dupEmail = false;
                     return;
@@ -229,13 +232,14 @@
                     validateType: 2,
                     email: email._value
                 }
-                var vResult = await fetchValidationAPI(vParam);
-                if(!vResult.data.success) this.dupEmail = false;
-                else this.dupEmail = true;
+                var vResult = await fetchValidationAPI(vParam);//검증 API 호출
+                if(!vResult.data.success) this.dupEmail = false;//중복시
+                else this.dupEmail = true;//성공시
             },
             validatePhone: async function(){
+                //전화번호 유효 검사
                 var re = /^\d{2,3}-\d{3,4}-\d{4}$/;
-                if(!re.test(this.phone))
+                if(!re.test(this.phone))//검증 실패시
                 {
                     this.valPhone = false;
                     return;
@@ -244,12 +248,12 @@
                     validateType: 3,
                     phone: phone._value
                 }
-                var vResult = await fetchValidationAPI(vParam);
-                if(!vResult.data.success) this.valPhone = false;
-                else this.valPhone = true;
+                var vResult = await fetchValidationAPI(vParam);//검증 API 호출
+                if(!vResult.data.success) this.valPhone = false;//중복시
+                else this.valPhone = true;//성공시
             },
             validateUserdata: async function(e){
-
+                //데이터베이스 등록 전 재검사
                 if(!this.dupUser) await this.validateUsername();
                 if(!this.dupEmail) await this.validateEmail();
                 await this.validatePhone();
@@ -283,7 +287,8 @@
 
                 if(!this.agree) this.valAgree = false;
                 else this.valAgree = true;
-
+                
+                //모두 유효할 시 submit
                 if(this.dupUser && this.dupEmail && this.valPwd && this.valName && this.valBirth && this.valSex && this.valZip && this.valAddr && this.valPhone && this.valAgree)
                 {
                     return e.target.submit();

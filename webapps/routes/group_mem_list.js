@@ -12,18 +12,19 @@ router.get('/:gid', async function(req, res, next) {
     try{
       var conn = await getSqlConnectionAsync();
 
-      if(req.params.gid == 0)
+      if(req.params.gid == 0)//전체 그룹원 보여주기
       {
         var renderInfo={
-          title: '그룹 구성원 목록 보기',
+          title: '전체 그룹 구성원 목록 보기',
           loggedin: 1,
           legal_name: req.session.legal_name,
           fullList: req.params.gid
         }
       }
-      else
+      else  
       {
         var [groups,fields] = await conn.query(sqlGetTeam, [req.params.gid, req.session.uid]);
+        // 사용자가 자신의 소유가 아닌 그룹에 접근하려 할 때 예외처리
         if(groups.length == 0)
         {
           conn.release();
@@ -39,7 +40,7 @@ router.get('/:gid', async function(req, res, next) {
         }
       }
       conn.release();
-      res.render('group_mem_list', renderInfo);
+      res.render('group_mem_list', renderInfo);//렌더링
 
     }catch(err){
       console.log("Error: MySQL returned ERROR :" + err);
@@ -47,7 +48,7 @@ router.get('/:gid', async function(req, res, next) {
     }
     
   }
-  else
+  else  //로그인 예외처리
   {
     res.send('<script>alert("로그인이 필요합니다.");location.href="login";</script>');
   }

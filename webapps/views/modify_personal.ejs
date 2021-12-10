@@ -115,28 +115,28 @@
             },
             methods: {
                 validatePhone: async function(){
-                    var re = /^\d{2,3}-\d{3,4}-\d{4}$/;
-                    if(!re.test(this.phone)) this.valPhone = false;
-                    else this.valPhone = true;
+                    var re = /^\d{2,3}-\d{3,4}-\d{4}$/;//전화번호 형식 검증
+                    if(!re.test(this.phone)) this.valPhone = false;//검증 실패시
+                    else this.valPhone = true;//성공시
                 },
                 validateUserdata: function(e){
-                    this.validatePhone();
+                    this.validatePhone();//전화번호 검증
 
-                    if(!this.passwd) this.valPwd = false;
+                    if(!this.passwd) this.valPwd = false;//비밀번호 검증
                     else this.valPwd = true;
 
-                    if(!this.zip || this.zip.length != 5) this.valZip = false;
+                    if(!this.zip || this.zip.length != 5) this.valZip = false;//우편번호 검증
                     else 
                     {
-                        var re = /^\d{5}$/
-                        if(re.test(this.zip)) this.valZip = true;
-                        else this.valZip = false;
+                        var re = /^\d{5}$/; //형식 검증
+                        if(re.test(this.zip)) this.valZip = true;//성공시
+                        else this.valZip = false;//실패시
                     }
 
-                    if(!this.addr) this.valAddr = false;
+                    if(!this.addr) this.valAddr = false;//주소 검증
                     else this.valAddr = true;
 
-                    if(this.valPwd && this.valZip && this.valAddr && this.valPhone)
+                    if(this.valPwd && this.valZip && this.valAddr && this.valPhone)//전부 검증 성공시
                     {
                         return true;
                     }

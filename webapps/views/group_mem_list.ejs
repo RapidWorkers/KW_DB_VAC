@@ -72,20 +72,20 @@
     const axios_inst = axios.create({
             baseURL: 'http://localhost:3000/api/'
     })
-    
+    //이미지 업로드
     function uploadProfileImage(frm){
         return axios_inst.post("group_profile_image_upload/<%= groups[0].id %>", frm, {headers: { 'Content-Type': 'multipart/form-data' }})
     }
     
-
+    //이미지 삭제
     function deleteProfileImage(frm){
         return axios_inst.delete("group_profile_image_upload/<%= groups[0].id %>")
     }
-
+    //그룹 멤버 삭제
     function deleteGroupMem(friend_uid){
         return axios_inst.delete("group_api/<%= groups[0].id %>/"+friend_uid);
     }
-
+    //그룹 멤버 추가
     function fetchGroupMemList(){
         return axios_inst.get("group_api/<%= groups[0].id %>");
     }
@@ -111,11 +111,11 @@
         deleteMember: []
        },
        methods: {
-           loadGroupMem: async function(){
+           loadGroupMem: async function(){//친구 리스트 로드
                 var memberData = await fetchGroupMemList();
                 this.groupMembers = memberData.data.uids;
            },
-           removeMembers: async function(){
+           removeMembers: async function(){//선택한 멤버들 그룹에서 삭제
                 if(!confirm("정말 친구를 삭제하시겠습니까?")) return;
 
                 for(i=0; i < this.deleteMember.length; i++)
@@ -125,7 +125,7 @@
                 }
                 this.loadGroupMem();
            },
-           uploadImg: async function(e){
+           uploadImg: async function(e){//그룹 프로필 사진 업로드
                 var frm = new FormData();
                 var profile_img = document.getElementById("profile_image");
                 frm.append("profile_image", profile_img.files[0]);
@@ -139,7 +139,7 @@
                 else alert("프로필 업로드에 실패했습니다.");
 
            },
-           deleteImg: async function(){
+           deleteImg: async function(){//그룹 프로필 사진 삭제
                 var result = await deleteProfileImage();
 
                 if(result.data.success == true) 
@@ -148,7 +148,7 @@
                 }
                 else alert("프로필 삭제에 실패했습니다.");
            },
-           selectAll: async function(){
+           selectAll: async function(){//모두 선택을 체크할 시 멤버들 모두를 선택
                 const checkboxes = document.getElementsByName('group_calc');
                 checkboxes.forEach((checkbox) => {
                     checkbox.checked = selectAll.checked;
@@ -156,7 +156,7 @@
                     else this.deleteMember = [];
                 })
            },
-           submit_action: function (){
+           submit_action: function (){//submit시 selectAll checkbox의 value까지 넘어가지 않도록 삭제 후 submit한다.
                 var checkall = document.getElementById( "selectAll" );
                 if(checkall.checked){
                     checkall.checked = false;

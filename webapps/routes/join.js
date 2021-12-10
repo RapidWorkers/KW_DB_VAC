@@ -65,6 +65,7 @@ router.post('/', async function(req, res, next) {
     if(!valResult) return res.redirect('join?hasError=1');
 
     //Duplicated value check
+    //ID 중복 확인
     try{
       var conn = await getSqlConnectionAsync();
       var [rows, fields] = await conn.query(sqlChkUsernameDup, [username]);
@@ -77,6 +78,7 @@ router.post('/', async function(req, res, next) {
         conn.release();
     }
 
+    //핸드폰 번호 중복 확인
     try{
       var conn = await getSqlConnectionAsync();
       var [rows, fields] = await conn.query(sqlChkPhoneDup, [phone]);
@@ -89,6 +91,7 @@ router.post('/', async function(req, res, next) {
         conn.release();
     }
 
+    //이메일 중복 확인
     try{
       var conn = await getSqlConnectionAsync();
       var [rows, fields] = await conn.query(sqlChkEmailDup, [email]);
@@ -101,6 +104,7 @@ router.post('/', async function(req, res, next) {
         conn.release();
     }
 
+    //모든 데이터 검증이 끝난 후, 사용자 정보를 데이터베이스에 추가
     bcrypt.hash(passwd, 10, async (err, hashedPasswd) => {
       //암호화 이후 실행할 내용
       try{
@@ -118,6 +122,7 @@ router.post('/', async function(req, res, next) {
           }
         }
 
+         //인증 메일 발송
         var mailerClient = await nodemailer.createTransport(mgTransport(mailerOpt));
         var emailContent = {
           from: mgCfg.from,
@@ -125,8 +130,6 @@ router.post('/', async function(req, res, next) {
           subject: "회원가입 인증 이메일 입니다.",
           html: "아래 링크를 클릭하세요.<br><a href='"+mgCfg.base_url + "email_auth?auth_link=" + rows[0].auth_link+"'>"+mgCfg.base_url + "email_auth?auth_link=" + rows[0].auth_link+"</a>"
         }
-
-        console.log(mgCfg.base_url + "email_auth" + rows[0].auth_link);
 
         mailerClient.sendMail(emailContent);
 

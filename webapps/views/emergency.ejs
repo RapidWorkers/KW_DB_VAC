@@ -77,14 +77,16 @@
     </div>
 
     <script>
+        //axios 설정
         const axios_inst = axios.create({
             baseURL: 'http://localhost:3000/api/'
         })
     
+        //병원 목록 API
         function fetchHospitalApi(params){
             return axios_inst.get("get_hospital_list_by_area", params)
         }
-    
+        
         var emergencySearchApp = new Vue({
             el: '#emergencySearch',
             data: {
@@ -100,6 +102,7 @@
                 mapAPIUrl: "https://www.google.com/maps/embed/v1/place?key=AIzaSyB1NTBVf81XlMwtZGOUnqLGRLc0Vp53DEA&q=광운대학교"
             },
             methods: {
+                //광역자치단체로 검색
                 searchByMetropol: async function(){
                     var searchParams = {params: {searchType: 0, metropol: this.metropol}};
                     var districtData = await fetchHospitalApi(searchParams);
@@ -107,7 +110,8 @@
                     this.district = "구/군/시 선택"
                     this.hospitalList = [];
                 },
-
+                
+                //기초자치단체로 병원 검색
                 searchByDistrict: async function(){
                     var searchParams = {params: {searchType: 2, metropol: this.metropol, district: this.district, emergency: 1}};
                     var hospitalData = await fetchHospitalApi(searchParams);
@@ -117,7 +121,8 @@
                     }
                     this.hospitalList = hospitalData;
                 },
-
+                
+                //병원(응급실) 병원 검색
                 selectHospital: async function(id){
 
                     var prevId = this.hospitalId;

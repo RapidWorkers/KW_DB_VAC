@@ -46,10 +46,11 @@
             baseURL: 'http://localhost:3000/api/'
     })
     
+    // 존재하는 ID인지 체크
     function usernameChk(params){
         return axios_inst.post("validate_join", params)
     }
-
+    // api/group_api 불러오기
     function doFetchGroup(){
             return axios_inst.get("group_api")
     }
@@ -65,6 +66,7 @@
             valUser: null
         },
         methods: {
+            // 사용자의 그룹 리스트 로드
             loadGroupList: async function () {
                 var groupData = await doFetchGroup();
                 if(!groupData.data.success)
@@ -75,9 +77,11 @@
 
                 this.groupList = groupData.data.groups;
             },
+            // 그룹 선택
             selectGroup: async function(){
                 this.group_id = this.selGroup;
             },
+            // 존재하는 사용자인지 ID 체크
             validateUser: async function(){
                 var vParam = {
                     validateType: 1,
@@ -88,7 +92,7 @@
                 if(!vResult.data.success) this.valUser = true;
                 else this.valUser = false;
             },
-
+            // 그룹 종류(group_id)와 추가하려는 사용자(friendName)가 존재하는지 체크
             validateData: async function(e){
                 if(this.group_id && this.group_id != -1) this.valGroup = true;
                 else this.valGroup = false;

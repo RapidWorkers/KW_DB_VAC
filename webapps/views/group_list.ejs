@@ -68,6 +68,7 @@
             },
             methods: {
                 loadGroupList: async function () {
+                    //사용자가 소유한 그룹의 리스트를 가져옴
                     var groupData = await doFetchGroup();
                     if(!groupData.data.success)
                     {
@@ -84,6 +85,7 @@
                     this.groupList = groupData.data.groups;
                 },
                 addGroup: async function(){
+                    //그룹 추가를 위한 확인 메시지와 API 호출
                     var groupName = prompt('새로 생성할 그룹 이름을 입력하세요', '새 그룹 ' + (this.groupList.length + 1));
                     if(groupName === null || groupName.length < 1) return;
 
@@ -98,6 +100,7 @@
                     await this.loadGroupList();
                 },
                 deleteGroup: async function(gid, gname){
+                    //그룹 삭제를 위한 확인 메시지와 API 호출 
                     if(!confirm('정말 그룹 "'+ gname +'"을 삭제하시겠습니까?')) return;
 
                     var result = await doDeleteGroup(gid);

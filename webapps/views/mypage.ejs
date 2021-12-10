@@ -95,14 +95,17 @@
 </div>
 
 <script>
+    //axios 설정
     const axios_inst = axios.create({
             baseURL: 'http://localhost:3000/api/'
     })
     
+    //프로필 업로드 함수
     function uploadProfileImage(frm){
         return axios_inst.post("profile_image_upload", frm, {headers: { 'Content-Type': 'multipart/form-data' }})
     }
 
+    //프로필 삭제 함수
     function deleteProfileImage(frm){
         return axios_inst.delete("profile_image_upload")
     }
@@ -115,10 +118,10 @@
        methods: {
            uploadImg: async function(e){
                 var frm = new FormData();
-                var profile_img = document.getElementById("profile_image");
-                frm.append("profile_image", profile_img.files[0]);
+                var profile_img = document.getElementById("profile_image");//프로필 파일
+                frm.append("profile_image", profile_img.files[0]);//추가
 
-                var result = await uploadProfileImage(frm);
+                var result = await uploadProfileImage(frm);//호출
 
                 if(result.data.success == true) 
                 {                
@@ -128,9 +131,9 @@
 
            },
            deleteImg: async function(){
-                var result = await deleteProfileImage();
+                var result = await deleteProfileImage();//API호출
 
-                if(result.data.success == true) 
+                if(result.data.success == true) //성공했으면 기본 이미지로 돌리기
                 {                
                     this.profile_img_path = "./image/syringe.png";
                 }

@@ -29,11 +29,13 @@ router.get('/', async function(req, res, next) {
         address: rows[0].address,
         profile_img: (rows[0].profile_img === null)?-1:rows[0].profile_img,
         vaccineDate: "-"
-      };
+      };//렌더링 정보 설정
 
+      //백신 접종 완료자 유무 확인
       [rows, fields] = await conn.query(sqlGetVaccinatedSeries, [req.session.uid]);
       renderInfo.vaccinatedStatus = rows[0].Vaccinated;
 
+      //1차 백신 접종 정보 가져오기
       [rows, fields] = await conn.query(sqlGetFirstDoseInfo, [req.session.uid]);
       if(rows.length != 0)//vaccine reservation first
       {
@@ -48,6 +50,7 @@ router.get('/', async function(req, res, next) {
         renderInfo.first_reserve_date = null;
       }
 
+      //2차 백신 접종 정보 가져오기
       [rows, fields] = await conn.query(sqlGetSecondDoseInfo, [req.session.uid]);
       if(rows.length != 0)//No vaccine reservation
       {
@@ -56,7 +59,7 @@ router.get('/', async function(req, res, next) {
         var vDate = new Date(rows[0].reserve_date);
         renderInfo.vaccineDate = vDate.getFullYear() + '. ' + (vDate.getMonth()+1).toString().padStart(2,"0") + '. ' + (vDate.getDate()).toString().padStart(2,"0") + '.';
       }
-      else
+      else 
       {
         renderInfo.secondVaccineName = "-";
         renderInfo.second_reserve_date = null;
@@ -73,7 +76,7 @@ router.get('/', async function(req, res, next) {
       conn.release();
     }
   }
-  else
+  else  //로그인 예외처리
   {
     res.send('<script>alert("로그인이 필요합니다.");location.href="login";</script>');
   }

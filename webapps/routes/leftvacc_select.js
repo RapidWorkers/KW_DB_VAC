@@ -53,7 +53,7 @@ router.get('/', async function(req, res, next) {
       
       conn.release();
     }
-    catch(err){
+    catch(err){ 
       console.log("Error: MySQL returned ERROR :" + err);
       conn.release();
     }
@@ -127,12 +127,12 @@ router.post('/', async function(req, res, next) {
       if(reserveInfo.length > 0)
         var reason = "기예약건 존재";
       
-      if(reason)
+      if(reason)  //백신 예약 실패 사유가 존재하면 예약 실패 페이지 렌더링
       {
         res.render('reserve_fail', { title: '잔여백신 예약 실패', loggedin: 1, legal_name: req.session.legal_name, 
         reason: reason ,vaccine_name: vaccine_name, hospital_name: hospital_name});
       }
-      else
+      else  //아니라면 백신 접종 내역을 데이터베이스에 추가하고 백신 예약 성공 페이지를 렌더링
       {
         var reserveInfo = [todayDate, uid, vaccine_id, hospital_id, series];
 

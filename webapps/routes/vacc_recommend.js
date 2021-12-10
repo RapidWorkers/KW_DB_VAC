@@ -105,34 +105,6 @@ router.post('/', async function (req, res, next) {
       conn.release();
     }
   }
-  /*
-  var sqlNestSub = "(SELECT RE.vaccine_type FROM RESERVATION AS RE JOIN RESERVE_REPORT AS VR ON VR.reserve_id = RE.id)";
-  var sqlGetVaccSideNum = "SELECT vac_name, V.id AS vacc_id, COUNT(R.id) AS report_cnt FROM VACCINE AS V LEFT OUTER JOIN RESERVE_REPORT AS R ON V.id = " + sqlNestSub + "GROUP BY vac_name ORDER BY report_cnt;";
-  var sqlGetVaccInfo = "SELECT COUNT(id) AS vaccined_cnt FROM RESERVATION where vaccine_type = ? AND is_complete = 1;";
-
-  
-  try{
-    var conn = getSqlConnectionAsync();
-    var [rows, fields] = await conn.query(sqlGetVaccSideNum, []);
-
-    var checked = 0;
-    if (vac_recommend_sideeffect === "yes" && rows[0].vac_name === "아스트라제네카") {
-      checked = 1;
-    }
-
-    var [subrows, fields] = await conn.query(sqlGetVaccInfo, [rows[checked].vacc_id]);
-    vaccined_num = subrows[0].vaccined_cnt;
-
-    vac_recommend_res = rows[checked].vac_name;
-    vac_sideeffect_num = rows[checked].report_cnt;
-    vac_sideeffect_rate = vac_sideeffect_num / vaccined_num;
-
-    conn.release();
-  }catch(err){
-    console.log("Error: MySQL returned ERROR : " + err);
-    conn.release();
-  }
-*/
   
 });
 

@@ -20,12 +20,12 @@ router.get('/:gid/:id', async function(req, res, next) {
       // 그룹아이디(gid), 사용자아이디(uid) 검증
       var [vals, fields] = await conn.query(sqlValInfo, [req.session.uid, req.params.id, req.params.gid]);
       
-      if(vals.length==0){
+      if(vals.length==0){//잘못된 경우(없는 경우)
         conn.release();
         return res.send('<script>alert("잘못된 경로로 접근하였습니다.");location.href="/group_mem_list/'+req.params.gid+'";</script>'); 
       }
       
-      var [rows, fields] = await conn.query(sqlGetUserInfo, [vals[0].uid]);
+      var [rows, fields] = await conn.query(sqlGetUserInfo, [vals[0].uid]);//유저 정보 가져오기
 
       var renderInfo = {
         title: '내 정보 보기',
@@ -36,39 +36,39 @@ router.get('/:gid/:id', async function(req, res, next) {
         sex: (rows[0].sex === 1)?"여자":"남자",
         profile_img: (rows[0].profile_img === null)?-1:rows[0].profile_img,
         vaccineDate: "-"
-      };
+      };//렌더링 정보 설정
 
-      [rows, fields] = await conn.query(sqlGetVaccinatedSeries, [vals[0].uid]);
+      [rows, fields] = await conn.query(sqlGetVaccinatedSeries, [vals[0].uid]);//백신접종회차 가져오기
       renderInfo.vaccinatedStatus = rows[0].Vaccinated;
 
-      [rows, fields] = await conn.query(sqlGetFirstDoseInfo, [vals[0].uid]);
+      [rows, fields] = await conn.query(sqlGetFirstDoseInfo, [vals[0].uid]);//1차 정보 획득
       if(rows.length != 0)//vaccine reservation first
       {
-        renderInfo.firstVaccineName = rows[0].vac_name;
-        renderInfo.first_reserve_date = rows[0].reserve_date;
+        renderInfo.firstVaccineName = rows[0].vac_name;//이름 가져오기
+        renderInfo.first_reserve_date = rows[0].reserve_date;//날짜 가져오기
         var vDate = new Date(rows[0].reserve_date);
-        renderInfo.vaccineDate = vDate.getFullYear() + '. ' + (vDate.getMonth()+1).toString().padStart(2,"0") + '. ' + (vDate.getDate()).toString().padStart(2,"0") + '.';
+        renderInfo.vaccineDate = vDate.getFullYear() + '. ' + (vDate.getMonth()+1).toString().padStart(2,"0") + '. ' + (vDate.getDate()).toString().padStart(2,"0") + '.';//날짜 추출
       }
       else//no reservation
       {
-        renderInfo.firstVaccineName = "-";
+        renderInfo.firstVaccineName = "-";//없을때
         renderInfo.first_reserve_date = null;
       }
 
-      [rows, fields] = await conn.query(sqlGetSecondDoseInfo, [vals[0].uid]);
+      [rows, fields] = await conn.query(sqlGetSecondDoseInfo, [vals[0].uid]);//2차 정보 획득
       if(rows.length != 0)//No vaccine reservation
       {
-        renderInfo.secondVaccineName = rows[0].vac_name;
-        renderInfo.second_reserve_date = rows[0].reserve_date;
+        renderInfo.secondVaccineName = rows[0].vac_name;//이름 가져오기
+        renderInfo.second_reserve_date = rows[0].reserve_date;//날짜 가져오기
         var vDate = new Date(rows[0].reserve_date);
-        renderInfo.vaccineDate = vDate.getFullYear() + '. ' + (vDate.getMonth()+1).toString().padStart(2,"0") + '. ' + (vDate.getDate()).toString().padStart(2,"0") + '.';
+        renderInfo.vaccineDate = vDate.getFullYear() + '. ' + (vDate.getMonth()+1).toString().padStart(2,"0") + '. ' + (vDate.getDate()).toString().padStart(2,"0") + '.';//날짜 추출
       }
       else
       {
-        renderInfo.secondVaccineName = "-";
+        renderInfo.secondVaccineName = "-";//없을때
         renderInfo.second_reserve_date = null;
       }
-      res.render('group_mem_info', renderInfo);
+      res.render('group_mem_info', renderInfo);//렌더링
       conn.release();
 
     }catch(err){

@@ -33,6 +33,7 @@ router.post('/', async function(req, res, next) {
     var sqlUpdateOldReserv = "UPDATE RESERVATION SET reserve_date = ?, vaccine_type = ?, hospital_id = ? WHERE uid = ? and current_series = ?;";
 
     try{
+      //사용자의 생년월일과 선택한 백신의 최저 연령을 가져옴
       var conn = await getSqlConnectionAsync();
 
       var [userInfo, fields] = await conn.query(sqlGetUserAge, [uid]);
@@ -47,7 +48,6 @@ router.post('/', async function(req, res, next) {
       else
         series = 3;
 
-      console.log(series);
 
       var [reserveInfo, fields] = await conn.query(sqlGetReservation, [uid, series]);
 
@@ -63,6 +63,7 @@ router.post('/', async function(req, res, next) {
       }
       
 
+      //백신 접종 불가 사유 분류
       var reason = null;
 
       if(vaccineInfo[0].min_age > age)
@@ -71,7 +72,7 @@ router.post('/', async function(req, res, next) {
       if(series === 3)
         var reason = "접종 완료";
   
-      console.log(reserveChange);
+     
       if(reserveInfo.length > 0 && !reserveChange)
         var reason = "기예약건 존재";
 
@@ -86,12 +87,13 @@ router.post('/', async function(req, res, next) {
       }
       else
       {
-        if(reserveChange==1)
+        
+        if(reserveChange==1)  //백신 예약 변경
         {
           var reserveInfo = [reserve_date, vaccine_id, hospital_id, uid, series];
           var [rows, fields] = await conn.query(sqlUpdateOldReserv, reserveInfo);
         }
-        else
+        else  //백신 예약 신규 추가
         {
           var reserveInfo = [reserve_date, uid, vaccine_id, hospital_id, series];
           var [rows, fields] = await conn.query(sqlInsertLeftVaccReserve, reserveInfo);

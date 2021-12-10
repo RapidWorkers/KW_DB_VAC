@@ -82,7 +82,7 @@
         },
         methods: {
             selectVaccine: async function(id, name){
-
+                //선택된 백신을 활성화하고, 이전에 활성화되어있던 항목을 비활성화
                 var prevId = this.vaccine_id;
 
                 if(prevId != -1)

@@ -5,26 +5,50 @@
             <h2 class="px-4 display-8 fw-bold text-white">전체 그룹원 목록</h2>
         </div>
 
+        <div id="groupMemListApp">
+        <form name = "GroupCalcMeetupForm" method="POST" action="/group_calc_meetup">
         <div class="p-5 mb-4 bg-light">
             <div class="container-fluid py-2">
-                
+    
                 <div class="form-check p-4">
                     <label><h5 class="fs-4 fw-bold">
-                        <input type="checkbox" class="check" id="checkAll"> 모두 선택
+                        <input type="checkbox" class="check" name="group_calc" id="checkAll" onclick="selectAll(this)"> 모두 선택
                     </label></h5>
                 </div>
                 <% for(var i=0; i<rows.length; i++){ %>
                     <div class="form-check">
                         <label><h5 class="fs-4 fw-bold">
-                            <input type="checkbox" class="check"> [<%=rows[i].team_name%>] <%=rows[i].legal_name %>
+                            <input type="checkbox" class="check" value="<%=rows[i].uid%>" name="group_calc"> [<%=rows[i].team_name%>] <%=rows[i].legal_name %>
                         </label></h5>
                     </div>
                 <% } %>
+                
                 <div class="row-md-3 mt-5 me-3 text-center">
-                    <button type="button" class="btn btn-primary me-3">모임 인원 계산</button>
+                    <input type="submit" class="btn btn-primary me-3"value="모임 인원 계산" onclick="submit_action()">
                 </div>
+            
             </div>
         </div>
+    </form>
     </div>
+
+    <script>
+        // '모두 선택' 옵션 클릭 시, 체크박스의 모든 항목 선택해주는 함수
+        function selectAll(selectAll)  {
+            const checkboxes 
+                = document.querySelectorAll('input[type="checkbox"]');
+            
+            checkboxes.forEach((checkbox) => {
+                checkbox.checked = selectAll.checked
+            })
+        }
+        // submit 시 checkAll checkbox는 해당되지 않으므로 지우고 submit하게 해준다.
+        function submit_action(){
+            var checkall = document.getElementById( "checkAll" );
+            if(checkall.checked){
+                checkall.checked = false;
+            }
+        }
+        </script>
 
     <% include ./common/footer %>

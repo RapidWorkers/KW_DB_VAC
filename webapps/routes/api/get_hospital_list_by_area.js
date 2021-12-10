@@ -28,25 +28,25 @@ router.get('/', async function (req, res, next) {
     var dong = req.query.dong;
     var emergency = req.query.emergency;
 
-    if(!req.query.searchType) return res.json({success: false});
+    if(!req.query.searchType) return res.json({success: false});//서치타입 없으면 에러
 
     var searchType = req.query.searchType;
-    if(searchType == 0)
+    if(searchType == 0)//구군시 검색
     {
-        if(!metropol) return res.json({success: false});
+        if(!metropol) return res.json({success: false});//없으면 에러
 
         try {
             var conn = await getSqlConnectionAsync();
-            var [rows, fields] = await conn.query(sqlSearchDistrict, [metropol+"%"]);
+            var [rows, fields] = await conn.query(sqlSearchDistrict, [metropol+"%"]);//검색 수행
             
             var districtArray = [];
 
-            rows.forEach(element => {
+            rows.forEach(element => {//어레이 추출
                 districtArray.push({name: element.district});
             });
 
             districtArray.success = true;
-            res.json(districtArray);
+            res.json(districtArray);//결과 출력
 
             conn.release();
         } catch(err) {
@@ -57,21 +57,21 @@ router.get('/', async function (req, res, next) {
     }
     else if(searchType == 1)
     {
-        if(!metropol) return res.json({success: false});
-        if(!district) return res.json({success: false});
+        if(!metropol) return res.json({success: false});//없으면 에러
+        if(!district) return res.json({success: false});//없으면 에러
 
         try {
             var conn = await getSqlConnectionAsync();
-            var [rows, fields] = await conn.query(sqlSearchDong, [metropol+" "+district+"%"]);
+            var [rows, fields] = await conn.query(sqlSearchDong, [metropol+" "+district+"%"]);//검색 수행
             
             var dongArray = [];
 
             rows.forEach(element => {
-                dongArray.push({name: element.dong});
+                dongArray.push({name: element.dong});//이름만 추출해서 출력
             });
 
             dongArray.success = true;
-            res.json(dongArray);
+            res.json(dongArray);//결과 출력
             
             conn.release();
         } catch(err) {
@@ -82,37 +82,37 @@ router.get('/', async function (req, res, next) {
     }
     else if(searchType == 2)
     {
-        if(!metropol) return res.json({success: false});
-        if(!district) return res.json({success: false});
+        if(!metropol) return res.json({success: false});//없으면 에러
+        if(!district) return res.json({success: false});//없으면 에러
 
         try {
             var conn = await getSqlConnectionAsync();
-            if(!emergency || emergency == 0)
+            if(!emergency || emergency == 0)//응급실 아닐때
             {
             if(!dong) return res.json({success: false});//Only when non-emergency
-            var [rows, fields] = await conn.query(sqlSearchHospital, [metropol+" "+district+" "+dong+"%"]);
+            var [rows, fields] = await conn.query(sqlSearchHospital, [metropol+" "+district+" "+dong+"%"]);//검색
             
             var hospitalArray = [];
 
             rows.forEach(element => {
-                hospitalArray.push({id: element.id, name: element.name, addr: element.address});
+                hospitalArray.push({id: element.id, name: element.name, addr: element.address});//필요한 정보 추출
             });
 
             hospitalArray.success = true;
-            res.json(hospitalArray);
+            res.json(hospitalArray);//사용자 출력
             }
             else
             {
-                var [rows, fields] = await conn.query(sqlSearchHospitalEmergency, [metropol+" "+district+"%"]);
+                var [rows, fields] = await conn.query(sqlSearchHospitalEmergency, [metropol+" "+district+"%"]);//검색
             
                 var hospitalArray = [];
     
                 rows.forEach(element => {
-                    hospitalArray.push({id: element.id, name: element.name, addr: element.address, department: element.department});
+                    hospitalArray.push({id: element.id, name: element.name, addr: element.address, department: element.department});//필요한 정보 추출
                 });
     
                 hospitalArray.success = true;
-                res.json(hospitalArray);
+                res.json(hospitalArray);//사용자 출력
             }
 
             conn.release();

@@ -6,16 +6,13 @@ const getSqlConnectionAsync = require('../configs/mysql_load').getSqlConnectionA
 /* GET home page. */
 router.get('/', async function(req, res, next) {
 
-  //백신 부작용의 종류를 가져와 뷰에 넘겨준다.
+  
   var sqlGetVaccReportType = "SELECT report_type, report_desc FROM VACC_REPORT_TYPE";
-  //var sqlGetVaccineList = "SELECT id, vac_name FROM VACCINE";
-
 
   try{
+    //백신 부작용의 종류를 가져와 뷰에 넘겨줌
     var conn = await getSqlConnectionAsync();
     var[vaccine_report_list, fields] =  await conn.query(sqlGetVaccReportType, []);
-    //var[vaccine_list, fields] = await conn.query(sqlGetVaccineList,[]);
-
 
     res.render('side_effect_stat', { title: '부작용 통계 보기', loggedin: +(req.session.loggedin === 1), 
     legal_name: req.session.legal_name, 

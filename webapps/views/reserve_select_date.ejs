@@ -49,30 +49,7 @@
                       유효하지 않은 백신입니다.
                     </div>
                 </div>
-                  <!--
-                    <ol class="list-group">
-                        <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-start active">
-                          <div class="ms-2 me-auto">
-                            모더나
-                          </div>
-                          <span class="badge bg-primary rounded-pill">5</span>
-                        </li>
-                        
-                        <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
-                          <div class="ms-2 me-auto">
-                            화이자
-                          </div>
-                          <span class="badge bg-primary rounded-pill">3</span>
-                        </li>
-                        <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
-                          <div class="ms-2 me-auto">
-                            아스트라제네카
-                          </div>
-                          <span class="badge bg-primary rounded-pill">7</span>
-                        </li>
-                        
-                      </ol>
-                      -->
+                  
                 </div>
                 
             </div>
@@ -98,6 +75,7 @@
       }).on('changeDate', function (e){
         reserveSelectDate.reserveDate = $('#selected_date').val();
 
+        //datepicker로 선택된 날짜를 vue에 저장
         var date = new Date($('#selected_date').val());
 
         date = date.getFullYear() + "년 " + (date.getMonth()+1) + "월 " + date.getDate() +"일";
@@ -130,51 +108,51 @@
     methods: {
       searchByDate: async function(){
         var searchParams = {params: {hospital_id: this.hospital_id, reserve_date: this.reserveDate}};
-        var vaccineData = await fetchGetVaccineApi(searchParams);
+        var vaccineData = await fetchGetVaccineApi(searchParams);//API 호출
         //vacineData: {vac_name, max_num, V.id}
 
         for(var i=0; i<vaccineData.data.rows.length;i++){
-          vaccineData.data.rows[i].isActive = false;
+          vaccineData.data.rows[i].isActive = false;//변수 설정
         }
 
-        this.vaccine_list = vaccineData.data.rows;
+        this.vaccine_list = vaccineData.data.rows;//할당
 
       },
       selectVaccine: async function(id, name){
         var prevId = this.vaccine_id;
-            if(prevId != -1)
+            if(prevId != -1)//이전 선택 조회
             {
                 var preIndex = this.vaccine_list.findIndex(function(curArray){
                     return curArray.id === prevId;
                 });
 
-                this.vaccine_list[preIndex].isActive = false;
+                this.vaccine_list[preIndex].isActive = false;//이전 선택 비활성화
                 
             }
 
             if(id != -1)
             {
-                var index = this.vaccine_list.findIndex(function(curArray){
+                var index = this.vaccine_list.findIndex(function(curArray){//새 선택 찾기
                     return curArray.id === id;
                 });
 
-                this.vaccine_list[index].isActive = true;
+                this.vaccine_list[index].isActive = true;//새 선택 활성화
             }
 
-            this.vaccine_name = name;
+            this.vaccine_name = name;//새 변수 설정
             this.vaccine_id = id;
       },
       validateData: function(e){
-        if(!vaccine_id || this.vaccine_id == -1) valVacc = false;
+        if(!vaccine_id || this.vaccine_id == -1) valVacc = false;//백신 선택 검증
         else valVacc = true;
 
-        if (isNaN(Date.parse(this.reserveDate))) valDate = false;
+        if (isNaN(Date.parse(this.reserveDate))) valDate = false;//날짜 유효성 검증
         else valDate = true;
 
-        if(valDate && valVacc) return true;
-        else alert("날짜 혹은 백신이 선택되지 않았습니다");
+        if(valDate && valVacc) return true;//백신 선택 여부 검증 성공시
+        else alert("날짜 혹은 백신이 선택되지 않았습니다");//아니면
 
-        e.preventDefault();
+        e.preventDefault();//서브밋 막기
       }
     }
   })

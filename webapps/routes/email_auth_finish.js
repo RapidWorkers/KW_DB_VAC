@@ -13,7 +13,7 @@ router.get('/', async function (req, res, next) {
 
     try{
       var conn = await getSqlConnectionAsync();
-      var [rows, fields] = await conn.query(sqlGetAuthLink, [auth_link]);
+      var [rows, fields] = await conn.query(sqlGetAuthLink, [auth_link]);//인증 링크로 이메일 얻기
       
       if(rows.length == 0)//DB에 존재하지 않는 link라면
       {
@@ -21,9 +21,9 @@ router.get('/', async function (req, res, next) {
       }
       else
       {
-        var email = rows[0].email;
-        [rows, fields] = await conn.query(sqlUpdateIsUsed, [auth_link]);
-        res.render('email_auth_finish', { title: '회원가입 완료', loggedin: 0, email: email});
+        var email = rows[0].email;//이메일 추출
+        [rows, fields] = await conn.query(sqlUpdateIsUsed, [auth_link]);//인증 완료로 업데이트
+        res.render('email_auth_finish', { title: '회원가입 완료', loggedin: 0, email: email});//페이지 렌더링
         conn.release();
       }
 
@@ -32,7 +32,7 @@ router.get('/', async function (req, res, next) {
       conn.release();
     }
   }
-  else {
+  else {//로그인 했을때
     res.send("<script>alert('잘못된 경로로 접근했습니다.');location.href='/';</script>");
   }
 });
